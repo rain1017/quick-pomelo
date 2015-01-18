@@ -83,47 +83,7 @@
             ,"backups": 5,
             "category":"pomelo-rpc"
         },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/app-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"app"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/api-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"api"
-        },    
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/login-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"login"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/manager.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"manager"
-        },
-        {
+       	{
             "type": "dateFile",
             "filename": "${opts:base}/logs/area-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
@@ -133,87 +93,6 @@
             ,"backups": 5,
             "category":"area"
         },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/statistics-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "pattern",
-                "pattern": "%m"
-              }
-            ,"backups": 5,
-            "category":"statistics"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/mysql-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"mysql"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/pve-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"pve"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/team.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"team"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/chat-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"chat"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/push.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"push"
-        },        
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/sync.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"sync"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/common-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"common"
-        }
     ],
 
     "levels" : {

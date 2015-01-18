@@ -2,6 +2,7 @@
 
 var heapdump = require('heapdump');
 var pomelo = require('pomelo');
+var Q = require('q');
 
 var app = pomelo.createApp();
 app.set('name', 'quick-pomelo');
@@ -41,6 +42,10 @@ app.configure('all', 'gate|connector', function() {
 	app.set('sessionConfig', {
 		singleSession : true,
 	});
+});
+
+app.configure('development|test', function(){
+	Q.longStackSupport = true;
 });
 
 process.on('uncaughtException', function(err) {

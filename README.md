@@ -53,6 +53,7 @@ area.handlers['levelup'] = function(opts){
 
 ### Auto Scaling
 Assigning areas to servers based on server topology and server load. Area will be moved to other servers on host server failure. New server can be added dynamically.
+Area server is 'hot plugable'. When more compute resource is needed, more area server can be plugged into cluster.
 
 ### Area Proxy
 Cross area communication.
@@ -63,7 +64,7 @@ Cross area communication has performance penalty and should be used with care.
 ### Area2Server Index
 Mapping from area to server, based on redis. Index is __Single Source of Truth__, all other components should refer to this index to maintain data consistency in the cluster.
 
-### Player2Server Index
+### Player2Area Index
 Mapping from player to area, based on redis. Index is __Single Source of Truth__, all other components should refer to this index to maintain data consistency in the cluster.
 
 ### Area Manager
