@@ -7,11 +7,11 @@ Developing in quick-pomelo is extremely simple and scalable
 
 ### Simple and intuitive
 
-All api handlers is performed single threaded.
-
-No async, No callback hell, No lock required.
+Api handlers is performed single threaded. No async, No callback hell, No lock required.
 
 Database access is controlled by framework, no explicit code required to access database.
+
+Async control is all promise based.
 
 ### Extreme performance
 
@@ -26,7 +26,7 @@ Player data can 'fly' from one physical server to another, without breaking play
 ## Quick Sample
 
 ```
-// Implement AP
+// Implement API
 area.handlers['levelup'] = function(opts){
 	var player = area.players[opts.id];
 
@@ -39,6 +39,8 @@ area.handlers['levelup'] = function(opts){
 
 	// Notify player only
 	player.notify('money', player.money);
+
+	// You can finally return a value or promise
 };
 ```
 

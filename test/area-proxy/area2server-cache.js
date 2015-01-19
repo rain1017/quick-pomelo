@@ -46,7 +46,7 @@ describe('area2server-cache test', function(){
 		}).delay(20)
 		.then(function(){
 			return cache.get('area1').then(function(ret){
-				(ret === null).should.equal(true);
+				(ret === null).should.be.true;
 			});
 		}).done(cb);
 	});

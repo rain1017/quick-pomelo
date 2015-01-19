@@ -1,35 +1,55 @@
 'use strict';
 
 var Q = require('q');
+var Area2ServerCache = require('./area2server-cache');
 var logger = require('pomelo-logger').getLogger('area-proxy', __filename);
 
 /**
  *
  * @param opts.app - pomelo app instance
+ * @param opts.area2server - area2server component
+ * @param opts.areaServer - areaServer component
  */
 var AreaProxy = function(opts){
 	opts = opts || {};
 
 	this.app = opts.app;
-	this.area2server = opts.area2serverCache;
+	this.cache = new Area2ServerCache({
+						area2server : opts.area2server,
+						timeout : opts.cacheTimeout
+					});
+	this.areaServer = opts.areaServer;
 };
 
-// var proto = AreaProxy.prototype;
+var proto = AreaProxy.prototype;
 
-// proto.invokeArea = function(areaId, handler, opts){
-// 	var self = this;
+/*
+ * Invoke area api
+ * Call areaServer directly if target area is in the same server,
+ * otherwise call remove areaServer via rpc.
+ */
+proto.invoke = function(areaId, method, opts){
+	var self = this;
 
-// 	this.area2server.get(areaId).then(function(serverId){
-// 		if(serverId === self.app.serverId){
-// 			return self.areaServer.invokeArea(areaId, opts);
-// 		}
-// 		else{
-// 			return Q.fncall(function(){
-// 				route = serverId;
-// 				self.app.rpc.areaServer.areaRemote.invokeArea(route, areaId, opts);
-// 			});
-// 		}
-// 	});
-// };
+	return Q.fcall(function(){
+		return self.cache.get(areaId);
+	})
+	.then(function(serverId){
+		if(serverId === null){
+			throw new Error('Area ' + areaId + ' not exist');
+		}
+		else if(serverId === ''){
+			throw new Error('Area ' + areaId + ' not loaded in any server');
+		}
+		else if(serverId === self.app.getServerId()){
+			return self.areaServer.invokeArea(areaId, method, opts);
+		}
+		else{
+			return Q.nfcall(function(cb){
+				self.app.rpc.area.proxyRemote.invokeArea(serverId, areaId, method, opts, cb);
+			});
+		}
+	});
+};
 
 module.exports = AreaProxy;

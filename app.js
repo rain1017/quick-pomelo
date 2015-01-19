@@ -2,7 +2,6 @@
 
 var heapdump = require('heapdump');
 var pomelo = require('pomelo');
-var Q = require('q');
 
 var app = pomelo.createApp();
 app.set('name', 'quick-pomelo');
@@ -30,6 +29,15 @@ app.configure('all', function() {
 	// Configure Redis
 	// app.loadConfig('redis', app.getBase() + '/config/redis.json');
 	// require('./app/redis').init(app.get('redis'));
+
+	app.route('area', function(routeParam, msg, app, cb){
+		if(msg.method === 'forwardMessage'){
+			// Message is forwarded for a handler
+			cb(new Error('forwardMessage is not allowed for area-server'));
+		}
+		var serverId = routeParam;
+		cb(null, serverId);
+	});
 });
 
 //Connector settings
@@ -45,7 +53,7 @@ app.configure('all', 'gate|connector', function() {
 });
 
 app.configure('development|test', function(){
-	Q.longStackSupport = true;
+	require('q').longStackSupport = true;
 });
 
 process.on('uncaughtException', function(err) {
