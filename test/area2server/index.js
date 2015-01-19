@@ -2,6 +2,7 @@
 
 var should = require('should');
 var redis = require('redis');
+var logger = require('pomelo-logger').getLogger('test', __filename);
 var Q = require('q');
 Q.longStackSupport = true;
 
@@ -21,19 +22,27 @@ describe('area2server test', function(){
 		var area2server = new Area2Server({db : this.db});
 
 		Q.nfcall(function(cb){
-			area2server.on('join:server1', function(areaId){
-				console.log('%s join server1', areaId);
+			area2server.on('server:server1:join', function(areaId){
+				logger.debug('server:server1:join "%s"', areaId);
 				areaId.should.equal('area1');
 			});
-			area2server.on('quit:server1', function(areaId){
-				console.log('%s quit server1', areaId);
+			area2server.on('server:server1:quit', function(areaId){
+				logger.debug('server:server1:quit "%s"', areaId);
 				areaId.should.equal('area1');
 			});
-			area2server.on('join:', function(areaId){
-				console.log('%s join ""', areaId);
+			area2server.on('server::join', function(areaId){
+				logger.debug('server::join "%s"', areaId);
+				areaId.should.equal('area1');
 			});
-			area2server.on('quit:', function(areaId){
-				console.log('%s quit ""', areaId);
+			area2server.on('server::quit', function(areaId){
+				logger.debug('server::quit "%s"', areaId);
+				areaId.should.equal('area1');
+			});
+			area2server.on('area:area1:update', function(serverId){
+				logger.debug('area:area1:update "%s"', serverId);
+			});
+			area2server.on('area:area1:remove', function(){
+				logger.debug('area:area1:remove');
 			});
 			setTimeout(cb, 10);
 		}).then(function(){

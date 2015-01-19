@@ -4,22 +4,22 @@ var util = require('util');
 var GlobalEventEmitter = require('global-events').EventEmitter;
 var redis = require('redis');
 var Q = require('q');
+var logger = require('pomelo-logger').getLogger('area-proxy', __filename);
 
 /**
  * Area2server index
  *
  * Events:
- * 		this.on('server.join.[serverId]', function(areaId){...})
- * 		this.on('server.quit.[serverId]', function(areaId){...})
+ * 		this.on('server.[serverId].join', function(areaId){...})
+ * 		this.on('server.[serverId].quit', function(areaId){...})
+ * 		this.on('area.[areaId].update', function(serverId){...})
+ * 		this.on('area.[areaId].remove', function(){...})
  *
  * @params opts.db - RedisClient
  * @params opts.logger - pomelo-logger
  */
 var Area2Server = function(opts) {
 	opts = opts || {};
-
-	var logger = opts.logger || require('pomelo-logger');
-	this.logger = logger.getLogger('area2server', __filename);
 
 	this.db = opts.db || redis.createClient();
 	opts.pub = opts.pub || this.db;
@@ -56,10 +56,11 @@ proto.update = function(areaId, serverId){
 		var multi = self.db.multi();
 		if(oldServerId !== null){
 			multi = multi.hdel('server2areas:' + oldServerId, areaId);
-			self.emit('quit:' + oldServerId, areaId);
+			self.emit(util.format('server:%s:quit', oldServerId), areaId);
 		}
 
-		self.emit('join:' + serverId, areaId);
+		self.emit(util.format('server:%s:join', serverId), areaId);
+		self.emit(util.format('area:%s:update', areaId), serverId);
 		return Q.ninvoke(multi
 						.set('area2server:' + areaId, serverId)
 						.hmset('server2areas:' + serverId, areaId, ''), 'exec');
@@ -76,7 +77,8 @@ proto.remove = function(areaId){
 		if(oldServerId === null){
 			return;
 		}
-		self.emit('quit:' + oldServerId, areaId);
+		self.emit(util.format('server:%s:quit', oldServerId), areaId);
+		self.emit(util.format('area:%s:remove', areaId));
 		return Q.ninvoke(self.db.multi()
 							.hdel('server2areas:' + oldServerId, areaId)
 							.del('area2server:' + areaId), 'exec');
