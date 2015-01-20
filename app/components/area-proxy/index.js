@@ -1,7 +1,6 @@
 'use strict';
 
 var Q = require('q');
-var IndexCache = require('./index-cache');
 var logger = require('pomelo-logger').getLogger('area-proxy', __filename);
 
 /**
@@ -14,10 +13,7 @@ var AreaProxy = function(opts){
 	opts = opts || {};
 
 	this.app = opts.app;
-	this.cache = new IndexCache({
-						areaManager : opts.areaManager,
-						timeout : opts.cacheTimeout
-					});
+	this.areaManager = opts.areaManager;
 	this.areaServer = opts.areaServer;
 };
 
@@ -32,7 +28,7 @@ proto.invoke = function(areaId, method, opts){
 	var self = this;
 
 	return Q.fcall(function(){
-		return self.cache.get(areaId);
+		return self.areaManager.indexCache.get(areaId);
 	})
 	.then(function(serverId){
 		if(serverId === null){

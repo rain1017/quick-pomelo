@@ -2,7 +2,7 @@
 
 var Q = require('q');
 var util = require('util');
-var logger = require('pomelo-logger').getLogger('area-proxy', __filename);
+var logger = require('pomelo-logger').getLogger('area-manager', __filename);
 
 var DEFAULT_TIMEOUT = 30 * 1000;
 

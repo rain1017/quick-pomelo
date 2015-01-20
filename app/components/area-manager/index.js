@@ -6,6 +6,7 @@ var Q = require('q');
 var GlobalEventEmitter = require('global-events').EventEmitter;
 var logger = require('pomelo-logger').getLogger('area-manager', __filename);
 var Area = require('../area');
+var IndexCache = require('./index-cache');
 
 /**
  *
@@ -28,6 +29,8 @@ var AreaManager = function(opts){
 	opts.sub = redis.createClient(port, host);
 
 	GlobalEventEmitter.call(this, opts);
+
+	this.indexCache = new IndexCache({areaManager : this, timeout : opts.cacheTimeout});
 };
 
 util.inherits(AreaManager, GlobalEventEmitter);

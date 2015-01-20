@@ -5,9 +5,8 @@ var Q = require('q');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
 var AreaManager = require('../../app/components/area-manager');
-var IndexCache = require('../../app/components/area-proxy/index-cache');
 
-describe('area2server-cache test', function(){
+describe('index-cache test', function(){
 
 	before(env.before);
 	beforeEach(env.beforeEach);
@@ -15,11 +14,8 @@ describe('area2server-cache test', function(){
 	after(env.after);
 
 	it('get/expire test', function(cb){
-		var areaManager = new AreaManager({redisConfig : env.redisConfig});
-		var cache = new IndexCache({
-									areaManager : areaManager,
-									timeout : 50
-								});
+		var areaManager = new AreaManager({redisConfig : env.redisConfig, cacheTimeout : 50});
+		var cache = areaManager.indexCache;
 		Q.fcall(function(){
 			return areaManager.createArea('area1');
 		}).then(function(){
