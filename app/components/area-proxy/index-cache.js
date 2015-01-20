@@ -9,18 +9,18 @@ var DEFAULT_TIMEOUT = 30 * 1000;
 /**
  * Cache area2server index in local memory
  *
- * @param opts.area2server - area2server instance
+ * @param opts.areaManager - areaManager instance
  * @param opts.timeout - (Optional) cache timeout in ms (cache is forced to expire timely)
  */
-var Area2ServerCache = function(opts){
+var IndexCache = function(opts){
 	opts = opts || {};
-	this.area2server = opts.area2server;
+	this.areaManager = opts.areaManager;
 	this.timeout = opts.timeout || DEFAULT_TIMEOUT;
 
 	this.index = {}; //{areaId : {value : serverId, onUpdate: fn, onRemove: fn}}
 };
 
-var proto = Area2ServerCache.prototype;
+var proto = IndexCache.prototype;
 
 proto.get = function(areaId){
 	var self = this, promise = null;
@@ -34,7 +34,7 @@ proto.get = function(areaId){
 	}
 	else{
 		promise = Q.fcall(function(){
-			return self.area2server.get(areaId);
+			return self.areaManager.getServerIdByAreaId(areaId);
 		}).then(function(serverId){
 			logger.debug('get %s->%s from redis', areaId, serverId);
 			if(serverId !== null){
@@ -67,8 +67,8 @@ proto._saveCache = function(areaId, serverId){
 		}
 	};
 
-	this.area2server.on(util.format('area:%s:update', areaId), cache.onUpdate);
-	this.area2server.on(util.format('area:%s:remove', areaId), cache.onRemove);
+	this.areaManager.on(util.format('area:%s:update', areaId), cache.onUpdate);
+	this.areaManager.on(util.format('area:%s:remove', areaId), cache.onRemove);
 	cache.timeoutObject = setTimeout(cache.onRemove, this.timeout);
 
 	this.index[areaId] = cache;
@@ -82,8 +82,8 @@ proto._deleteCache = function(areaId){
 		return;
 	}
 
-	this.area2server.removeListener(util.format('area:%s:update', areaId), cache.onUpdate);
-	this.area2server.removeListener(util.format('area:%s:remove', areaId), cache.onRemove);
+	this.areaManager.removeListener(util.format('area:%s:update', areaId), cache.onUpdate);
+	this.areaManager.removeListener(util.format('area:%s:remove', areaId), cache.onRemove);
 	clearTimeout(cache.timeoutObject);
 
 	delete this.index[areaId];
@@ -91,4 +91,4 @@ proto._deleteCache = function(areaId){
 	logger.debug('deleteCache %s', areaId);
 };
 
-module.exports = Area2ServerCache;
+module.exports = IndexCache;

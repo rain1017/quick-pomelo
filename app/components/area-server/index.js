@@ -17,7 +17,7 @@ var AreaServer = function(opts){
 	opts = opts || {};
 
 	this.app = opts.app;
-	this.area2server = opts.area2server;
+	this.areaManager = opts.areaManager;
 	this.areas = {};
 	this.serverId = this.app.getServerId();
 };
@@ -30,8 +30,8 @@ proto.init = function(){
 
 	this.onAreaJoin = this.loadArea.bind(this, this.serverId);
 	this.onAreaQuit = this.releaseArea.bind(this, this.serverId);
-	this.area2server.on('server:' + this.serverId + ':join', this.onAreaJoin);
-	this.area2server.on('server:' + this.serverId + ':quit', this.onAreaQuit);
+	this.areaManager.on('server:' + this.serverId + ':join', this.onAreaJoin);
+	this.areaManager.on('server:' + this.serverId + ':quit', this.onAreaQuit);
 
 	this.state = STATE.RUNNING;
 };
@@ -40,8 +40,8 @@ proto.close = function(){
 	assert(this.state === STATE.RUNNING);
 	this.state = STATE.CLOSING;
 
-	this.area2server.removeListener('server:' + this.serverId + ':join', this.onAreaJoin);
-	this.area2server.removeListener('server:' + this.serverId + ':quit', this.onAreaQuit);
+	this.areaManager.removeListener('server:' + this.serverId + ':join', this.onAreaJoin);
+	this.areaManager.removeListener('server:' + this.serverId + ':quit', this.onAreaQuit);
 
 	this.state = STATE.CLOSED;
 };

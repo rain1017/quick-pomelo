@@ -1,21 +1,21 @@
 'use strict';
 
 var Q = require('q');
-var Area2ServerCache = require('./area2server-cache');
+var IndexCache = require('./index-cache');
 var logger = require('pomelo-logger').getLogger('area-proxy', __filename);
 
 /**
  *
  * @param opts.app - pomelo app instance
- * @param opts.area2server - area2server component
+ * @param opts.areaManager - areaManager component
  * @param opts.areaServer - areaServer component
  */
 var AreaProxy = function(opts){
 	opts = opts || {};
 
 	this.app = opts.app;
-	this.cache = new Area2ServerCache({
-						area2server : opts.area2server,
+	this.cache = new IndexCache({
+						areaManager : opts.areaManager,
 						timeout : opts.cacheTimeout
 					});
 	this.areaServer = opts.areaServer;
@@ -26,7 +26,7 @@ var proto = AreaProxy.prototype;
 /*
  * Invoke area api
  * Call areaServer directly if target area is in the same server,
- * otherwise call remove areaServer via rpc.
+ * otherwise call remote areaServer via rpc.
  */
 proto.invoke = function(areaId, method, opts){
 	var self = this;

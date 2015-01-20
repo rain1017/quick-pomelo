@@ -1,36 +1,33 @@
 'use strict';
-var should = require('should');
-var redis = require('redis');
-var redisConfig = require('../../config/test/redis');
-var Area2ServerCache = require('../../app/components/area-proxy/area2server-cache');
-var Area2Server = require('../../app/components/area2server');
+
+var env = require('../env');
 var Q = require('q');
-Q.longStackSupport = true;
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
-describe('area2server-cache test', function(){
-	before(function(){
-		this.db = redis.createClient(redisConfig.port, redisConfig.host);
-	});
+var AreaManager = require('../../app/components/area-manager');
+var IndexCache = require('../../app/components/area-proxy/index-cache');
 
-	beforeEach(function(cb){
-		this.db.flushdb(cb);
-	});
+describe('area2server-cache test', function(){
+
+	before(env.before);
+	beforeEach(env.beforeEach);
+	afterEach(env.afterEach);
+	after(env.after);
 
 	it('get/expire test', function(cb){
-		var area2server = new Area2Server({db : this.db});
-		var cache = new Area2ServerCache({
-									area2server : area2server,
+		var areaManager = new AreaManager({redisConfig : env.redisConfig});
+		var cache = new IndexCache({
+									areaManager : areaManager,
 									timeout : 50
 								});
 		Q.fcall(function(){
-			return area2server.add('area1');
+			return areaManager.createArea('area1');
 		}).then(function(){
 			return cache.get('area1').then(function(ret){
 				ret.should.equal('');
 			});
 		}).then(function(){
-			return area2server.update('area1', 'server1');
+			return areaManager.updateServerId('area1', 'server1');
 		}).delay(20) //Wait for data sync
 		.then(function(){
 			return cache.get('area1').then(function(ret){
@@ -42,16 +39,12 @@ describe('area2server-cache test', function(){
 				ret.should.equal('server1');
 			});
 		}).then(function(){
-			return area2server.remove('area1');
+			return areaManager.removeArea('area1');
 		}).delay(20)
 		.then(function(){
 			return cache.get('area1').then(function(ret){
 				(ret === null).should.be.true;
 			});
 		}).done(cb);
-	});
-
-	after(function(cb){
-		this.db.flushdb(cb);
 	});
 });

@@ -1,19 +1,24 @@
 'use strict';
 
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var logger = require('pomelo-logger').getLogger('area', __filename);
 
-var Area = function(opts){
-	opts = opts || {};
+var areaSchema = new Schema({
+	_id: {type: String, index: true},
+	_serverId: {type: String, index: true, default: ''},
 
-	this.id = opts.id;
-};
+	name: String,
+});
 
-var proto = Area.prototype;
+//areaSchema.set('autoIndex', false);
 
-proto.invoke = function(method, opts){
-	logger.info('area[%s].invoke\t%s\t%s', this.id, method, opts);
-
+areaSchema.methods.invoke = function(method, opts){
+	logger.info('area[%s].invoke\t%s\t%s', this._id, method, opts);
 	// return a value or a promise
 };
+
+
+var Area = mongoose.model('area', areaSchema);
 
 module.exports = Area;

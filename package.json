@@ -33,7 +33,8 @@
 		"heapdump" : "~0.3.4",
 		"redis" : "~0.12.1",
 		"hiredis" : "~0.1.17",
-		"global-events" : "~0.0.2"
+		"global-events" : "~0.0.2",
+		"mongoose" : "~3.8.21"
 	},
 	"devDependencies": {
 		"should": "~4.5.0",
