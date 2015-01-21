@@ -6,8 +6,8 @@ var logger = require('pomelo-logger').getLogger('area', __filename);
 
 var areaSchema = new Schema({
 	_id: {type: String, index: true},
-	_serverId: {type: String, index: true, default: ''},
-
+	_serverId: {type: String, index: true, default: null},
+	_type: {type: String, index: true},
 	name: String,
 });
 

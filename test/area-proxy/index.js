@@ -41,18 +41,22 @@ describe('area-proxy test', function(){
 		Q.fcall(function(){
 			return areaManager.createArea('area1');
 		}).then(function(){
-			return areaManager.updateServerId('area1', 'server1');
+			return areaManager.acquireArea('area1', 'server1');
 		}).delay(10).then(function(){
 			return areaProxy.invoke('area1', 'method', 'opts').then(function(){
 				fakeAreaServer.invokeArea.calledWith('area1', 'method', 'opts').should.be.true;
 			});
 		}).then(function(){
-			return areaManager.updateServerId('area1', 'server2');
+			return areaManager.releaseAreaForce('area1');
+		}).then(function(){
+			return areaManager.acquireArea('area1', 'server2');
 		}).delay(10).then(function(cb){
 			return areaProxy.invoke('area1', 'method', 'opts').then(function(){
 				fakeApp.rpc.area.proxyRemote.invokeArea.calledWith('server2', 'area1', 'method', 'opts').should.be.true;
 			});
-		})
-		.done(cb);
+		}).done(function(){
+			areaManager.close();
+			cb();
+		});
 	});
 });

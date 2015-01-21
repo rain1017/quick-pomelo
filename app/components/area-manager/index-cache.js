@@ -34,12 +34,10 @@ proto.get = function(areaId){
 	}
 	else{
 		promise = Q.fcall(function(){
-			return self.areaManager.getServerIdByAreaId(areaId);
+			return self.areaManager.getAreaOwnerId(areaId);
 		}).then(function(serverId){
 			logger.debug('get %s->%s from redis', areaId, serverId);
-			if(serverId !== null){
-				self._saveCache(areaId, serverId);
-			}
+			self._saveCache(areaId, serverId);
 			return serverId;
 		});
 	}

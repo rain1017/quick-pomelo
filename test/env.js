@@ -4,6 +4,7 @@ var should = require('should');
 var Q = require('q');
 var redis = require('redis');
 var mongoose = require('mongoose');
+var logger = require('pomelo-logger').getLogger('test', __filename);
 
 var redisConfig = require('../config/test/redis');
 var mongoConfig = require('../config/test/mongodb');
@@ -23,7 +24,6 @@ module.exports = {
 	},
 
 	afterEach : function(){
-
 	},
 
 	after : function(){

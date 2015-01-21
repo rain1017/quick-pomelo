@@ -17,6 +17,7 @@ var IndexCache = require('./index-cache');
  * 		this.on('area.[areaId].remove', function(){...})
  *
  * @params opts.redisConfig - {host : '127.0.0.1', port : 6379}
+ * @params opts.cacheTimeout - indexCache timeout
  *
  */
 var AreaManager = function(opts){
@@ -37,14 +38,23 @@ util.inherits(AreaManager, GlobalEventEmitter);
 
 var proto = AreaManager.prototype;
 
-proto.getServerIdByAreaId = function(areaId){
+proto.close = function(){
+	//close redis connection
+	this.end();
+	logger.debug('areaManager closed');
+};
+
+proto.getAreaOwnerId = function(areaId){
 	return Q.ninvoke(Area, 'findById', areaId, '_serverId')
 	.then(function(doc){
-		return doc ? doc._serverId : null;
+		if(!doc){
+			throw new Error('area ' + areaId + ' not exist');
+		}
+		return doc._serverId;
 	});
 };
 
-proto.getAreaIdsByServerId = function(serverId){
+proto.getAcquiredAreaIds = function(serverId){
 	if(!serverId){
 		serverId = '';
 	}
@@ -59,25 +69,68 @@ proto.getAreaIdsByServerId = function(serverId){
 	});
 };
 
-proto.updateServerId = function(areaId, serverId){
-	if(!serverId){
-		serverId = '';
-	}
-
+// Get the area 'lock': set area._serverId to serverId
+proto.acquireArea = function(areaId, serverId){
 	var self = this;
 
+	return Q.ninvoke(Area, 'update',
+							{_id : areaId, _serverId : null},
+							{'$set' : {_serverId : serverId}})
+	.then(function(args){
+		if(args[0] !== 1){
+			throw new Error(util.format('%s acquire %s failed', serverId, areaId));
+		}
+		self.emit('server:' + serverId + ':join', areaId);
+		self.emit('area:' + areaId + ':update', serverId);
+	});
+};
+
+// Relase the area 'lock': set area._serverId to null
+proto.releaseArea = function(areaId, serverId){
+	var self = this;
+
+	return Q.ninvoke(Area, 'update',
+							{_id : areaId, _serverId : serverId},
+							{'$set' : {_serverId : null}})
+	.then(function(args){
+		if(args[0] !== 1){
+			throw new Error(util.format('%s release %s failed', serverId, areaId));
+		}
+		self.emit('server:' + serverId + ':quit', areaId);
+		self.emit('area:' + areaId + ':update', null);
+	});
+};
+
+// Forcely release the area 'lock'
+proto.releaseAreaForce = function(areaId){
+	var self = this;
 	return Q.ninvoke(Area, 'findByIdAndUpdate', areaId,
-								{'$set' : {'_serverId' : serverId}},
-								{new : false, 'fields' : '_serverId'})
+							{'$set' : {_serverId : null}},
+							{new : false, 'fields' : '_serverId'})
 	.then(function(doc){
 		if(doc === null){
-			logger.warn('area %s not exist', areaId);
-			return;
+			throw new Error(util.format('area %s not exist', areaId));
 		}
-		self.emit(util.format('server:%s:quit', doc._serverId), areaId);
-		self.emit(util.format('server:%s:join', serverId), areaId);
-		self.emit(util.format('area:%s:update', areaId), serverId);
+		self.emit('server:' + doc._serverId + ':quit', areaId);
+		self.emit('area:' + areaId + ':update', null);
 	});
+};
+
+// Check area._serverId == serverId
+proto.ensureAcquired = function(areaId, serverId){
+	return this.getAreaOwnerId(areaId).then(function(ret){
+		if(ret !== serverId){
+			throw new Error(util.format('%s not acquired %s', serverId, areaId));
+		}
+	});
+};
+
+proto.joinServer = function(areaId, serverId){
+	//TODO: rpc to area server
+};
+
+proto.quitServer = function(areaId){
+	//TODO: rpc to area server
 };
 
 proto.createArea = function(areaId, opts){
@@ -88,8 +141,6 @@ proto.createArea = function(areaId, opts){
 
 	return Q.ninvoke(Area, 'create', area)
 	.then(function(doc){
-		self.emit(util.format('server:%s:join', doc._serverId), areaId);
-		self.emit(util.format('area:%s:create', areaId));
 		self.emit(util.format('area:%s:update', areaId), doc._serverId);
 		return doc;
 	});
@@ -98,13 +149,13 @@ proto.createArea = function(areaId, opts){
 proto.removeArea = function(areaId){
 	var self = this;
 
-	return Q.ninvoke(Area, 'findByIdAndRemove', areaId, {'select' : '_serverId'})
-	.then(function(doc){
-		if(doc === null){
-			logger.warn('area %s not exist', areaId);
-			return;
+	//TODO: call quitServer first
+
+	return Q.ninvoke(Area, 'remove', {_id : areaId, _serverId : null})
+	.then(function(ret){
+		if(ret === 0){
+			throw new Error('remove area ' + areaId + ' failed');
 		}
-		self.emit(util.format('server:%s:quit', doc._serverId), areaId);
 		self.emit(util.format('area:%s:remove', areaId));
 	});
 };
