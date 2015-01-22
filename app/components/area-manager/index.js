@@ -160,4 +160,30 @@ proto.removeArea = function(areaId){
 	});
 };
 
+proto.loadArea = function(areaId, serverId){
+	return Q.ninvoke(Area, 'findById', areaId).then(function(area){
+		if(!area){
+			throw new Error('area ' + areaId + ' not exist');
+		}
+		logger.debug('loaded area %s by %s', areaId, serverId);
+		return area;
+	});
+};
+
+proto.saveArea = function(area, serverId){
+	var self = this;
+
+	return Q.fcall(function(){
+		return self.ensureAcquired(area._id, serverId);
+	}).then(function(){
+		//Version control, incase the area is an out of date version.
+		//(http://aaronheckmann.tumblr.com/post/48943525537/mongoose-v3-part-1-versioning)
+		area.increment();
+
+		return Q.ninvoke(area, 'save').then(function(){
+			logger.debug('saved area %s by %s', area._id, serverId);
+		});
+	});
+};
+
 module.exports = AreaManager;

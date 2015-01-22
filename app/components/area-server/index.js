@@ -4,7 +4,6 @@ var util = require('util');
 var Q = require('q');
 var logger = require('pomelo-logger').getLogger('area-server', __filename);
 var assert = require('assert');
-var Area = require('../area');
 
 var STATE = {
 				NONE : 0,
@@ -71,7 +70,7 @@ proto.syncAcquiredAreas = function(){
 		Object.keys(self.areas).forEach(function(areaId){
 			if(!areaIdMap[areaId]){
 				// force unload area if area is loaded but not acquired
-				promises.push(self.unloadArea(areaId, true));
+				promises.push(self.quit(areaId, true));
 			}
 		});
 
@@ -86,7 +85,12 @@ proto.join = function(areaId){
 	return Q.fcall(function(){
 		return self.areaManager.acquireArea(areaId, self.serverId);
 	}).then(function(){
-		return self.loadArea(areaId).catch(function(e){
+		return Q.fcall(function(){
+			return self.areaManager.loadArea(areaId, self.serverId);
+		}).then(function(area){
+			self.areas[areaId] = area;
+			logger.debug('area %s joined server %s', areaId, self.serverId);
+		}).catch(function(e){
 			self.areaManager.releaseArea(areaId, self.serverId).catch(function(e){
 				logger.warn(e);
 			});
@@ -95,73 +99,36 @@ proto.join = function(areaId){
 	});
 };
 
-proto.quit = function(areaId){
-	assert(this.state === STATE.RUNNING);
-	var self = this;
-
-	return Q.fcall(function(){
-		return self.unloadArea(areaId);
-	}).then(function(){
-		return self.areaManager.releaseArea(areaId, self.serverId);
-	});
-};
-
-proto.loadArea = function(areaId){
-	assert(this.state === STATE.RUNNING);
-
-	var self = this;
-	return Q.ninvoke(Area, 'findById', areaId)
-	.then(function(area){
-		if(!area){
-			throw new Error('area ' + areaId + ' not exist');
-		}
-		self.areas[areaId] = area;
-		logger.debug('loaded area %s', areaId);
-	});
-};
-
 /*
  *
  * @param force - force unload without save
  */
-proto.unloadArea = function(areaId, force){
+proto.quit = function(areaId, force){
 	assert(this.state === STATE.RUNNING);
-	var self = this;
 
+	var area = this.areas[areaId];
+	if(!area){
+		throw new Error('area ' + areaId + ' not in server ' + this.serverId);
+	}
+
+	if(force){
+		delete this.areas[areaId];
+		return;
+	}
+
+	var self = this;
 	return Q.fcall(function(){
-		if(!force){
-			return self.saveArea(areaId);
-		}
+		return self.areaManager.saveArea(area, self.serverId);
 	}).then(function(){
 		delete self.areas[areaId];
-		logger.debug('unloaded area %s', areaId);
+		return self.areaManager.releaseArea(areaId, self.serverId);
+	}).then(function(){
+		logger.debug('area %s quit server %s', areaId, self.serverId);
 	});
 };
 
 proto.isLoaded = function(areaId){
 	return !!this.areas[areaId];
-};
-
-proto.saveArea = function(areaId){
-	assert(this.state === STATE.RUNNING);
-	var self = this;
-
-	return Q.fcall(function(){
-		return self.areaManager.ensureAcquired(areaId, self.serverId);
-	}).then(function(){
-		var area = self.areas[areaId];
-		if(!area){
-			throw new Error('area ' + areaId + ' not loaded');
-		}
-
-		//Version control, incase the area is an out of date version.
-		//(http://aaronheckmann.tumblr.com/post/48943525537/mongoose-v3-part-1-versioning)
-		area.increment();
-
-		return Q.ninvoke(area, 'save').then(function(){
-			logger.debug('saved area %s', areaId);
-		});
-	});
 };
 
 proto.invokeArea = function(areaId, method, opts){
