@@ -13,8 +13,8 @@ var areaSchema = new Schema({
 
 //areaSchema.set('autoIndex', false);
 
-areaSchema.methods.invoke = function(method, opts){
-	logger.info('area[%s].invoke\t%s\t%s', this._id, method, opts);
+areaSchema.methods.test = function(){
+	logger.info('area[%s].test\t%s', this._id, [].slice.call(arguments));
 	// return a value or a promise
 };
 

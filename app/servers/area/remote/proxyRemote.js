@@ -1,16 +1,17 @@
 'use strict';
 
+var Q = require('q');
+
 var Remote = function(app){
 	this.app = app;
 };
 
-Remote.prototype.invokeArea = function(areaId, method, opts, cb){
+Remote.prototype.invokeAreaServer = function(method, args, cb){
 	var areaServer = this.app.get('areaServer');
-	if(!areaServer){
-		return cb(new Error('areaServer is null'));
-	}
 
-	areaServer.invokeArea(areaId, method, opts).then(function(ret){
+	Q.fcall(function(){
+		return areaServer[method].apply(areaServer, args);
+	}).then(function(ret){
 		cb(null, ret);
 	}).catch(function(err){
 		cb(err);

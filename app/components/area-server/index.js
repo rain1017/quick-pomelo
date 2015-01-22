@@ -13,15 +13,19 @@ var STATE = {
 				CLOSED : 4,
 			};
 
+/*
+ * @params opts.app - pomelo app instance
+ *
+ */
 var AreaServer = function(opts){
 	this.state = STATE.NONE;
 
 	opts = opts || {};
 
 	this.app = opts.app;
-	this.areaManager = opts.areaManager;
 	this.areas = {};
-	this.serverId = this.app.getServerId();
+
+	this.init();
 };
 
 var proto = AreaServer.prototype;
@@ -52,7 +56,7 @@ proto.syncAcquiredAreas = function(){
 	assert(this.state === STATE.RUNNING);
 
 	var self = this;
-	return this.areaManager.getAcquiredAreaIds(this.serverId).then(function(areaIds){
+	return this.app.get('areaManager').getAcquiredAreaIds().then(function(areaIds){
 		var areaIdMap = {};
 		areaIds.forEach(function(areaId){
 			areaIdMap[areaId] = true;
@@ -63,7 +67,7 @@ proto.syncAcquiredAreas = function(){
 		areaIds.forEach(function(areaId){
 			if(!self.areas[areaId]){
 				// release area lock if area is acquired but not loaded
-				promises.push(self.areaManager.releaseArea(areaId, self.serverId));
+				promises.push(self.app.get('areaManager').releaseArea(areaId));
 			}
 		});
 
@@ -83,15 +87,15 @@ proto.join = function(areaId){
 	var self = this;
 
 	return Q.fcall(function(){
-		return self.areaManager.acquireArea(areaId, self.serverId);
+		return self.app.get('areaManager').acquireArea(areaId);
 	}).then(function(){
 		return Q.fcall(function(){
-			return self.areaManager.loadArea(areaId, self.serverId);
+			return self.app.get('areaManager').loadArea(areaId);
 		}).then(function(area){
 			self.areas[areaId] = area;
-			logger.debug('area %s joined server %s', areaId, self.serverId);
+			logger.debug('area %s joined server %s', areaId, self.app.getServerId());
 		}).catch(function(e){
-			self.areaManager.releaseArea(areaId, self.serverId).catch(function(e){
+			self.app.get('areaManager').releaseArea(areaId).catch(function(e){
 				logger.warn(e);
 			});
 			throw e;
@@ -108,7 +112,7 @@ proto.quit = function(areaId, force){
 
 	var area = this.areas[areaId];
 	if(!area){
-		throw new Error('area ' + areaId + ' not in server ' + this.serverId);
+		throw new Error('area ' + areaId + ' not in server ' + this.app.getServerId());
 	}
 
 	if(force){
@@ -118,12 +122,12 @@ proto.quit = function(areaId, force){
 
 	var self = this;
 	return Q.fcall(function(){
-		return self.areaManager.saveArea(area, self.serverId);
+		return self.app.get('areaManager').saveArea(area);
 	}).then(function(){
 		delete self.areas[areaId];
-		return self.areaManager.releaseArea(areaId, self.serverId);
+		return self.app.get('areaManager').releaseArea(areaId);
 	}).then(function(){
-		logger.debug('area %s quit server %s', areaId, self.serverId);
+		logger.debug('area %s quit server %s', areaId, self.app.getServerId());
 	});
 };
 
@@ -131,15 +135,15 @@ proto.isLoaded = function(areaId){
 	return !!this.areas[areaId];
 };
 
-proto.invokeArea = function(areaId, method, opts){
+proto.invokeArea = function(areaId, method, args){
 	assert(this.state === STATE.RUNNING);
 
 	var area = this.areas[areaId];
 	if(!area){
-		throw new Error('area ' + areaId + 'not exist');
+		throw new Error('area ' + areaId + 'not loaded');
 	}
 
-	return area.invoke(method, opts);
+	return area[method].apply(area, args);
 };
 
 module.exports = AreaServer;

@@ -4,13 +4,6 @@ var env = require('../env');
 var Q = require('q');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
-var AreaManager = require('../../app/components/area-manager');
-var AreaServer = require('../../app/components/area-server');
-
-var fakeApp = {
-	getServerId : function(){return 'server1';}
-};
-
 describe('areaServer test', function(){
 	before(env.before);
 	beforeEach(env.beforeEach);
@@ -18,45 +11,39 @@ describe('areaServer test', function(){
 	after(env.after);
 
 	it('join/quit', function(cb){
-		var areaManager = new AreaManager({redisConfig : env.redisConfig});
-		var areaServer = new AreaServer({
-			areaManager : areaManager,
-			app : fakeApp,
-		});
+		var serverId = 'server1', areaId = 'area1';
+		var app = env.createMockApp({serverId : serverId});
+		var areaServer = app.get('areaServer');
+		var areaManager = app.get('areaManager');
 
 		Q.fcall(function(){
-			areaServer.init();
+			return areaManager.createArea({'_id' : areaId});
 		}).then(function(){
-			return areaManager.createArea({'_id' : 'area1'});
+			return areaServer.join(areaId);
 		}).then(function(){
-			return areaServer.join('area1');
+			return areaServer.isLoaded(areaId).should.be.true;
 		}).then(function(){
-			return areaServer.invokeArea('area1', 'method', 'opts');
-		}).then(function(){
-			return areaServer.quit('area1');
+			return areaServer.quit(areaId);
 		}).done(function(){
-			areaServer.close();
+			app.close();
 			cb();
 		});
 	});
 
 	it('sync acquired area', function(cb){
-		var areaManager = new AreaManager({redisConfig : env.redisConfig});
-		var areaServer = new AreaServer({
-			areaManager : areaManager,
-			app : fakeApp,
-		});
+		var serverId = 'server1';
+		var app = env.createMockApp({serverId : serverId});
+		var areaServer = app.get('areaServer');
+		var areaManager = app.get('areaManager');
 
 		Q.fcall(function(){
-			areaServer.init();
-		}).then(function(){
 			return areaManager.createArea({'_id' : 'area1'});
 		}).then(function(){
 			return areaManager.createArea({'_id' : 'area2'});
 		}).then(function(){
 			return areaServer.join('area1');
 		}).then(function(){
-			return areaManager.acquireArea('area2', 'server1');
+			return areaManager.acquireArea('area2');
 		}).then(function(){
 			return areaManager.releaseAreaForce('area1');
 		}).then(function(){
@@ -67,8 +54,7 @@ describe('areaServer test', function(){
 				(ret === null).should.be.true;
 			});
 		}).done(function(){
-			areaManager.close();
-			areaServer.close();
+			app.close();
 			cb();
 		});
 	});

@@ -6,14 +6,14 @@ var Handler = function(app){
 	this.app = app;
 };
 
-Handler.prototype.invokeArea = function(msg, session, next){
-	var areaProxy = this.app.get('areaProxy');
-	if(!areaProxy){
-		return next(new Error('areaProxy is null'));
-	}
+Handler.prototype.invokeAreaManager = function(msg, session, next){
+	var areaManager = this.app.get('areaManager');
+
+	var method = msg.method;
+	var args = msg.args;
 
 	Q.fcall(function(){
-		return areaProxy.invoke(msg.areaId, msg.method, msg.opts);
+		return areaManager[method].apply(areaManager, args);
 	}).then(function(ret){
 		next(null, ret);
 	}).catch(function(err){

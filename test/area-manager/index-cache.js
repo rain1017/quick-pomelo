@@ -4,9 +4,6 @@ var env = require('../env');
 var Q = require('q');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
-var AreaManager = require('../../app/components/area-manager');
-var IndexCache = require('../../app/components/area-manager/index-cache');
-
 describe('index-cache test', function(){
 
 	before(env.before);
@@ -15,41 +12,40 @@ describe('index-cache test', function(){
 	after(env.after);
 
 	it('get/expire test', function(cb){
-		var areaManager = new AreaManager({redisConfig : env.redisConfig});
-		var cache = new IndexCache({
-									areaManager : areaManager,
-									timeout : 50
-								});
+		var serverId = 'server1', areaId = 'area1';
+		var app = env.createMockApp({serverId : serverId, cacheTimeout : 50});
+		var areaManager = app.get('areaManager');
+
 		Q.fcall(function(){
-			return areaManager.createArea('area1');
+			return areaManager.createArea(areaId);
 		}).then(function(){
-			return cache.get('area1').then(function(ret){
+			return areaManager.indexCache.get(areaId).then(function(ret){
 				(ret === null).should.be.true;
 			});
 		}).then(function(){
-			return areaManager.acquireArea('area1', 'server1');
+			return areaManager.acquireArea(areaId);
 		}).delay(20) //Wait for data sync
 		.then(function(){
-			return cache.get('area1').then(function(ret){
-				ret.should.equal('server1');
+			return areaManager.indexCache.get(areaId).then(function(ret){
+				ret.should.equal(serverId);
 			});
 		}).delay(100) //Wait for cache expire
 		.then(function(){
-			return cache.get('area1').then(function(ret){
-				ret.should.equal('server1');
+			return areaManager.indexCache.get(areaId).then(function(ret){
+				ret.should.equal(serverId);
 			});
 		}).then(function(){
-			return areaManager.releaseArea('area1', 'server1');
+			return areaManager.releaseArea(areaId);
 		}).then(function(){
-			return areaManager.removeArea('area1');
+			return areaManager.removeArea(areaId);
 		}).delay(20)
 		.then(function(){
-			return cache.get('area1').fail(function(e){
+			return areaManager.indexCache.get(areaId).fail(function(e){
 				//Error is expected
 				logger.debug(e);
 			});
 		}).done(function(){
-			areaManager.close();
+			app.close();
 			cb();
 		});
 	});

@@ -16,6 +16,7 @@ var IndexCache = require('./index-cache');
  * 		this.on('area.[areaId].update', function(serverId){...})
  * 		this.on('area.[areaId].remove', function(){...})
  *
+ * @params app - pomelo app instance
  * @params opts.redisConfig - {host : '127.0.0.1', port : 6379}
  * @params opts.cacheTimeout - indexCache timeout
  *
@@ -32,6 +33,7 @@ var AreaManager = function(opts){
 	GlobalEventEmitter.call(this, opts);
 
 	this.indexCache = new IndexCache({areaManager : this, timeout : opts.cacheTimeout});
+	this.app = opts.app;
 };
 
 util.inherits(AreaManager, GlobalEventEmitter);
@@ -41,7 +43,6 @@ var proto = AreaManager.prototype;
 proto.close = function(){
 	//close redis connection
 	this.end();
-	logger.debug('areaManager closed');
 };
 
 proto.getAreaOwnerId = function(areaId){
@@ -55,9 +56,7 @@ proto.getAreaOwnerId = function(areaId){
 };
 
 proto.getAcquiredAreaIds = function(serverId){
-	if(!serverId){
-		serverId = '';
-	}
+	serverId = serverId || this.app.getServerId();
 
 	return Q.ninvoke(Area, 'find', {'_serverId' : serverId}, '_id')
 	.then(function(docs){
@@ -71,8 +70,9 @@ proto.getAcquiredAreaIds = function(serverId){
 
 // Get the area 'lock': set area._serverId to serverId
 proto.acquireArea = function(areaId, serverId){
-	var self = this;
+	serverId = serverId || this.app.getServerId();
 
+	var self = this;
 	return Q.ninvoke(Area, 'update',
 							{_id : areaId, _serverId : null},
 							{'$set' : {_serverId : serverId}})
@@ -87,8 +87,9 @@ proto.acquireArea = function(areaId, serverId){
 
 // Relase the area 'lock': set area._serverId to null
 proto.releaseArea = function(areaId, serverId){
-	var self = this;
+	serverId = serverId || this.app.getServerId();
 
+	var self = this;
 	return Q.ninvoke(Area, 'update',
 							{_id : areaId, _serverId : serverId},
 							{'$set' : {_serverId : null}})
@@ -118,19 +119,14 @@ proto.releaseAreaForce = function(areaId){
 
 // Check area._serverId == serverId
 proto.ensureAcquired = function(areaId, serverId){
+	serverId = serverId || this.app.getServerId();
+
+	var self = this;
 	return this.getAreaOwnerId(areaId).then(function(ret){
 		if(ret !== serverId){
 			throw new Error(util.format('%s not acquired %s', serverId, areaId));
 		}
 	});
-};
-
-proto.joinServer = function(areaId, serverId){
-	//TODO: rpc to area server
-};
-
-proto.quitServer = function(areaId){
-	//TODO: rpc to area server
 };
 
 proto.createArea = function(areaId, opts){
@@ -161,6 +157,9 @@ proto.removeArea = function(areaId){
 };
 
 proto.loadArea = function(areaId, serverId){
+	serverId = serverId || this.app.getServerId();
+
+	var self = this;
 	return Q.ninvoke(Area, 'findById', areaId).then(function(area){
 		if(!area){
 			throw new Error('area ' + areaId + ' not exist');
@@ -171,8 +170,9 @@ proto.loadArea = function(areaId, serverId){
 };
 
 proto.saveArea = function(area, serverId){
-	var self = this;
+	serverId = serverId || this.app.getServerId();
 
+	var self = this;
 	return Q.fcall(function(){
 		return self.ensureAcquired(area._id, serverId);
 	}).then(function(){
@@ -185,5 +185,53 @@ proto.saveArea = function(area, serverId){
 		});
 	});
 };
+
+proto.joinServer = function(areaId, serverId){
+	return this.invokeAreaServer(serverId, 'join', [areaId]);
+};
+
+proto.quitServer = function(areaId){
+	var self = this;
+	return Q.fcall(function(){
+		return self.indexCache.get(areaId);
+	})
+	.then(function(serverId){
+		if(serverId === null){
+			throw new Error('Area ' + areaId + ' not loaded in any server');
+		}
+		return self.invokeAreaServer(serverId, 'quit', [areaId]);
+	});
+};
+
+proto.invokeAreaServer = function(serverId, method, args){
+	var self = this;
+
+	if(serverId === this.app.getServerId()){
+		var areaServer = self.app.get('areaServer');
+		return Q.fcall(function(){
+			return areaServer[method].apply(areaServer, args);
+		});
+	}
+	else{
+		return Q.nfcall(function(cb){
+			self.app.rpc.area.proxyRemote.invokeAreaServer(serverId, method, args, cb);
+		});
+	}
+};
+
+proto.invokeArea = function(areaId, method, args){
+	var self = this;
+
+	return Q.fcall(function(){
+		return self.indexCache.get(areaId);
+	})
+	.then(function(serverId){
+		if(serverId === null){
+			throw new Error('Area ' + areaId + ' not loaded in any server');
+		}
+		return self.invokeAreaServer(serverId, 'invokeArea', [method, args]);
+	});
+};
+
 
 module.exports = AreaManager;
