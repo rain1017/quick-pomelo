@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var usage = require('usage');
 var Q = require('q');
 var logger = require('pomelo-logger').getLogger('area-server', __filename);
 var assert = require('assert');
@@ -13,19 +14,21 @@ var STATE = {
 				CLOSED : 4,
 			};
 
+var DEFAULT_REPORT_INTERVAL = 5 * 1000;
+
 /*
  * @params opts.app - pomelo app instance
- *
+ * areaServerConfig - {reportInterval}
  */
 var AreaServer = function(opts){
 	this.state = STATE.NONE;
 
-	opts = opts || {};
-
 	this.app = opts.app;
-	this.areas = {};
+	var config = this.app.get('areaServerConfig') || {};
 
-	this.init();
+	this.reportIntervalValue = config.reportInterval || DEFAULT_REPORT_INTERVAL;
+
+	this.areas = {};
 };
 
 var proto = AreaServer.prototype;
@@ -34,7 +37,7 @@ proto.init = function(){
 	assert(this.state === STATE.NONE);
 	this.state = STATE.INITING;
 
-//	init code
+	this.reportInterval = setInterval(this.reportServerStatus.bind(this), this.reportIntervalValue);
 
 	this.state = STATE.RUNNING;
 };
@@ -43,7 +46,7 @@ proto.close = function(){
 	assert(this.state === STATE.RUNNING);
 	this.state = STATE.CLOSING;
 
-//	finalize code
+	clearInterval(this.reportInterval);
 
 	this.state = STATE.CLOSED;
 };
@@ -67,18 +70,22 @@ proto.syncAcquiredAreas = function(){
 		areaIds.forEach(function(areaId){
 			if(!self.areas[areaId]){
 				// release area lock if area is acquired but not loaded
-				promises.push(self.app.get('areaManager').releaseArea(areaId));
+				promises.push(self.app.get('areaManager').releaseArea(areaId).catch(function(e){
+					logger.warn(e.stack);
+				}));
 			}
 		});
 
 		Object.keys(self.areas).forEach(function(areaId){
 			if(!areaIdMap[areaId]){
 				// force unload area if area is loaded but not acquired
-				promises.push(self.quit(areaId, true));
+				promises.push(self.quit(areaId, true).catch(function(e){
+					logger.warn(e.stack);
+				}));
 			}
 		});
 
-		return Q.all(promises);
+		return Q.allSettled(promises);
 	});
 };
 
@@ -96,7 +103,7 @@ proto.join = function(areaId){
 			logger.debug('area %s joined server %s', areaId, self.app.getServerId());
 		}).catch(function(e){
 			self.app.get('areaManager').releaseArea(areaId).catch(function(e){
-				logger.warn(e);
+				logger.warn(e.stack);
 			});
 			throw e;
 		});
@@ -115,12 +122,13 @@ proto.quit = function(areaId, force){
 		throw new Error('area ' + areaId + ' not in server ' + this.app.getServerId());
 	}
 
+	var self = this;
 	if(force){
-		delete this.areas[areaId];
-		return;
+		return Q.fcall(function(){
+			delete self.areas[areaId];
+		});
 	}
 
-	var self = this;
 	return Q.fcall(function(){
 		return self.app.get('areaManager').saveArea(area);
 	}).then(function(){
@@ -144,6 +152,37 @@ proto.invokeArea = function(areaId, method, args){
 	}
 
 	return area[method].apply(area, args);
+};
+
+/*
+ * report server status to autoscaling
+ */
+proto.reportServerStatus = function(){
+	var app = this.app;
+	var loadAve = this.getLoadAverage();
+	return Q.nfcall(function(cb){
+		app.rpc.autoscaling.reportRemote.reportServerStatus(null, app.getServerId(), loadAve, cb);
+	});
+};
+
+proto.getLoadAverage = function(){
+	return Q.nfcall(function(cb){
+		return usage.lookup(process.pid, {keepHistory : true}, cb);
+	}).then(function(status){
+		var cpuPercent = status.cpu / 100;
+		//v8 memory limit is 1GB
+		var memoryPercent = status.memory / (1024 * 1024 * 1024);
+
+		//max loadAve = 1 (either cpu or memory is full)
+		var loadAve = 1 - (1 - cpuPercent) * (1 - memoryPercent);
+		if(loadAve > 1){
+			loadAve = 1;
+		}
+		if(loadAve < 0){
+			loadAve = 0;
+		}
+		return loadAve;
+	});
 };
 
 module.exports = AreaServer;

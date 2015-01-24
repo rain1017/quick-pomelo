@@ -17,28 +17,30 @@ var IndexCache = require('./index-cache');
  * 		this.on('area.[areaId].remove', function(){...})
  *
  * @params app - pomelo app instance
- * @params opts.redisConfig - {host : '127.0.0.1', port : 6379}
- * @params opts.cacheTimeout - indexCache timeout
  *
+ * areaManagerConfig - {host, port, cacheTimeout}
  */
 var AreaManager = function(opts){
-	opts = opts || {};
-
-	var host = opts.redisConfig && opts.redisConfig.host ? opts.redisConfig.host : '127.0.0.1';
-	var port = opts.redisConfig && opts.redisConfig.port ? opts.redisConfig.port : 6379;
+	this.app = opts.app;
+	var config = this.app.get('areaManagerConfig') || {};
+	var host = config.host || '127.0.0.1';
+	var port = config.port || 6379;
 
 	opts.pub = redis.createClient(port, host);
 	opts.sub = redis.createClient(port, host);
 
 	GlobalEventEmitter.call(this, opts);
 
-	this.indexCache = new IndexCache({areaManager : this, timeout : opts.cacheTimeout});
-	this.app = opts.app;
+	this.indexCache = new IndexCache({areaManager : this, timeout : config.cacheTimeout});
 };
 
 util.inherits(AreaManager, GlobalEventEmitter);
 
 var proto = AreaManager.prototype;
+
+proto.init = function(){
+
+};
 
 proto.close = function(){
 	//close redis connection
@@ -55,14 +57,18 @@ proto.getAreaOwnerId = function(areaId){
 	});
 };
 
-proto.getAcquiredAreaIds = function(serverId){
+proto.getAcquiredAreaIds = function(serverId, limit){
 	serverId = serverId || this.app.getServerId();
 
-	return Q.ninvoke(Area, 'find', {'_serverId' : serverId}, '_id')
-	.then(function(docs){
-		var areaIds = [];
-		docs.forEach(function(doc){
-			areaIds.push(doc._id);
+	return Q.nfcall(function(cb){
+		var query = Area.find({'_serverId' : serverId}, '_id');
+		if(limit){
+			query = query.limit(limit);
+		}
+		query.exec(cb);
+	}).then(function(docs){
+		var areaIds = docs.map(function(doc){
+			return doc._id;
 		});
 		return areaIds;
 	});
@@ -233,5 +239,14 @@ proto.invokeArea = function(areaId, method, args){
 	});
 };
 
+proto.getAreasNotInServers = function(serverIds, limit){
+	return Q.nfcall(function(cb){
+		var query = Area.find({'_serverId' : {'$nin' : serverIds}}, '_id _serverId');
+		if(limit){
+			query = query.limit(limit);
+		}
+		return query.exec(cb);
+	});
+};
 
 module.exports = AreaManager;

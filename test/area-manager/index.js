@@ -3,6 +3,7 @@
 var env = require('../env');
 var Q = require('q');
 var sinon = require('sinon');
+var util = require('util');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
 describe('areaManager test', function(){
@@ -16,9 +17,13 @@ describe('areaManager test', function(){
 		var areaId = 'area1';
 
 		var app = env.createMockApp({serverId : serverId});
-		var areaManager = app.get('areaManager');
+		var areaManager = null;
 
-		Q.nfcall(function(cb){
+		Q.fcall(function(){
+			return app.init();
+		}).then(function(){
+			areaManager = app.get('areaManager');
+		}).then(function(){
 			areaManager.on('server:' + serverId + ':join', function(ret){
 				logger.debug('server:' + serverId + ':join %s', ret);
 				ret.should.equal(areaId);
@@ -33,8 +38,7 @@ describe('areaManager test', function(){
 			areaManager.on('area:area1:remove', function(){
 				logger.debug('area:area1:remove');
 			});
-			setTimeout(cb, 10);
-		}).then(function(){
+		}).delay(10).then(function(){
 			return areaManager.createArea(areaId, {});
 		}).then(function(){
 			return areaManager.getAreaOwnerId(areaId).then(function(ret){
@@ -60,21 +64,27 @@ describe('areaManager test', function(){
 			return areaManager.removeArea(areaId);
 		}).delay(10)
 		.done(function(){
-			app.close();
-			cb();
+			app.close().then(function(){
+				cb(null);
+			});
 		});
 	});
 
 	it('invoke areaServer', function(cb){
 		var app = env.createMockApp({serverId : 'server1'});
-		var areaManager = app.get('areaManager');
-		var areaServer = app.get('areaServer');
+		var areaManager = null;
+		var areaServer = null;
 
 		var method = 'testInvoke';
 		var args = ['arg1', 'arg2'];
-		areaServer[method] = sinon.spy(function(){return 'ret';});
 
 		Q.fcall(function(){
+			return app.init();
+		}).then(function(){
+			areaManager = app.get('areaManager');
+			areaServer = app.get('areaServer');
+			areaServer[method] = sinon.spy(function(){return 'ret';});
+		}).then(function(){
 			return areaManager.invokeAreaServer('server1', method, args).then(function(ret){
 				ret.should.equal('ret');
 				areaServer[method].calledWith.apply(areaServer[method], args).should.be.true;
@@ -84,8 +94,9 @@ describe('areaManager test', function(){
 				app.rpc.area.proxyRemote.invokeAreaServer.calledWith('server2', method, args).should.be.true;
 			});
 		}).done(function(){
-			app.close();
-			cb();
+			app.close().then(function(){
+				cb(null);
+			});
 		});
 	});
 });

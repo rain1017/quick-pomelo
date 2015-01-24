@@ -53,24 +53,32 @@ area.handlers['levelup'] = function(opts){
 ###	Area Server
 * Container of areas. One server can load multiple areas depend on hardware resources.
 
-### Auto Scaling
-Assigning areas to servers based on server topology and server load. Area will be moved to other servers on host server failure. New server can be added dynamically.
-Area server is 'hot plugable'. When more compute resource is needed, more area server can be plugged into cluster.
+### Area Manager
+Access center db and dispatch requests to areaServers, all cross area request or request to center resource must via areaManager.
+Area manager is loaded on each server, and it does not hold any state in local memory but it's a proxy to center resource.
 
-### Area Proxy
-Cross area communication.
+* DB Access
+Create/Remove/Load/Save area to mongodb.
+
+* Area Locks
+The are lock indicates which areaServer 'owns' the area currently, and an areaServer must hold the global area lock in order to load/save area.
+The lock is saved as a field of mongodb area schema (Area._serverId).
+
+* Cross area communication:
 If the target area is in the same server, it will be called directly. Otherwise, a rpc will be made to target server.
-The proxy maintains a cache of areaIndex and playerIndex in local memory to speedup index querying.
 Cross area communication has performance penalty and should be used with care.
 
-### Area2Server Index
-Mapping from area to server, based on redis. Index is __Single Source of Truth__, all other components should refer to this index to maintain data consistency in the cluster.
+* Index cache
+A cache of area -> serverId index in local memory in order to speedup index querying.
 
-### Player2Area Index
-Mapping from player to area, based on redis. Index is __Single Source of Truth__, all other components should refer to this index to maintain data consistency in the cluster.
+### Auto Scaling
+Assigning areas to servers based on server topology and server load average.
+Area server is 'hot plugable'. When more compute resource is needed, more area server can be plugged into cluster.
 
-### Area Manager
-* Area statistics.
-* Create or destroy area.
-* Player join and quit area.
+The load balancer algorithm is defined by the following principles:
+* New area always load to the server with the lowest load average
+* Area stays in one server until the load average of the server exceed limit or the server is down.
+* When the system total load exceed certain limit (total load is the sum of load average of all servers), the cluster should scale up by add more servers.
+* When the system total load below certain limit, the cluster should scale down by turn of servers with lowest load.
 
+### Player Manager

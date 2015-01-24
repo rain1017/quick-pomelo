@@ -13,10 +13,20 @@ describe('index-cache test', function(){
 
 	it('get/expire test', function(cb){
 		var serverId = 'server1', areaId = 'area1';
-		var app = env.createMockApp({serverId : serverId, cacheTimeout : 50});
-		var areaManager = app.get('areaManager');
+
+		var app = env.createMockApp({serverId : serverId});
+
+		var config = app.get('areaManagerConfig') || {};
+		config.cacheTimeout = 50;
+		app.set('areaManagerConfig', config);
+
+		var areaManager = null;
 
 		Q.fcall(function(){
+			return app.init();
+		}).then(function(){
+			areaManager = app.get('areaManager');
+		}).then(function(){
 			return areaManager.createArea(areaId);
 		}).then(function(){
 			return areaManager.indexCache.get(areaId).then(function(ret){
@@ -45,8 +55,9 @@ describe('index-cache test', function(){
 				logger.debug(e);
 			});
 		}).done(function(){
-			app.close();
-			cb();
+			app.close().then(function(){
+				cb(null);
+			});
 		});
 	});
 });

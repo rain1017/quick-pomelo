@@ -13,10 +13,15 @@ describe('areaServer test', function(){
 	it('join/quit', function(cb){
 		var serverId = 'server1', areaId = 'area1';
 		var app = env.createMockApp({serverId : serverId});
-		var areaServer = app.get('areaServer');
-		var areaManager = app.get('areaManager');
+		var areaServer = null;
+		var areaManager = null;
 
 		Q.fcall(function(){
+			return app.init();
+		}).then(function(){
+			areaServer = app.get('areaServer');
+			areaManager = app.get('areaManager');
+		}).then(function(){
 			return areaManager.createArea({'_id' : areaId});
 		}).then(function(){
 			return areaServer.join(areaId);
@@ -25,18 +30,24 @@ describe('areaServer test', function(){
 		}).then(function(){
 			return areaServer.quit(areaId);
 		}).done(function(){
-			app.close();
-			cb();
+			app.close().then(function(){
+				cb(null);
+			});
 		});
 	});
 
 	it('sync acquired area', function(cb){
 		var serverId = 'server1';
 		var app = env.createMockApp({serverId : serverId});
-		var areaServer = app.get('areaServer');
-		var areaManager = app.get('areaManager');
+		var areaServer = null;
+		var areaManager = null;
 
 		Q.fcall(function(){
+			return app.init();
+		}).then(function(){
+			areaServer = app.get('areaServer');
+			areaManager = app.get('areaManager');
+		}).then(function(){
 			return areaManager.createArea({'_id' : 'area1'});
 		}).then(function(){
 			return areaManager.createArea({'_id' : 'area2'});
@@ -54,8 +65,26 @@ describe('areaServer test', function(){
 				(ret === null).should.be.true;
 			});
 		}).done(function(){
-			app.close();
-			cb();
+			app.close().then(function(){
+				cb(null);
+			});
+		});
+	});
+
+	it('reportStatus', function(cb){
+		var app = env.createMockApp({serverId : 'server1'});
+
+		Q.fcall(function(){
+			return app.init();
+		}).delay(100).then(function(){
+			return app.get('areaServer').getLoadAverage();
+		}).then(function(loadAve){
+			(loadAve <= 1.0 && loadAve >= 0.0).should.be.true;
+			logger.info('Load Average = %s', loadAve);
+		}).done(function(){
+			app.close().then(function(){
+				cb(null);
+			});
 		});
 	});
 });
