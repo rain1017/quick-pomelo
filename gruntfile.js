@@ -3,7 +3,7 @@
 module.exports = function(grunt) {
 	// Unified Watch Object
 	var watchFiles = {
-		serverJS: ['gruntfile.js', 'app.js', 'app/**/*.js'],
+		libJS: ['gruntfile.js', 'index.js', 'lib/**/*.js'],
 		testJS: ['test/**/*.js'],
 	};
 
@@ -11,8 +11,8 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		watch: {
-			serverJS: {
-				files: watchFiles.serverJS,
+			libJS: {
+				files: watchFiles.libJS,
 				tasks: ['jshint'],
 				options: {
 					livereload: true
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 			all: {
-				src: watchFiles.serverJS.concat(watchFiles.testJS),
+				src: watchFiles.libJS.concat(watchFiles.testJS),
 				options: {
 					jshintrc: true
 				}
@@ -50,37 +50,6 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		nodemon: {
-			dev: {
-				script: 'app.js',
-				options: {
-					nodeArgs: ['--debug'],
-					ext: 'js,html',
-					watch: watchFiles.serverJS
-				}
-			}
-		},
-		'node-inspector': {
-			custom: {
-				options: {
-					'web-port': 8088,
-					'web-host': 'localhost',
-					'debug-port': 5858,
-					'save-live-edit': true,
-					'no-preload': true,
-					'stack-trace-limit': 50,
-					'hidden': []
-				}
-			}
-		},
-		concurrent: {
-			default: ['nodemon', 'watch'],
-			debug: ['nodemon', 'watch', 'node-inspector'],
-			options: {
-				logConcurrentOutput: true,
-				limit: 10
-			}
-		},
 		clean: {
 			'coverage.html' : {
 				src: ['coverage.html']
@@ -97,12 +66,9 @@ module.exports = function(grunt) {
 	// Lint task(s).
 	grunt.registerTask('lint', ['jshint']);
 
-	// Default task(s).
-	grunt.registerTask('default', ['clean', 'lint', 'concurrent:default']);
-
-	// Debug task.
-	grunt.registerTask('debug', ['clean', 'lint', 'concurrent:debug']);
-
 	// Test task.
 	grunt.registerTask('test', ['clean', 'env:test', 'lint', 'mochaTest']);
+
+	// Default task(s).
+	grunt.registerTask('default', ['test']);
 };

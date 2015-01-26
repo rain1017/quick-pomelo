@@ -16,87 +16,78 @@ describe('areaManager test', function(){
 		var serverId = 'server1';
 		var areaId = 'area1';
 
-		var app = env.createMockApp({serverId : serverId});
-		var areaManager = null;
+		var app = env.createMockApp(serverId, 'area');
 
-		Q.fcall(function(){
-			return app.init();
+		Q.nfcall(function(cb){
+			app.start(cb);
 		}).then(function(){
-			areaManager = app.get('areaManager');
-		}).then(function(){
-			areaManager.on('server:' + serverId + ':join', function(ret){
+			app.areaManager.on('server:' + serverId + ':join', function(ret){
 				logger.debug('server:' + serverId + ':join %s', ret);
 				ret.should.equal(areaId);
 			});
-			areaManager.on('server:' + serverId + ':quit', function(ret){
+			app.areaManager.on('server:' + serverId + ':quit', function(ret){
 				logger.debug('server:' + serverId + ':quit %s', ret);
 				ret.should.equal(areaId);
 			});
-			areaManager.on('area:area1:update', function(ret){
+			app.areaManager.on('area:area1:update', function(ret){
 				logger.debug('area:area1:update %s', ret);
 			});
-			areaManager.on('area:area1:remove', function(){
+			app.areaManager.on('area:area1:remove', function(){
 				logger.debug('area:area1:remove');
 			});
 		}).delay(10).then(function(){
-			return areaManager.createArea(areaId, {});
+			return app.areaManager.createArea(areaId, {});
 		}).then(function(){
-			return areaManager.getAreaOwnerId(areaId).then(function(ret){
+			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				(ret === null).should.equal(true);
 			});
 		}).then(function(){
-			return areaManager.acquireArea(areaId);
+			return app.areaManager.acquireArea(areaId);
 		}).then(function(){
-			return areaManager.getAreaOwnerId(areaId).then(function(ret){
+			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				ret.should.equal(serverId);
 			});
 		}).then(function(){
-			return areaManager.getAcquiredAreaIds().then(function(ret){
+			return app.areaManager.getAcquiredAreaIds().then(function(ret){
 				ret.should.eql([areaId]);
 			});
 		}).then(function(){
-			return areaManager.releaseArea(areaId);
+			return app.areaManager.releaseArea(areaId);
 		}).then(function(){
-			return areaManager.getAreaOwnerId(areaId).then(function(ret){
+			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				(ret === null).should.be.true;
 			});
 		}).then(function(){
-			return areaManager.removeArea(areaId);
+			return app.areaManager.removeArea(areaId);
 		}).delay(10)
 		.done(function(){
-			app.close().then(function(){
-				cb(null);
-			});
+			app.stop(cb);
 		});
 	});
 
 	it('invoke areaServer', function(cb){
-		var app = env.createMockApp({serverId : 'server1'});
+		var app = env.createMockApp('server1', 'area');
 		var areaManager = null;
 		var areaServer = null;
 
 		var method = 'testInvoke';
 		var args = ['arg1', 'arg2'];
 
-		Q.fcall(function(){
-			return app.init();
+		Q.nfcall(function(cb){
+			return app.start(cb);
 		}).then(function(){
-			areaManager = app.get('areaManager');
-			areaServer = app.get('areaServer');
-			areaServer[method] = sinon.spy(function(){return 'ret';});
+			app.areaServer[method] = sinon.spy(function(){return 'ret';});
 		}).then(function(){
-			return areaManager.invokeAreaServer('server1', method, args).then(function(ret){
+			return app.areaManager.invokeAreaServer('server1', method, args).then(function(ret){
 				ret.should.equal('ret');
-				areaServer[method].calledWith.apply(areaServer[method], args).should.be.true;
+				app.areaServer[method].calledWith.apply(app.areaServer[method], args).should.be.true;
 			});
 		}).then(function(cb){
-			return areaManager.invokeAreaServer('server2', method, args).then(function(){
+			return app.areaManager.invokeAreaServer('server2', method, args).then(function(){
 				app.rpc.area.proxyRemote.invokeAreaServer.calledWith('server2', method, args).should.be.true;
 			});
 		}).done(function(){
-			app.close().then(function(){
-				cb(null);
-			});
+			app.stop(cb);
 		});
 	});
 });

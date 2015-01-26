@@ -4,7 +4,7 @@ var should = require('should');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 var Q = require('q');
 
-var Area = require('../../app/components/area');
+var Area = require('../../lib/components/area-manager/area');
 
 describe('area test', function(){
 	it('invoke', function(cb){

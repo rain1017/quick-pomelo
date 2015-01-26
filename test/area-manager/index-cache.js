@@ -14,50 +14,43 @@ describe('index-cache test', function(){
 	it('get/expire test', function(cb){
 		var serverId = 'server1', areaId = 'area1';
 
-		var app = env.createMockApp({serverId : serverId});
+		var opts = {
+			'areaManager' : {cacheTimeout : 50}
+		};
+		var app = env.createMockApp(serverId, 'area', opts);
 
-		var config = app.get('areaManagerConfig') || {};
-		config.cacheTimeout = 50;
-		app.set('areaManagerConfig', config);
-
-		var areaManager = null;
-
-		Q.fcall(function(){
-			return app.init();
+		Q.nfcall(function(cb){
+			return app.start(cb);
 		}).then(function(){
-			areaManager = app.get('areaManager');
+			return app.areaManager.createArea(areaId);
 		}).then(function(){
-			return areaManager.createArea(areaId);
-		}).then(function(){
-			return areaManager.indexCache.get(areaId).then(function(ret){
+			return app.areaManager.indexCache.get(areaId).then(function(ret){
 				(ret === null).should.be.true;
 			});
 		}).then(function(){
-			return areaManager.acquireArea(areaId);
+			return app.areaManager.acquireArea(areaId);
 		}).delay(20) //Wait for data sync
 		.then(function(){
-			return areaManager.indexCache.get(areaId).then(function(ret){
+			return app.areaManager.indexCache.get(areaId).then(function(ret){
 				ret.should.equal(serverId);
 			});
 		}).delay(100) //Wait for cache expire
 		.then(function(){
-			return areaManager.indexCache.get(areaId).then(function(ret){
+			return app.areaManager.indexCache.get(areaId).then(function(ret){
 				ret.should.equal(serverId);
 			});
 		}).then(function(){
-			return areaManager.releaseArea(areaId);
+			return app.areaManager.releaseArea(areaId);
 		}).then(function(){
-			return areaManager.removeArea(areaId);
+			return app.areaManager.removeArea(areaId);
 		}).delay(20)
 		.then(function(){
-			return areaManager.indexCache.get(areaId).fail(function(e){
+			return app.areaManager.indexCache.get(areaId).fail(function(e){
 				//Error is expected
 				logger.debug(e);
 			});
 		}).done(function(){
-			app.close().then(function(){
-				cb(null);
-			});
+			app.stop(cb);
 		});
 	});
 });

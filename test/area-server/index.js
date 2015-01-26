@@ -12,79 +12,63 @@ describe('areaServer test', function(){
 
 	it('join/quit', function(cb){
 		var serverId = 'server1', areaId = 'area1';
-		var app = env.createMockApp({serverId : serverId});
-		var areaServer = null;
-		var areaManager = null;
+		var app = env.createMockApp(serverId, 'area');
 
-		Q.fcall(function(){
-			return app.init();
+		Q.nfcall(function(cb){
+			app.start(cb);
 		}).then(function(){
-			areaServer = app.get('areaServer');
-			areaManager = app.get('areaManager');
+			return app.areaManager.createArea({'_id' : areaId});
 		}).then(function(){
-			return areaManager.createArea({'_id' : areaId});
+			return app.areaServer.join(areaId);
 		}).then(function(){
-			return areaServer.join(areaId);
+			return app.areaServer.isLoaded(areaId).should.be.true;
 		}).then(function(){
-			return areaServer.isLoaded(areaId).should.be.true;
-		}).then(function(){
-			return areaServer.quit(areaId);
+			return app.areaServer.quit(areaId);
 		}).done(function(){
-			app.close().then(function(){
-				cb(null);
-			});
+			app.stop(cb);
 		});
 	});
 
 	it('sync acquired area', function(cb){
 		var serverId = 'server1';
-		var app = env.createMockApp({serverId : serverId});
-		var areaServer = null;
-		var areaManager = null;
+		var app = env.createMockApp(serverId, 'area');
 
-		Q.fcall(function(){
-			return app.init();
+		Q.nfcall(function(cb){
+			return app.start(cb);
 		}).then(function(){
-			areaServer = app.get('areaServer');
-			areaManager = app.get('areaManager');
+			return app.areaManager.createArea({'_id' : 'area1'});
 		}).then(function(){
-			return areaManager.createArea({'_id' : 'area1'});
+			return app.areaManager.createArea({'_id' : 'area2'});
 		}).then(function(){
-			return areaManager.createArea({'_id' : 'area2'});
+			return app.areaServer.join('area1');
 		}).then(function(){
-			return areaServer.join('area1');
+			return app.areaManager.acquireArea('area2');
 		}).then(function(){
-			return areaManager.acquireArea('area2');
+			return app.areaManager.releaseAreaForce('area1');
 		}).then(function(){
-			return areaManager.releaseAreaForce('area1');
+			return app.areaServer.syncAcquiredAreas();
 		}).then(function(){
-			return areaServer.syncAcquiredAreas();
-		}).then(function(){
-			areaServer.isLoaded('area1').should.be.false;
-			return areaManager.getAreaOwnerId('area2').then(function(ret){
+			app.areaServer.isLoaded('area1').should.be.false;
+			return app.areaManager.getAreaOwnerId('area2').then(function(ret){
 				(ret === null).should.be.true;
 			});
 		}).done(function(){
-			app.close().then(function(){
-				cb(null);
-			});
+			app.stop(cb);
 		});
 	});
 
 	it('reportStatus', function(cb){
-		var app = env.createMockApp({serverId : 'server1'});
+		var app = env.createMockApp('server1', 'area');
 
-		Q.fcall(function(){
-			return app.init();
+		Q.nfcall(function(cb){
+			return app.start(cb);
 		}).delay(100).then(function(){
-			return app.get('areaServer').getLoadAverage();
+			return app.areaServer.getLoadAverage();
 		}).then(function(loadAve){
 			(loadAve <= 1.0 && loadAve >= 0.0).should.be.true;
 			logger.info('Load Average = %s', loadAve);
 		}).done(function(){
-			app.close().then(function(){
-				cb(null);
-			});
+			app.stop(cb);
 		});
 	});
 });

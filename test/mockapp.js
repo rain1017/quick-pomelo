@@ -1,117 +1,66 @@
 'use strict';
 
 var Q = require('q');
-var sinon = require('sinon');
 var util = require('util');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
 /*
  * @param opts.serverId
- * @param opts.components - ['areaManager', 'areaServer']
+ * @param opts.components - {'name' : opts}
+ * @param opts.rpc
  */
 var MockApp = function(opts){
+	opts = opts || {};
 	this.serverId = opts.serverId;
 
-	var componentNames = opts.components || ['areaManager', 'areaServer'];
-	var components = {};
-	componentNames.forEach(function(name){
-		components[name] = null;
-	});
-
-	this.components = components;
-	this.configs = {};
+	this.settings = {};
+	this.components = {};
 	this.remoteApps = [];
-};
-
-MockApp.prototype.init = function(opts){
-	var self = this;
-	return Q.fcall(function(){
-		return self.loadComponents();
-	}).then(function(){
-		return self.initComponents();
-	}).then(function(){
-		return self.initRpc();
-	});
-};
-
-MockApp.prototype.initRpc = function(){
-	var self = this;
 	this.rpc = {};
-	this.rpc.area = {
-		proxyRemote : {
-			invokeAreaServer: sinon.spy(function(serverId, method, args, cb){
-				var matched = false;
-				self.remoteApps.forEach(function(app){
-					if(app.getServerId() === serverId){
-						if(matched){
-							return;
-						}
-						matched = true;
-						var areaServer = app.get('areaServer');
-						Q.fcall(function(){
-							return areaServer[method].apply(areaServer, args);
-						}).catch(function(e){
-							cb(e);
-						}).then(function(ret){
-							cb(null, ret);
-						});
-					}
-				});
-				if(!matched){
-					cb(null);
-				}
-			})
-		}
-	};
-
-	this.rpc.autoscaling = {
-		reportRemote : {
-			reportServerStatus: sinon.spy(function(route, serverId, loadAve, cb){cb();})
-		}
-	};
 };
 
-MockApp.prototype.loadComponents = function(){
+MockApp.prototype.start = function(cb){
+	this.startComponents(cb);
+};
+
+MockApp.prototype.stop = function(force, cb){
+	this.stopComponents(force, cb);
+};
+
+MockApp.prototype.load = function(component, opts){
+	var instance = component(this, opts);
+	this.components[instance.name] = instance;
+};
+
+MockApp.prototype.startComponents = function(cb){
 	var self = this;
-	Object.keys(this.components).forEach(function(name){
-		var Cls = self.getComponentClass(name);
-		self.components[name] = new Cls({app : self});
+	Q.allSettled(
+		Object.keys(self.components).map(function(name){
+			return Q.nfcall(function(cb){
+				self.components[name].start(cb);
+			});
+		})
+	).done(function(){
+		cb();
 	});
 };
 
-MockApp.prototype.getComponentClass = function(name){
-	if(name === 'areaManager'){
-		return require('../app/components/area-manager');
+MockApp.prototype.stopComponents = function(force, cb){
+	if(typeof(force) === 'function'){
+		cb = force;
+		force = false;
 	}
-	else if(name === 'areaServer'){
-		return require('../app/components/area-server');
-	}
-	else if(name === 'autoScaling'){
-		return require('../app/components/autoscaling');
-	}
-	throw new Error('unexpected component - ' + name);
-};
 
-MockApp.prototype.initComponents = function(){
 	var self = this;
-	return Q.all(
+	Q.allSettled(
 		Object.keys(self.components).map(function(name){
-			return Q.fcall(function(){
-				return self.components[name].init();
+			return Q.nfcall(function(cb){
+				self.components[name].stop(force, cb);
 			});
 		})
-	);
-};
-
-MockApp.prototype.close = function(){
-	var self = this;
-	return Q.all(
-		Object.keys(self.components).map(function(name){
-			return Q.fcall(function(){
-				return self.components[name].close();
-			});
-		})
-	);
+	).done(function(){
+		cb();
+	});
 };
 
 MockApp.prototype.getServerId = function(){
@@ -119,20 +68,22 @@ MockApp.prototype.getServerId = function(){
 };
 
 MockApp.prototype.get = function(name){
-	if(this.components.hasOwnProperty(name)){
-		return this.components[name];
-	}
-	else{
-		return this.configs[name];
-	}
+	return this.settings[name];
 };
 
-MockApp.prototype.set = function(name, config){
-	this.configs[name] = config;
+MockApp.prototype.set = function(name, value, attach){
+	this.settings[name] = value;
+	if(attach){
+		this[name] = value;
+	}
 };
 
 MockApp.prototype.setRemoteApps = function(apps){
 	this.remoteApps = apps;
+};
+
+MockApp.prototype.setRpc = function(serverType, rpc){
+	this.rpc[serverType] = rpc;
 };
 
 module.exports = MockApp;
