@@ -34,13 +34,15 @@ MockApp.prototype.load = function(component, opts){
 
 MockApp.prototype.startComponents = function(cb){
 	var self = this;
-	Q.allSettled(
+	Q.all(
 		Object.keys(self.components).map(function(name){
 			return Q.nfcall(function(cb){
 				self.components[name].start(cb);
 			});
 		})
-	).done(function(){
+	).catch(function(e){
+		cb(e);
+	}).done(function(){
 		cb();
 	});
 };
@@ -52,13 +54,15 @@ MockApp.prototype.stopComponents = function(force, cb){
 	}
 
 	var self = this;
-	Q.allSettled(
+	Q.all(
 		Object.keys(self.components).map(function(name){
 			return Q.nfcall(function(cb){
 				self.components[name].stop(force, cb);
 			});
 		})
-	).done(function(){
+	).catch(function(e){
+		cb(e);
+	}).done(function(){
 		cb();
 	});
 };

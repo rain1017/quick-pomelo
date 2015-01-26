@@ -15,6 +15,28 @@ var mongoConfig = {uri: 'mongodb://localhost/quick-pomelo-test', options : {}};
 
 Q.longStackSupport = true;
 
+var flushdb = function(cb){
+	logger.debug('start flushdb');
+
+	var mongodb = null;
+	Q.nfcall(function(cb){
+		mongodb = mongoose.connect(mongoConfig.uri, mongoConfig.options, cb);
+	}).then(function(){
+		return Q.ninvoke(mongodb.connection.db, 'dropDatabase');
+	}).then(function(){
+		return Q.ninvoke(mongodb, 'disconnect');
+	}).then(function(){
+		var client = redis.createClient(redisConfig.port, redisConfig.host);
+		client.flushdb();
+		client.end();
+	})
+	.catch(cb)
+	.then(function(){
+		logger.debug('done flushdb');
+		cb();
+	});
+};
+
 var env = {
 
 	/*
@@ -28,8 +50,9 @@ var env = {
 		var app = new MockApp({serverId : serverId});
 
 		var areaManagerOpts = componentOpts.areaManager || {};
-		areaManagerOpts.host = redisConfig.host;
-		areaManagerOpts.port = redisConfig.port;
+		areaManagerOpts.redisConfig = redisConfig;
+		areaManagerOpts.mongoConfig = mongoConfig;
+
 		app.load(quick.components.areaManager, areaManagerOpts);
 
 		if(role === 'area'){
@@ -51,9 +74,9 @@ var env = {
 							matched = true;
 							Q.fcall(function(){
 								return app.areaServer[method].apply(app.areaServer, args);
-							}).catch(function(e){
-								cb(e);
-							}).then(function(ret){
+							})
+							.catch(cb)
+							.then(function(ret){
 								cb(null, ret);
 							});
 						}
@@ -76,24 +99,19 @@ var env = {
 	},
 
 	before : function(){
-		mongoose.connect(mongoConfig.uri, mongoConfig.options);
-		this.redisClient = redis.createClient(redisConfig.port, redisConfig.host);
+
 	},
 
-	beforeEach : function(){
-		mongoose.connection.db.dropDatabase();
-		this.redisClient.flushdb();
+	beforeEach : function(cb){
+		flushdb(cb);
 	},
 
 	afterEach : function(){
 
 	},
 
-	after : function(){
-		mongoose.connection.db.dropDatabase();
-		mongoose.disconnect();
-		this.redisClient.flushdb();
-		this.redisClient.end();
+	after : function(cb){
+		flushdb(cb);
 	},
 };
 

@@ -29,7 +29,7 @@ describe('index-cache test', function(){
 			});
 		}).then(function(){
 			return app.areaManager.acquireArea(areaId);
-		}).delay(20) //Wait for data sync
+		}).delay(20) //Wait for cache sync
 		.then(function(){
 			return app.areaManager.indexCache.get(areaId).then(function(ret){
 				ret.should.equal(serverId);
@@ -41,7 +41,8 @@ describe('index-cache test', function(){
 			});
 		}).then(function(){
 			return app.areaManager.releaseArea(areaId);
-		}).then(function(){
+		}).delay(20) //Wait for cache sync
+		.then(function(){
 			return app.areaManager.removeArea(areaId);
 		}).delay(20)
 		.then(function(){
