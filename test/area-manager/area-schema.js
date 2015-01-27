@@ -4,9 +4,9 @@ var should = require('should');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 var Q = require('q');
 
-var areaSchema = require('../../lib/components/area-manager/area');
+var AreaSchema = require('../../lib/components/area-manager/area-schema');
 
-describe('area test', function(){
+describe('area schema test', function(){
 	it('invoke', function(cb){
 		//TBD
 		cb(null);

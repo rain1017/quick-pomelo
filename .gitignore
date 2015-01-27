@@ -18,3 +18,5 @@ coverage.html
 .svn/
 node_modules/
 tmp/
+log/
+logs/

@@ -9,6 +9,7 @@ var sinon = require('sinon');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 var quick = require('../lib');
 var MockApp = require('./mockapp');
+var areaFactory = require('./area');
 
 var redisConfig = {host : '127.0.0.1', port : 6379};
 var mongoConfig = {uri: 'mongodb://localhost/quick-pomelo-test', options : {}};
@@ -52,6 +53,7 @@ var env = {
 		var areaManagerOpts = componentOpts.areaManager || {};
 		areaManagerOpts.redisConfig = redisConfig;
 		areaManagerOpts.mongoConfig = mongoConfig;
+		areaManagerOpts.areaFactories = {'area' : areaFactory};
 
 		app.load(quick.components.areaManager, areaManagerOpts);
 

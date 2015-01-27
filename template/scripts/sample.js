@@ -8,7 +8,7 @@
 var Q = require('q');
 
 Q.fcall(function(){
-	return app.areaManager.createArea('area1');
+	return app.areaManager.createArea('area1', 'room', {name : 'new room'});
 })
 .delay(5 * 1000)
 .then(function(){

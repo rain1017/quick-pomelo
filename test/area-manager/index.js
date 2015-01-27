@@ -36,7 +36,7 @@ describe('areaManager test', function(){
 				logger.debug('area:area1:remove');
 			});
 		}).delay(10).then(function(){
-			return app.areaManager.createArea(areaId, {});
+			return app.areaManager.createArea(areaId);
 		}).then(function(){
 			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				(ret === null).should.equal(true);

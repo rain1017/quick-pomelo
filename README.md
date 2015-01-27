@@ -55,20 +55,25 @@ area.handlers['levelup'] = function(opts){
 
 ### Area Manager
 Access center db and dispatch requests to areaServers, all cross area request or request to center resource must via areaManager.
+
 Area manager is loaded on each server, and it does not hold any state in local memory but it's a proxy to center resource.
 
 * DB Access
+
 Create/Remove/Load/Save area to mongodb.
 
 * Area Locks
-The are lock indicates which areaServer 'owns' the area currently, and an areaServer must hold the global area lock in order to load/save area.
-The lock is saved as a field of mongodb area schema (Area._serverId).
 
-* Cross area communication:
+The are lock indicates which areaServer 'owns' the area currently, and an areaServer must hold the global area lock in order to load/save area.
+The lock is saved as a field of mongodb area schema (Area._server).
+
+* Cross area communication
+
 If the target area is in the same server, it will be called directly. Otherwise, a rpc will be made to target server.
 Cross area communication has performance penalty and should be used with care.
 
 * Index cache
+
 A cache of area -> serverId index in local memory in order to speedup index querying.
 
 ### Auto Scaling

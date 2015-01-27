@@ -49,6 +49,7 @@ app.configure('all', 'connector|area|autoscaling', function(){
 		redisConfig : app.get('redisConfig'),
 		mongoConfig : app.get('mongoConfig'),
 		cacheTimeout : 30 * 1000,
+		areaFactories : {'room' : require('./app/areas/room')},
 	};
 	app.load(quick.components.areaManager, opts);
 });
@@ -63,7 +64,7 @@ app.configure('all', 'autoscaling', function(){
 	app.load(quick.components.autoScaling, opts);
 });
 
-app.configure('development|test', function(){
+app.configure('development', function(){
 	require('heapdump');
 	require('q').longStackSupport = true;
 });
