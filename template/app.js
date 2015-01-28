@@ -49,7 +49,7 @@ app.configure('all', 'connector|area|autoscaling', function(){
 		redisConfig : app.get('redisConfig'),
 		mongoConfig : app.get('mongoConfig'),
 		cacheTimeout : 30 * 1000,
-		areaFactories : {'room' : require('./app/areas/room')},
+		areaTypes : {'room' : require('./app/areas/room')},
 	};
 	app.load(quick.components.areaManager, opts);
 });

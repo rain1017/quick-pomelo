@@ -2,8 +2,8 @@
 
 var util = require('util');
 var Q = require('q');
-var logger = require('pomelo-logger').getLogger('room', __filename);
-var Area = require('quick-pomelo').Area;
+var logger = require('pomelo-logger').getLogger('test', __filename);
+var Area = require('../lib/components/area-manager/area');
 
 var Room = function(doc){
 	Area.call(this, doc);
