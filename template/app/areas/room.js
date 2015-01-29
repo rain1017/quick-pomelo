@@ -3,12 +3,31 @@
 var util = require('util');
 var Q = require('q');
 var logger = require('pomelo-logger').getLogger('room', __filename);
-var Area = require('quick-pomelo').Area;
+var Area = require('quick-pomelo').area;
 
-var Room = function(doc){
-	Area.call(this, doc);
+var Room = function(app, doc){
+	Area.call(this, app, doc);
 
 	this.name = doc.name || 'Default Room';
+
+	this.on('start', function(){
+		logger.debug('on room start');
+	});
+	this.on('stop', function(){
+		logger.debug('on room stop');
+	});
+	this.on('player.join', function(playerId){
+		logger.debug('on player %s join', playerId);
+	});
+	this.on('player.quit', function(playerId){
+		logger.debug('on player %s quit', playerId);
+	});
+	this.on('player.connect', function(playerId){
+		logger.debug('on player %s connect', playerId);
+	});
+	this.on('player.disconnect', function(playerId){
+		logger.debug('on player %s disconnect', playerId);
+	});
 };
 
 util.inherits(Room, Area);
@@ -22,24 +41,6 @@ var proto = Room.prototype;
 proto.toDoc = function(doc){
 	Area.prototype.toDoc.call(this, doc);
 	doc.name = this.name;
-};
-
-proto.start = function(){
-	var self = this;
-	return Q.fcall(function(){
-		return Area.prototype.start.call(self);
-	}).then(function(){
-		logger.debug('room start');
-	});
-};
-
-proto.stop = function(){
-	var self = this;
-	return Q.fcall(function(){
-		return Area.prototype.stop.call(self);
-	}).then(function(){
-		logger.debug('room start');
-	});
 };
 
 proto.test = function(){

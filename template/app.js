@@ -54,6 +54,14 @@ app.configure('all', 'connector|area|autoscaling', function(){
 	app.load(quick.components.areaManager, opts);
 });
 
+app.configure('all', 'connector|area', function(){
+	var opts = {
+		mongoConfig : app.get('mongoConfig'),
+		playerSchema : require('./app/player').schema,
+	};
+	app.load(quick.components.playerManager, opts);
+});
+
 app.configure('all', 'area', function(){
 	var opts = {};
 	app.load(quick.components.areaServer, opts);

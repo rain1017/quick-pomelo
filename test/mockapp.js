@@ -2,7 +2,9 @@
 
 var Q = require('q');
 var util = require('util');
+var sinon = require('sinon');
 var logger = require('pomelo-logger').getLogger('test', __filename);
+var MockChannelService = require('./mock-channelservice');
 
 /*
  * @param opts.serverId
@@ -17,6 +19,7 @@ var MockApp = function(opts){
 	this.components = {};
 	this.remoteApps = [];
 	this.rpc = {};
+	this.channelService = new MockChannelService();
 };
 
 MockApp.prototype.start = function(cb){
@@ -40,11 +43,9 @@ MockApp.prototype.startComponents = function(cb){
 				self.components[name].start(cb);
 			});
 		})
-	).catch(function(e){
-		cb(e);
-	}).done(function(){
+	).then(function(){
 		cb();
-	});
+	}).catch(cb);
 };
 
 MockApp.prototype.stopComponents = function(force, cb){
@@ -60,11 +61,9 @@ MockApp.prototype.stopComponents = function(force, cb){
 				self.components[name].stop(force, cb);
 			});
 		})
-	).catch(function(e){
-		cb(e);
-	}).done(function(){
+	).then(function(){
 		cb();
-	});
+	}).catch(cb);
 };
 
 MockApp.prototype.getServerId = function(){

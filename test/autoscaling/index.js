@@ -76,7 +76,7 @@ describe('autoscaling test', function(){
 				ret.should.eql(areaIds);
 			});
 		}).done(function(){
-			Q.allSettled([Q.ninvoke(app1, 'stop'),
+			Q.all([Q.ninvoke(app1, 'stop'),
 							Q.ninvoke(app2, 'stop'),
 							Q.ninvoke(app, 'stop')])
 			.then(function(){

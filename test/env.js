@@ -10,6 +10,7 @@ var logger = require('pomelo-logger').getLogger('test', __filename);
 var quick = require('../lib');
 var MockApp = require('./mockapp');
 var Room = require('./room');
+var playerSchema = require('./player').schema;
 
 var redisConfig = {host : '127.0.0.1', port : 6379};
 var mongoConfig = {uri: 'mongodb://localhost/quick-pomelo-test', options : {}};
@@ -59,6 +60,12 @@ var env = {
 
 		if(role === 'area'){
 			app.load(quick.components.areaServer, componentOpts.areaServer || {});
+
+			var playerManagerOpts = componentOpts.playerManager || {};
+			playerManagerOpts.mongoConfig = mongoConfig;
+			playerManagerOpts.playerSchema = playerSchema;
+
+			app.load(quick.components.playerManager, playerManagerOpts);
 		}
 		if(role === 'autoscaling'){
 			app.load(quick.components.autoScaling, componentOpts.autoScaling || {});
