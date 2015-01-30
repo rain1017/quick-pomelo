@@ -1,9 +1,8 @@
 'use strict';
 
 var util = require('util');
-var Q = require('q');
 var logger = require('pomelo-logger').getLogger('test', __filename);
-var Area = require('../lib').area;
+var Area = require('../../lib').area;
 
 var Room = function(app, doc){
 	Area.call(this, app, doc);

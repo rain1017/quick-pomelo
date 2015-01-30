@@ -47,4 +47,12 @@ proto.test = function(){
 	logger.debug('room.test %s', [].slice.apply(arguments));
 };
 
+proto.beforeJoin = function(playerId){
+	//Check prerequistics, you can prevent join by throw an exception
+};
+
+proto.beforeQuit = function(playerId){
+	//Check prerequistics, you can prevent quit by throw an exception
+};
+
 module.exports = Room;

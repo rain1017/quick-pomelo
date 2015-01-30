@@ -2,6 +2,8 @@
 
 var pomelo = require('pomelo');
 var quick = require('quick-pomelo');
+var pomeloLogger = require('pomelo-logger');
+var logger = pomeloLogger.getLogger('pomelo', __filename);
 
 var app = pomelo.createApp();
 app.set('name', 'quick-pomelo');
@@ -25,6 +27,14 @@ app.configure('all', function() {
 		interval : 30,
 		timeout : 10 * 1000,
 	});
+
+	app.loadConfigBaseApp('redisConfig', 'redis.json');
+	app.loadConfigBaseApp('mongoConfig', 'mongodb.json');
+
+	pomeloLogger.configure(app.getBase() + '/config/log4js.json', {
+		serverId : app.getServerId(),
+		base: app.getBase(),
+	}, [], [app.getServerId()]);
 });
 
 //Connector settings
@@ -41,9 +51,6 @@ app.configure('all', 'gate|connector', function() {
 
 app.configure('all', 'connector|area|autoscaling', function(){
 	app.route('area', quick.routes.area);
-
-	app.loadConfigBaseApp('redisConfig', 'redis.json');
-	app.loadConfigBaseApp('mongoConfig', 'mongodb.json');
 
 	var opts = {
 		redisConfig : app.get('redisConfig'),
@@ -75,10 +82,15 @@ app.configure('all', 'autoscaling', function(){
 app.configure('development', function(){
 	require('heapdump');
 	require('q').longStackSupport = true;
+	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.ALL);
+});
+
+app.configure('production', function(){
+	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.INFO);
 });
 
 process.on('uncaughtException', function(err) {
-	console.error('Uncaught exception: ', err);
+	logger.error('Uncaught exception: %s', err.stack);
 });
 
 app.start();

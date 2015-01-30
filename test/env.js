@@ -8,9 +8,9 @@ var mongoose = require('mongoose');
 var sinon = require('sinon');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 var quick = require('../lib');
-var MockApp = require('./mockapp');
-var Room = require('./room');
-var playerSchema = require('./player').schema;
+var MockApp = require('./mocks/mockapp');
+var Room = require('./mocks/room');
+var playerSchema = require('./mocks/player').schema;
 
 var redisConfig = {host : '127.0.0.1', port : 6379};
 var mongoConfig = {uri: 'mongodb://localhost/quick-pomelo-test', options : {}};
