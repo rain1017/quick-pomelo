@@ -56,15 +56,13 @@ app.configure('all', 'connector|area|autoscaling', function(){
 		redisConfig : app.get('redisConfig'),
 		mongoConfig : app.get('mongoConfig'),
 		cacheTimeout : 30 * 1000,
-		areaTypes : {'room' : require('./app/areas/room')},
+		areaClasses : {'room' : require('./app/areas/room')},
 	};
 	app.load(quick.components.areaManager, opts);
-});
 
-app.configure('all', 'connector|area', function(){
 	var opts = {
 		mongoConfig : app.get('mongoConfig'),
-		playerSchema : require('./app/player').schema,
+		playerClass : require('./app/player'),
 	};
 	app.load(quick.components.playerManager, opts);
 });

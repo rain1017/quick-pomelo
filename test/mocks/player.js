@@ -1,11 +1,47 @@
 'use strict';
 
-var baseSchema = require('../../lib').player.schema;
+var util = require('util');
+var BasePlayer = require('../../lib').player;
+var logger = require('pomelo-logger').getLogger('test', __filename);
 
-var schema = baseSchema.extend({
+var Player = function(){
+	BasePlayer.apply(this, [].slice.call(arguments));
+};
+
+util.inherits(Player, BasePlayer);
+
+Player.schema = BasePlayer.schema.extend({
 	name : String,
 });
 
-module.exports = {
-	schema : schema
+var proto = Player.prototype;
+
+proto.onInit = function(opts){
+	this.name = opts.name || 'No name';
 };
+
+proto.onDestroy = function(){
+
+};
+
+proto.onSerialize = function(doc){
+	doc.name = this.name;
+};
+
+proto.onDeserialize = function(doc){
+	this.name = doc.name;
+};
+
+proto.onStart = function(){
+
+};
+
+proto.onStop = function(){
+
+};
+
+proto.test = function(){
+	logger.debug('player.test %s', [].slice.apply(arguments));
+};
+
+module.exports = Player;

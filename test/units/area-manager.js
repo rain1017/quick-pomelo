@@ -12,7 +12,7 @@ describe('areaManager test', function(){
 	afterEach(env.afterEach);
 	after(env.after);
 
-	it('createArea/removeArea/acquireArea', function(cb){
+	it('create/acquire/release Area', function(cb){
 		var serverId = 'server1';
 		var areaId = 'area1';
 
@@ -36,7 +36,7 @@ describe('areaManager test', function(){
 				logger.debug('area:area1:remove');
 			});
 		}).delay(10).then(function(){
-			return app.areaManager.createArea(areaId);
+			return app.areaManager.createArea({_id : areaId});
 		}).then(function(){
 			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				(ret === null).should.equal(true);
@@ -57,10 +57,7 @@ describe('areaManager test', function(){
 			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				(ret === null).should.be.true;
 			});
-		}).then(function(){
-			return app.areaManager.removeArea(areaId);
-		}).delay(10)
-		.done(function(){
+		}).done(function(){
 			app.stop(cb);
 		});
 	});
@@ -110,7 +107,7 @@ describe('index-cache test', function(){
 		Q.nfcall(function(cb){
 			return app.start(cb);
 		}).then(function(){
-			return app.areaManager.createArea(areaId);
+			return app.areaManager.createArea({_id : areaId});
 		}).then(function(){
 			return app.areaManager.indexCache.get(areaId).then(function(ret){
 				(ret === null).should.be.true;
@@ -131,12 +128,8 @@ describe('index-cache test', function(){
 			return app.areaManager.releaseArea(areaId);
 		}).delay(20) //Wait for cache sync
 		.then(function(){
-			return app.areaManager.removeArea(areaId);
-		}).delay(20)
-		.then(function(){
-			return app.areaManager.indexCache.get(areaId).fail(function(e){
-				//Error is expected
-				logger.debug(e);
+			return app.areaManager.indexCache.get(areaId).then(function(ret){
+				(ret === null).should.be.true;
 			});
 		}).done(function(){
 			app.stop(cb);

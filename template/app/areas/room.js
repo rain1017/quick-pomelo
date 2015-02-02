@@ -5,29 +5,8 @@ var Q = require('q');
 var logger = require('pomelo-logger').getLogger('room', __filename);
 var Area = require('quick-pomelo').area;
 
-var Room = function(app, doc){
-	Area.call(this, app, doc);
-
-	this.name = doc.name || 'Default Room';
-
-	this.on('start', function(){
-		logger.debug('on room start');
-	});
-	this.on('stop', function(){
-		logger.debug('on room stop');
-	});
-	this.on('player.join', function(playerId){
-		logger.debug('on player %s join', playerId);
-	});
-	this.on('player.quit', function(playerId){
-		logger.debug('on player %s quit', playerId);
-	});
-	this.on('player.connect', function(playerId){
-		logger.debug('on player %s connect', playerId);
-	});
-	this.on('player.disconnect', function(playerId){
-		logger.debug('on player %s disconnect', playerId);
-	});
+var Room = function(app){
+	Area.apply(this, [].slice.call(arguments));
 };
 
 util.inherits(Room, Area);
@@ -38,21 +17,49 @@ Room.schema = Area.schema.extend({
 
 var proto = Room.prototype;
 
-proto.toDoc = function(doc){
-	Area.prototype.toDoc.call(this, doc);
+proto.onInit = function(opts){
+	opts = opts || {};
+	this.name = opts.name || 'No name';
+};
+
+proto.onDestroy = function(){
+
+};
+
+proto.onSerialize = function(doc){
 	doc.name = this.name;
+};
+
+proto.onDeserialize = function(doc){
+	this.name = doc.name;
+};
+
+proto.onStart = function(){
+
+};
+
+proto.onStop = function(){
+
+};
+
+proto.onJoin = function(playerId){
+
+};
+
+proto.onQuit = function(playerId){
+
+};
+
+proto.beforeJoin = function(playerId){
+
+};
+
+proto.beforeQuit = function(playerId){
+
 };
 
 proto.test = function(){
 	logger.debug('room.test %s', [].slice.apply(arguments));
-};
-
-proto.beforeJoin = function(playerId){
-	//Check prerequistics, you can prevent join by throw an exception
-};
-
-proto.beforeQuit = function(playerId){
-	//Check prerequistics, you can prevent quit by throw an exception
 };
 
 module.exports = Room;

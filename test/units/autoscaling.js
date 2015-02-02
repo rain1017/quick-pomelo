@@ -42,7 +42,7 @@ describe('autoscaling test', function(){
 		}).then(function(){
 			//Create several areas
 			return Q.all(areaIds.map(function(areaId){
-				return app.areaManager.createArea(areaId);
+				return app1.areaManager.createArea({_id : areaId});
 			}));
 		}).then(function(){
 			//Add two servers

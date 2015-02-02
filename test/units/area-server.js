@@ -17,7 +17,7 @@ describe('areaServer test', function(){
 		Q.nfcall(function(cb){
 			app.start(cb);
 		}).then(function(){
-			return app.areaManager.createArea(areaId);
+			return app.areaManager.createArea({_id : areaId});
 		}).then(function(){
 			return app.areaServer.join(areaId);
 		}).then(function(){
@@ -36,9 +36,9 @@ describe('areaServer test', function(){
 		Q.nfcall(function(cb){
 			return app.start(cb);
 		}).then(function(){
-			return app.areaManager.createArea('area1');
+			return app.areaManager.createArea({_id : 'area1'});
 		}).then(function(){
-			return app.areaManager.createArea('area2');
+			return app.areaManager.createArea({_id : 'area2'});
 		}).then(function(){
 			return app.areaServer.join('area1');
 		}).then(function(){

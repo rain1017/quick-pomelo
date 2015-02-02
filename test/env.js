@@ -10,7 +10,7 @@ var logger = require('pomelo-logger').getLogger('test', __filename);
 var quick = require('../lib');
 var MockApp = require('./mocks/mockapp');
 var Room = require('./mocks/room');
-var playerSchema = require('./mocks/player').schema;
+var Player = require('./mocks/player');
 
 var redisConfig = {host : '127.0.0.1', port : 6379};
 var mongoConfig = {uri: 'mongodb://localhost/quick-pomelo-test', options : {}};
@@ -32,11 +32,10 @@ var flushdb = function(cb){
 		client.flushdb();
 		client.end();
 	})
-	.catch(cb)
 	.then(function(){
 		logger.debug('done flushdb');
 		cb();
-	});
+	}).catch(cb);
 };
 
 var env = {
@@ -54,18 +53,16 @@ var env = {
 		var areaManagerOpts = componentOpts.areaManager || {};
 		areaManagerOpts.redisConfig = redisConfig;
 		areaManagerOpts.mongoConfig = mongoConfig;
-		areaManagerOpts.areaTypes = {'room' : Room};
-
+		areaManagerOpts.areaClasses = {'room' : Room};
 		app.load(quick.components.areaManager, areaManagerOpts);
+
+		var playerManagerOpts = componentOpts.playerManager || {};
+		playerManagerOpts.mongoConfig = mongoConfig;
+		playerManagerOpts.playerClass = Player;
+		app.load(quick.components.playerManager, playerManagerOpts);
 
 		if(role === 'area'){
 			app.load(quick.components.areaServer, componentOpts.areaServer || {});
-
-			var playerManagerOpts = componentOpts.playerManager || {};
-			playerManagerOpts.mongoConfig = mongoConfig;
-			playerManagerOpts.playerSchema = playerSchema;
-
-			app.load(quick.components.playerManager, playerManagerOpts);
 		}
 		if(role === 'autoscaling'){
 			app.load(quick.components.autoScaling, componentOpts.autoScaling || {});
