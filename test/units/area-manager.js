@@ -36,7 +36,7 @@ describe('areaManager test', function(){
 				logger.debug('area:area1:remove');
 			});
 		}).delay(10).then(function(){
-			return app.areaManager.createArea({_id : areaId});
+			return app.areaManager.createArea({_id : areaId}, 'room');
 		}).then(function(){
 			return app.areaManager.getAreaOwnerId(areaId).then(function(ret){
 				(ret === null).should.equal(true);
@@ -81,7 +81,7 @@ describe('areaManager test', function(){
 			});
 		}).then(function(cb){
 			return app.areaManager.invokeAreaServer('server2', method, args).then(function(){
-				app.rpc.area.proxyRemote.invokeAreaServer.calledWith('server2', method, args).should.be.true;
+				app.rpc.area.quickRemote.invokeAreaServer.calledWith('server2', method, args).should.be.true;
 			});
 		}).done(function(){
 			app.stop(cb);
@@ -107,7 +107,7 @@ describe('index-cache test', function(){
 		Q.nfcall(function(cb){
 			return app.start(cb);
 		}).then(function(){
-			return app.areaManager.createArea({_id : areaId});
+			return app.areaManager.createArea({_id : areaId}, 'room');
 		}).then(function(){
 			return app.areaManager.indexCache.get(areaId).then(function(ret){
 				(ret === null).should.be.true;

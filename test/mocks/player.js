@@ -24,6 +24,14 @@ proto.onDestroy = function(){
 
 };
 
+proto.onStart = function(){
+
+};
+
+proto.onStop = function(){
+
+};
+
 proto.onSerialize = function(doc){
 	doc.name = this.name;
 };
@@ -32,12 +40,8 @@ proto.onDeserialize = function(doc){
 	this.name = doc.name;
 };
 
-proto.onStart = function(){
-
-};
-
-proto.onStop = function(){
-
+proto.set = function(attr, value){
+	this[attr] = value;
 };
 
 proto.test = function(){

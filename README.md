@@ -5,40 +5,36 @@ Rapid game server framework based on pomelo
 
 Developing in quick-pomelo is extremely simple and scalable
 
+### Autoscaling and hot transfer
+Server cluster is horizontally scaled up and down, automatically, lively and transparently.
+
+Player running data can 'fly' from one server to another, without breaking connection, without losing running state.
+
 ### Simple and intuitive
 
-Api handlers is performed single threaded. No async, No callback hell, No lock required.
+* Promise based async code, no callback hell
+* Dedicated database access, no explicit db access required
+* Dedicated concurrency control, no explicit synchronization required
 
-Database access is controlled by framework, no explicit code required to access database.
-
-Async control is all promise based.
-
-### Extreme performance
-
+### Performance
 All data is performed in local server memory and synced to database on demand
-
-### Scalable and robostness
-
-Server cluster can be horizontally scaled up and down, lively and transparently, without shuting down.
-Player data can 'fly' from one physical server to another, without breaking player connection, completely unnoticable by player.
 
 
 ## Quick Sample
 
 ```
-// Implement API
-area.handlers['levelup'] = function(opts){
-	var player = area.players[opts.id];
+Area.prototype.levelup = function(playerId){
+	var player = this.getPlayer(playerId);
 
 	// Change data in memory
 	player.level += 1;
 	player.money += 10;
 	
 	// Notify all players in area
-	area.notifyAll('levelup', {'playerId' : opts.id});
+	this.notifyAll('levelup', {'playerId' : playerId});
 
 	// Notify player only
-	player.notify('money', player.money);
+	this.notify(playerId, 'money', player.money);
 
 	// You can finally return a value or promise
 };
@@ -87,3 +83,16 @@ The load balancer algorithm is defined by the following principles:
 * When the system total load below certain limit, the cluster should scale down by turn of servers with lowest load.
 
 ### Player Manager
+
+
+### Objects (Player & Area)
+
+Life cycle:
+create: new -> init -> serialize
+update: new -> deserialize -> start -> running -> serialize -> stop
+remove: running -> stop -> destroy
+
+Concurrency:
+Methods in the same object (Identified by area._id or player._id) is guaranteed to be called in serial, so no synchronization required for user code.
+
+

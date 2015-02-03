@@ -48,12 +48,12 @@ var env = {
 	createMockApp : function(serverId, role, componentOpts){
 		componentOpts = componentOpts || {};
 
-		var app = new MockApp({serverId : serverId});
+		var app = new MockApp({serverId : serverId, serverType : role});
 
 		var areaManagerOpts = componentOpts.areaManager || {};
 		areaManagerOpts.redisConfig = redisConfig;
 		areaManagerOpts.mongoConfig = mongoConfig;
-		areaManagerOpts.areaClasses = {'room' : Room};
+		areaManagerOpts.areaClasses = [Room];
 		app.load(quick.components.areaManager, areaManagerOpts);
 
 		var playerManagerOpts = componentOpts.playerManager || {};
@@ -67,27 +67,22 @@ var env = {
 		if(role === 'autoscaling'){
 			app.load(quick.components.autoScaling, componentOpts.autoScaling || {});
 		}
+		if(role === 'allocator'){
+			app.load(quick.components.defaultAreaAllocator, componentOpts.defaultAreaAllocator || {});
+		}
 
 		app.setRpc('area', 	{
-			proxyRemote : {
+			quickRemote : {
 				invokeAreaServer: sinon.spy(function(serverId, method, args, cb){
-					var matched = false;
-					app.remoteApps.forEach(function(app){
-						if(app.getServerId() === serverId){
-							if(matched){
-								return;
-							}
-							matched = true;
-							Q.fcall(function(){
-								return app.areaServer[method].apply(app.areaServer, args);
-							})
-							.catch(cb)
-							.then(function(ret){
-								cb(null, ret);
-							});
-						}
-					});
-					if(!matched){
+					var remoteApp = app.getRemoteApp(serverId);
+					if(remoteApp){
+						Q.fcall(function(){
+							return remoteApp.areaServer[method].apply(remoteApp.areaServer, args);
+						}).then(function(ret){
+							cb(null, ret);
+						}, cb);
+					}
+					else{
 						cb(null);
 					}
 				})
@@ -95,9 +90,27 @@ var env = {
 		});
 
 		app.setRpc('autoscaling', {
-			reportRemote : {
+			quickRemote : {
 				reportServerStatus: sinon.spy(function(route, serverId, loadAve, cb){
 					cb();
+				})
+			}
+		});
+
+		app.setRpc('allocator', {
+			quickRemote : {
+				joinDefaultArea: sinon.spy(function(route, playerId, cb){
+					var remoteApp = app.getRemoteAppsByType('allocator')[0];
+					if(remoteApp){
+						Q.fcall(function(){
+							return remoteApp.defaultAreaAllocator.joinDefaultArea(playerId);
+						}).then(function(ret){
+							cb(null, ret);
+						}, cb);
+					}
+					else{
+						cb();
+					}
 				})
 			}
 		});

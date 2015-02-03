@@ -21,6 +21,10 @@ describe('playerManager test', function(){
 		Q.nfcall(function(cb){
 			app.start(cb);
 		}).then(function(){
+			return app.areaManager.createArea({_id : areaId}, 'room');
+		}).then(function(){
+			return app.areaManager.acquireArea(areaId);
+		}).then(function(){
 			return app.playerManager.createPlayer({_id : playerId});
 		}).then(function(){
 			return app.playerManager.acquirePlayer(playerId, areaId);

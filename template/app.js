@@ -49,18 +49,18 @@ app.configure('all', 'gate|connector', function() {
 	});
 });
 
-app.configure('all', 'connector|area|autoscaling', function(){
+app.configure('all', 'connector|area|autoscaling|allocator', function(){
 	app.route('area', quick.routes.area);
 
 	var opts = {
 		redisConfig : app.get('redisConfig'),
 		mongoConfig : app.get('mongoConfig'),
 		cacheTimeout : 30 * 1000,
-		areaClasses : {'room' : require('./app/areas/room')},
+		areaClasses : [require('./app/areas/room')],
 	};
 	app.load(quick.components.areaManager, opts);
 
-	var opts = {
+	opts = {
 		mongoConfig : app.get('mongoConfig'),
 		playerClass : require('./app/player'),
 	};
@@ -75,6 +75,11 @@ app.configure('all', 'area', function(){
 app.configure('all', 'autoscaling', function(){
 	var opts = {};
 	app.load(quick.components.autoScaling, opts);
+});
+
+app.configure('all', 'allocator', function(){
+	var opts = {};
+	app.load(quick.components.defaultAreaAllocator, opts);
 });
 
 app.configure('development', function(){

@@ -1,16 +1,19 @@
 {
 	"gate": [
-	    {"id": "gate-server", "host": "127.0.0.1", "port": 3099, "clientPort": 3010, "frontend": true, "args": "--debug=5860"}
+	    {"id": "gate-server", "host": "127.0.0.1", "port": 13010, "clientPort": 3010, "frontend": true, "args": "--debug=5860"}
 	],
 	"connector": [
-		{"id": "connector-server-1", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 3200, "clientPort": 3100, "frontend": true, "args": "--debug=5861"},
-		{"id": "connector-server-2", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 3201, "clientPort": 3101, "frontend": true, "args": "--debug=5871"}
+		{"id": "connector-server-1", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13100, "clientPort": 3100, "frontend": true, "args": "--debug=5870"},
+		{"id": "connector-server-2", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13101, "clientPort": 3101, "frontend": true, "args": "--debug=5871"}
 	],
 	"area": [
-		{"id": "area-server-1", "host": "127.0.0.1", "port": 3300, "args": "--debug=5862"},
-		{"id": "area-server-2", "host": "127.0.0.1", "port": 3301, "args": "--debug=5872"}
+		{"id": "area-server-1", "host": "127.0.0.1", "port": 13200, "args": "--debug=5880"},
+		{"id": "area-server-2", "host": "127.0.0.1", "port": 13201, "args": "--debug=5881"}
 	],
 	"autoscaling": [
-		{"id": "autoscaling-server", "host": "127.0.0.1", "port": 3400, "args": "--debug=5863"}
+		{"id": "autoscaling-server", "host": "127.0.0.1", "port": 13011, "args": "--debug=5861"}
+	],
+	"allocator": [
+		{"id": "allocator-server", "host": "127.0.0.1", "port": 13012, "args": "--debug=5862"}
 	]
 }

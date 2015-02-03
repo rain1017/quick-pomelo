@@ -14,6 +14,7 @@ var MockChannelService = require('./mock-channelservice');
 var MockApp = function(opts){
 	opts = opts || {};
 	this.serverId = opts.serverId;
+	this.serverType = opts.serverType;
 
 	this.settings = {};
 	this.components = {};
@@ -23,7 +24,14 @@ var MockApp = function(opts){
 };
 
 MockApp.prototype.start = function(cb){
-	this.startComponents(cb);
+	var self = this;
+	Q.fcall(function(){
+		return Q.ninvoke(self, 'startComponents');
+	}).then(function(){
+		return Q.ninvoke(self, 'afterStartComponents');
+	}).then(function(ret){
+		cb(null, ret);
+	}, cb);
 };
 
 MockApp.prototype.stop = function(force, cb){
@@ -40,7 +48,30 @@ MockApp.prototype.startComponents = function(cb){
 	Q.all(
 		Object.keys(self.components).map(function(name){
 			return Q.nfcall(function(cb){
-				self.components[name].start(cb);
+				if(typeof(self.components[name].start) === 'function'){
+					self.components[name].start(cb);
+				}
+				else{
+					cb();
+				}
+			});
+		})
+	).then(function(){
+		cb();
+	}).catch(cb);
+};
+
+MockApp.prototype.afterStartComponents = function(cb){
+	var self = this;
+	Q.all(
+		Object.keys(self.components).map(function(name){
+			return Q.nfcall(function(cb){
+				if(typeof(self.components[name].afterStart) === 'function'){
+					self.components[name].afterStart(cb);
+				}
+				else{
+					cb();
+				}
 			});
 		})
 	).then(function(){
@@ -58,7 +89,12 @@ MockApp.prototype.stopComponents = function(force, cb){
 	Q.all(
 		Object.keys(self.components).map(function(name){
 			return Q.nfcall(function(cb){
-				self.components[name].stop(force, cb);
+				if(typeof(self.components[name].stop) === 'function'){
+					self.components[name].stop(force, cb);
+				}
+				else{
+					cb();
+				}
 			});
 		})
 	).then(function(){
@@ -68,6 +104,10 @@ MockApp.prototype.stopComponents = function(force, cb){
 
 MockApp.prototype.getServerId = function(){
 	return this.serverId;
+};
+
+MockApp.prototype.getServerType = function(){
+	return this.serverType;
 };
 
 MockApp.prototype.get = function(name){
@@ -82,11 +122,32 @@ MockApp.prototype.set = function(name, value, attach){
 };
 
 MockApp.prototype.setRemoteApps = function(apps){
+	if(!(apps instanceof Array)){
+		apps = [apps];
+	}
 	this.remoteApps = apps;
 };
 
 MockApp.prototype.setRpc = function(serverType, rpc){
 	this.rpc[serverType] = rpc;
+};
+
+MockApp.prototype.getRemoteApp = function(serverId){
+	for(var i in this.remoteApps){
+		if(this.remoteApps[i].getServerId() === serverId){
+			return this.remoteApps[i];
+		}
+	}
+};
+
+MockApp.prototype.getRemoteAppsByType = function(serverType){
+	var apps = [];
+	for(var i in this.remoteApps){
+		if(this.remoteApps[i].getServerType() === serverType){
+			apps.push(this.remoteApps[i]);
+		}
+	}
+	return apps;
 };
 
 module.exports = MockApp;

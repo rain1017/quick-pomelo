@@ -11,6 +11,8 @@ var Room = function(app){
 
 util.inherits(Room, Area);
 
+Room.type = 'room';
+
 Room.schema = Area.schema.extend({
 	name : String,
 });
@@ -26,14 +28,6 @@ proto.onDestroy = function(){
 
 };
 
-proto.onSerialize = function(doc){
-	doc.name = this.name;
-};
-
-proto.onDeserialize = function(doc){
-	this.name = doc.name;
-};
-
 proto.onStart = function(){
 
 };
@@ -42,12 +36,12 @@ proto.onStop = function(){
 
 };
 
-proto.onJoin = function(playerId){
-
+proto.onSerialize = function(doc){
+	doc.name = this.name;
 };
 
-proto.onQuit = function(playerId){
-
+proto.onDeserialize = function(doc){
+	this.name = doc.name;
 };
 
 proto.beforeJoin = function(playerId){
@@ -55,6 +49,14 @@ proto.beforeJoin = function(playerId){
 };
 
 proto.beforeQuit = function(playerId){
+
+};
+
+proto.onJoin = function(playerId){
+
+};
+
+proto.onQuit = function(playerId){
 
 };
 
