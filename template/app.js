@@ -58,13 +58,16 @@ app.configure('all', 'connector|area|autoscaling|allocator', function(){
 		cacheTimeout : 30 * 1000,
 		areaClasses : [require('./app/areas/room')],
 	};
-	app.load(quick.components.areaManager, opts);
+	app.load(quick.components.areaBackend, opts);
 
 	opts = {
 		mongoConfig : app.get('mongoConfig'),
 		playerClass : require('./app/player'),
 	};
-	app.load(quick.components.playerManager, opts);
+	app.load(quick.components.playerBackend, opts);
+
+	app.load(quick.components.areaProxy, opts);
+	app.load(quick.components.playerProxy, opts);
 });
 
 app.configure('all', 'area', function(){

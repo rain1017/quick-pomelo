@@ -42,7 +42,7 @@ describe('autoscaling test', function(){
 		}).then(function(){
 			//Create several areas
 			return Q.all(areaIds.map(function(areaId){
-				return app1.areaManager.createArea({_id : areaId}, 'room');
+				return app1.areaBackend.createArea({_id : areaId}, 'room');
 			}));
 		}).then(function(){
 			//Add two servers
@@ -52,7 +52,7 @@ describe('autoscaling test', function(){
 					]);
 		}).delay(SCALE_INTERVAL + 500).then(function(){
 			//Areas should be loaded to server1
-			return app1.areaManager.getAcquiredAreaIds().then(function(ret){
+			return app1.areaBackend.getAcquiredAreaIds().then(function(ret){
 				ret.sort().should.eql(areaIds.sort());
 			});
 		}).then(function(){
@@ -63,7 +63,7 @@ describe('autoscaling test', function(){
 					]);
 		}).delay(SCALE_INTERVAL + 500).then(function(){
 			//Areas should be moved to server2
-			return app2.areaManager.getAcquiredAreaIds().then(function(ret){
+			return app2.areaBackend.getAcquiredAreaIds().then(function(ret){
 				ret.sort().should.eql(areaIds.sort());
 			});
 		}).then(function(){
@@ -72,7 +72,7 @@ describe('autoscaling test', function(){
 		}).delay(REPORT_TIMEOUT - 500).then(function(){
 			//server2 heart beat timeout, should be disconnected
 			//areas should be moved to server1
-			return app1.areaManager.getAcquiredAreaIds().then(function(ret){
+			return app1.areaBackend.getAcquiredAreaIds().then(function(ret){
 				ret.sort().should.eql(areaIds.sort());
 			});
 		}).done(function(){

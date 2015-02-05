@@ -21,9 +21,9 @@ describe('defaultarea test', function(){
 		Q.nfcall(function(cb){
 			return app.start(cb);
 		}).then(function(){
-			return app.playerManager.createPlayer({_id : 'player1'});
+			return app.playerBackend.createPlayer({_id : 'player1'});
 		}).then(function(){
-			return app.playerManager.createPlayer({_id : 'player2'});
+			return app.playerBackend.createPlayer({_id : 'player2'});
 		}).then(function(){
 			var opts = {
 				_id : areaId,
@@ -32,32 +32,32 @@ describe('defaultarea test', function(){
 				capacity : 1,
 				freeUpdate : 100
 			};
-			return app.areaManager.createArea(opts, 'default');
+			return app.areaBackend.createArea(opts, 'default');
 		}).then(function(){
-			return app.areaManager.joinServer(areaId, serverId);
+			return app.areaProxy.joinServer(areaId, serverId);
 		}).then(function(){
-			return app.playerManager.joinArea('player1', areaId);
+			return app.playerProxy.joinArea('player1', areaId);
 		}).then(function(){
-			return app.playerManager.invokePlayer('player1', 'set', ['name', 'new name']);
+			return app.playerProxy.invokePlayer('player1', 'set', ['name', 'new name']);
 		}).delay(flush + 50).then(function(){
 			//should flushed
 			return Q.nfcall(function(cb){
-				app.playerManager.getPlayerModel().findById('player1').exec(cb);
+				app.playerBackend.getPlayerModel().findById('player1').exec(cb);
 			}).then(function(ret){
 				ret.name.should.equal('new name');
 			});
 		}).then(function(){
-			return app.playerManager.joinArea('player2', areaId).fail(function(e){
+			return app.playerProxy.joinArea('player2', areaId).fail(function(e){
 				//should fail
 				logger.debug(e);
 			});
 		}).delay(timeout + 50).then(function(){
 			//player 1 should quit now
-			return app.areaManager.invokeArea(areaId, 'getPlayerCount').then(function(ret){
+			return app.areaProxy.invokeArea(areaId, 'getPlayerCount').then(function(ret){
 				ret.should.equal(0);
 			});
 		}).then(function(){
-			return app.areaManager.quitServer(areaId);
+			return app.areaProxy.quitServer(areaId);
 		}).done(function(){
 			app.stop(cb);
 		});

@@ -17,7 +17,7 @@ describe('areaServer test', function(){
 		Q.nfcall(function(cb){
 			app.start(cb);
 		}).then(function(){
-			return app.areaManager.createArea({_id : areaId}, 'room');
+			return app.areaBackend.createArea({_id : areaId}, 'room');
 		}).then(function(){
 			return app.areaServer.join(areaId);
 		}).then(function(){
@@ -36,20 +36,20 @@ describe('areaServer test', function(){
 		Q.nfcall(function(cb){
 			return app.start(cb);
 		}).then(function(){
-			return app.areaManager.createArea({_id : 'area1'}, 'room');
+			return app.areaBackend.createArea({_id : 'area1'}, 'room');
 		}).then(function(){
-			return app.areaManager.createArea({_id : 'area2'}, 'room');
+			return app.areaBackend.createArea({_id : 'area2'}, 'room');
 		}).then(function(){
 			return app.areaServer.join('area1');
 		}).then(function(){
-			return app.areaManager.acquireArea('area2');
+			return app.areaBackend.acquireArea('area2');
 		}).then(function(){
-			return app.areaManager.releaseAreaForce('area1');
+			return app.areaBackend.releaseAreaForce('area1');
 		}).then(function(){
 			return app.areaServer.syncAcquiredAreas();
 		}).then(function(){
 			app.areaServer.isLoaded('area1').should.be.false;
-			return app.areaManager.getAreaOwnerId('area2').then(function(ret){
+			return app.areaBackend.getAreaOwnerId('area2').then(function(ret){
 				(ret === null).should.be.true;
 			});
 		}).done(function(){

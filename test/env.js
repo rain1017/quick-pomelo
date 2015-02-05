@@ -50,16 +50,19 @@ var env = {
 
 		var app = new MockApp({serverId : serverId, serverType : role});
 
-		var areaManagerOpts = componentOpts.areaManager || {};
-		areaManagerOpts.redisConfig = redisConfig;
-		areaManagerOpts.mongoConfig = mongoConfig;
-		areaManagerOpts.areaClasses = [Room];
-		app.load(quick.components.areaManager, areaManagerOpts);
+		var areaBackendOpts = componentOpts.areaBackend || {};
+		areaBackendOpts.redisConfig = redisConfig;
+		areaBackendOpts.mongoConfig = mongoConfig;
+		areaBackendOpts.areaClasses = [Room];
+		app.load(quick.components.areaBackend, areaBackendOpts);
 
-		var playerManagerOpts = componentOpts.playerManager || {};
-		playerManagerOpts.mongoConfig = mongoConfig;
-		playerManagerOpts.playerClass = Player;
-		app.load(quick.components.playerManager, playerManagerOpts);
+		var playerBackendOpts = componentOpts.playerBackend || {};
+		playerBackendOpts.mongoConfig = mongoConfig;
+		playerBackendOpts.playerClass = Player;
+		app.load(quick.components.playerBackend, playerBackendOpts);
+
+		app.load(quick.components.areaProxy, componentOpts.areaProxy || {});
+		app.load(quick.components.playerProxy, componentOpts.playerProxy || {});
 
 		if(role === 'area'){
 			app.load(quick.components.areaServer, componentOpts.areaServer || {});

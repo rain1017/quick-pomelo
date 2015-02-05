@@ -95,13 +95,73 @@
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/area-manager-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/area-backend-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"area-manager"
+            "category":"area-backend"
+        },
+       	{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/area-proxy-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"area-proxy"
+        },
+       	{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/player-backend-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"player-backend"
+        },
+       	{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/player-proxy-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"player-proxy"
+        },
+       	{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/area-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"area"
+        },
+		{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/default-area-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"default-area"
+        },
+       	{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/player-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"player"
         },
        	{
             "type": "dateFile",
@@ -112,6 +172,16 @@
               }
             ,"backups": 5,
             "category":"autosaling"
+        },
+       	{
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/defaultarea-allocator.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"defaultarea-allocator"
         }
     ],
 

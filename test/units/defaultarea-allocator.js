@@ -37,7 +37,7 @@ describe('defaultarea test', function(){
 		areaApp.setRemoteApps([allocatorApp]);
 
 		var onCreateArea = function(areaId){
-			areaApp.areaManager.joinServer(areaId, 'area-server-1');
+			areaApp.areaProxy.joinServer(areaId, 'area-server-1');
 		};
 
 		var playerIds = _.range(playerCount);
@@ -46,16 +46,16 @@ describe('defaultarea test', function(){
 			return Q.ninvoke(areaApp, 'start');
 		}).then(function(){
 			// Automatically join server when new area created
-			areaApp.areaManager.on('area:create', onCreateArea);
+			areaApp.areaBackend.on('area:create', onCreateArea);
 		}).then(function(){
 			return Q.ninvoke(allocatorApp, 'start');
 		}).then(function(){
 			return Q.all(playerIds.map(function(playerId){
-				return areaApp.playerManager.createPlayer({_id : playerId});
+				return areaApp.playerBackend.createPlayer({_id : playerId});
 			}));
 		}).then(function(){
 			//Create a normal area
-			return areaApp.areaManager.createArea({_id :'room1'}, 'room');
+			return areaApp.areaBackend.createArea({_id :'room1'}, 'room');
 		}).delay(resizeInterval + 200)
 		.then(function(){
 			//should have enough free slots now
@@ -63,7 +63,7 @@ describe('defaultarea test', function(){
 			var promises = playerIds.map(function(playerId){
 				return function(){
 					return Q.fcall(function(){
-						return areaApp.playerManager.invokePlayer(playerId, 'set', ['name', 'player' + playerId]);
+						return areaApp.playerProxy.invokePlayer(playerId, 'set', ['name', 'player' + playerId]);
 					}).catch(function(e){
 						//Failure is possible
 						logger.warn(e.stack);
@@ -79,15 +79,15 @@ describe('defaultarea test', function(){
 			//should quit and removed redundant areas
 		})
 		.then(function(){
-			areaApp.areaManager.removeListener('area:create', onCreateArea);
+			areaApp.areaBackend.removeListener('area:create', onCreateArea);
 		}).then(function(){
 			//Unload all areas
-			var Area = areaApp.areaManager.getAreaModel();
+			var Area = areaApp.areaBackend.getAreaModel();
 			return Q.nfcall(function(cb){
 				Area.find({}, '_id').exec(cb);
 			}).then(function(areas){
 				return Q.all(areas.map(function(area){
-					return areaApp.areaManager.quitServer(area._id);
+					return areaApp.areaProxy.quitServer(area._id);
 				}));
 			});
 		}).done(function(){

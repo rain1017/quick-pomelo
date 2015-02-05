@@ -49,10 +49,10 @@ Area.prototype.levelup = function(playerId){
 ###	Area Server
 * Container of areas. One server can load multiple areas depend on hardware resources.
 
-### Area Manager
-Access center db and dispatch requests to areaServers, all cross area request or request to center resource must via areaManager.
+### Area Backend
+Access center database.
 
-Area manager is loaded on each server, and it does not hold any state in local memory but it's a proxy to center resource.
+Area backend is loaded on each server and it does not hold any state in local memory.
 
 * DB Access
 
@@ -62,6 +62,12 @@ Create/Remove/Load/Save area to mongodb.
 
 The are lock indicates which areaServer 'owns' the area currently, and an areaServer must hold the global area lock in order to load/save area.
 The lock is saved as a field of mongodb area schema (Area._server).
+
+### Area Proxy
+
+Dispatch requests to areaServers, all cross area request must via areaProxy.
+
+Area proxy is loaded on each server and it does not hold any state in local memory.
 
 * Cross area communication
 
@@ -82,8 +88,11 @@ The load balancer algorithm is defined by the following principles:
 * When the system total load exceed certain limit (total load is the sum of load average of all servers), the cluster should scale up by add more servers.
 * When the system total load below certain limit, the cluster should scale down by turn of servers with lowest load.
 
-### Player Manager
+### Player
 
+### Player Backend
+
+### Player Proxy
 
 ### Objects (Player & Area)
 
@@ -95,4 +104,4 @@ remove: running -> stop -> destroy
 Concurrency:
 Methods in the same object (Identified by area._id or player._id) is guaranteed to be called in serial, so no synchronization required for user code.
 
-
+### Default Area
