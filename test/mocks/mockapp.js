@@ -26,16 +26,23 @@ var MockApp = function(opts){
 MockApp.prototype.start = function(cb){
 	var self = this;
 	Q.fcall(function(){
-		return Q.ninvoke(self, 'startComponents');
+		return Q.ninvoke(self, 'optComponents', 'start');
 	}).then(function(){
-		return Q.ninvoke(self, 'afterStartComponents');
+		return Q.ninvoke(self, 'optComponents', 'afterStart');
 	}).then(function(ret){
 		cb(null, ret);
 	}, cb);
 };
 
 MockApp.prototype.stop = function(force, cb){
-	this.stopComponents(force, cb);
+	var self = this;
+	Q.fcall(function(){
+		return Q.ninvoke(self, 'optComponents', 'beforeStop');
+	}).then(function(){
+		return Q.ninvoke(self, 'stopComponents', force);
+	}).then(function(ret){
+		cb(null, ret);
+	}, cb);
 };
 
 MockApp.prototype.load = function(component, opts){
@@ -43,31 +50,13 @@ MockApp.prototype.load = function(component, opts){
 	this.components[instance.name] = instance;
 };
 
-MockApp.prototype.startComponents = function(cb){
+MockApp.prototype.optComponents = function(method, cb){
 	var self = this;
 	Q.all(
 		Object.keys(self.components).map(function(name){
 			return Q.nfcall(function(cb){
-				if(typeof(self.components[name].start) === 'function'){
-					self.components[name].start(cb);
-				}
-				else{
-					cb();
-				}
-			});
-		})
-	).then(function(){
-		cb();
-	}).catch(cb);
-};
-
-MockApp.prototype.afterStartComponents = function(cb){
-	var self = this;
-	Q.all(
-		Object.keys(self.components).map(function(name){
-			return Q.nfcall(function(cb){
-				if(typeof(self.components[name].afterStart) === 'function'){
-					self.components[name].afterStart(cb);
+				if(typeof(self.components[name][method]) === 'function'){
+					self.components[name][method](cb);
 				}
 				else{
 					cb();

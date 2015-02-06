@@ -56,8 +56,6 @@ describe('defaultarea test', function(){
 			return app.areaProxy.invokeArea(areaId, 'getPlayerCount').then(function(ret){
 				ret.should.equal(0);
 			});
-		}).then(function(){
-			return app.areaProxy.quitServer(areaId);
 		}).done(function(){
 			app.stop(cb);
 		});

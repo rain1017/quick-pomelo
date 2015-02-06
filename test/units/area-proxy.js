@@ -48,7 +48,7 @@ describe('index-cache test', function(){
 		var serverId = 'server1', areaId = 'area1';
 
 		var opts = {
-			'areaBackend' : {cacheTimeout : 50}
+			'areaProxy' : {cacheTimeout : 50}
 		};
 		var app = env.createMockApp(serverId, 'area', opts);
 

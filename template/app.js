@@ -1,8 +1,12 @@
 'use strict';
 
+var Q = require('q');
+var util = require('util');
 var pomelo = require('pomelo');
 var quick = require('quick-pomelo');
 var pomeloLogger = require('pomelo-logger');
+var pomeloConstants = require('pomelo/lib/util/constants');
+var pomeloAppUtil = require('pomelo/lib/util/appUtil');
 var logger = pomeloLogger.getLogger('pomelo', __filename);
 
 var app = pomelo.createApp();
@@ -31,10 +35,39 @@ app.configure('all', function() {
 	app.loadConfigBaseApp('redisConfig', 'redis.json');
 	app.loadConfigBaseApp('mongoConfig', 'mongodb.json');
 
-	pomeloLogger.configure(app.getBase() + '/config/log4js.json', {
+	var loggerConfig = app.getBase() + '/config/log4js.json';
+	var loggerOpts = {
 		serverId : app.getServerId(),
 		base: app.getBase(),
-	}, [], [app.getServerId()]);
+	};
+	quick.configureLogger(loggerConfig, loggerOpts);
+	pomeloLogger.configure(loggerConfig, loggerOpts);
+
+	// Add beforeStop hook
+	app.lifecycleCbs[pomeloConstants.LIFECYCLE.BEFORE_SHUTDOWN] = function(app, shutdown, cancelShutDownTimer){
+		cancelShutDownTimer();
+
+		if(app.getServerType() === 'master'){
+			// Wait for all server stop
+			var tryShutdown = function(){
+				if(Object.keys(app.getServers()).length === 0){
+					shutdown();
+				}
+				else{
+					setTimeout(tryShutdown, 200);
+				}
+			}
+			tryShutdown();
+			return;
+		}
+
+		Q.ninvoke(pomeloAppUtil, 'optComponents', app.loaded, 'beforeStop')
+		.then(function(){
+			shutdown();
+		}, function(e){
+			logger.error(e.stack);
+		});
+	};
 });
 
 //Connector settings
@@ -55,7 +88,6 @@ app.configure('all', 'connector|area|autoscaling|allocator', function(){
 	var opts = {
 		redisConfig : app.get('redisConfig'),
 		mongoConfig : app.get('mongoConfig'),
-		cacheTimeout : 30 * 1000,
 		areaClasses : [require('./app/areas/room')],
 	};
 	app.load(quick.components.areaBackend, opts);
@@ -66,7 +98,12 @@ app.configure('all', 'connector|area|autoscaling|allocator', function(){
 	};
 	app.load(quick.components.playerBackend, opts);
 
+	opts = {
+		cacheTimeout : 30 * 1000,
+	}
 	app.load(quick.components.areaProxy, opts);
+
+	opts = {};
 	app.load(quick.components.playerProxy, opts);
 });
 

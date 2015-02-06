@@ -80,16 +80,6 @@ describe('defaultarea test', function(){
 		})
 		.then(function(){
 			areaApp.areaBackend.removeListener('area:create', onCreateArea);
-		}).then(function(){
-			//Unload all areas
-			var Area = areaApp.areaBackend.getAreaModel();
-			return Q.nfcall(function(cb){
-				Area.find({}, '_id').exec(cb);
-			}).then(function(areas){
-				return Q.all(areas.map(function(area){
-					return areaApp.areaProxy.quitServer(area._id);
-				}));
-			});
 		}).done(function(){
 			Q.all([Q.ninvoke(allocatorApp, 'stop'), Q.ninvoke(areaApp, 'stop')])
 			.then(function(){

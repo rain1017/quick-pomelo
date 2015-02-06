@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var BasePlayer = require('../../lib').player;
+var BasePlayer = require('quick-pomelo').player;
 var logger = require('pomelo-logger').getLogger('player', __filename);
 
 var Player = function(){
