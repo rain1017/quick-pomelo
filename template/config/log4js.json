@@ -85,6 +85,16 @@
         },
        	{
             "type": "dateFile",
+            "filename": "${opts:base}/logs/handler-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"handler"
+        },
+       	{
+            "type": "dateFile",
             "filename": "${opts:base}/logs/area-server-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {

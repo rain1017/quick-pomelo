@@ -45,6 +45,9 @@
 		"grunt-contrib-clean": "~0.6.0",
 		"grunt-mocha-test": "~0.12.6",
 		"load-grunt-tasks": "~2.0.0",
-		"blanket" : "~1.1.6"
+		"blanket" : "~1.1.6",
+		"ws" : "~0.7.1",
+		"pomelo-protocol" : "~0.1.4",
+		"pomelo-protobuf" : "~0.4.0"
 	}
 }

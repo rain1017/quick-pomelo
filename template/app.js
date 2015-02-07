@@ -68,6 +68,20 @@ app.configure('all', function() {
 			logger.error(e.stack);
 		});
 	};
+
+	app.set('errorHandler', function(err, msg, resp, session, cb){
+		resp = {
+			code : 500,
+			stack : err.stack,
+			message : err.message,
+		};
+		cb(err, resp);
+	});
+
+	app.set('authFunc', function(auth){
+		var playerId = auth;
+		return playerId;
+	});
 });
 
 //Connector settings
@@ -81,6 +95,7 @@ app.configure('all', 'gate|connector', function() {
 		singleSession : true,
 	});
 });
+
 
 app.configure('all', 'connector|area|autoscaling|allocator', function(){
 	app.route('area', quick.routes.area);

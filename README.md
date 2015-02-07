@@ -5,19 +5,18 @@ Rapid game server framework based on pomelo
 
 Developing in quick-pomelo is extremely simple and scalable
 
-### Autoscaling and hot transfer
-Server cluster is horizontally scaled up and down, automatically, lively and transparently.
+### Simple Simple Simple!
 
-Player running data can 'fly' from one server to another, without breaking connection, without losing running state.
-
-### Simple and intuitive
-
-* Promise based async code, no callback hell
 * Dedicated database access, no explicit db access required
 * Dedicated concurrency control, no explicit synchronization required
+* Promise based async code, no callback hell
 
-### Performance
+### Performance and AutoScaling
+
 All data is performed in local server memory and synced to database on demand
+
+Server cluster is horizontally scaled up and down, automatically, lively and transparently.
+Player live data can 'fly' from one server to another, without breaking connection, without losing running state.
 
 
 ## Quick Sample

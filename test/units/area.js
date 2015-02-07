@@ -11,7 +11,7 @@ describe('area test', function(){
 	afterEach(env.afterEach);
 	after(env.after);
 
-	it('create/remove/join/quit/connect/disconnect/notify player', function(cb){
+	it('create/remove/join/quit/login/logout/notify player', function(cb){
 		var connectorId = 'connector-server-1';
 		var areaId = 'area1';
 		var playerId = 'player1';
@@ -30,7 +30,7 @@ describe('area test', function(){
 		}).then(function(){
 			return app1.playerProxy.joinArea(playerId, areaId);
 		}).then(function(){
-			return app1.playerProxy.invokePlayer(playerId, 'connect', [connectorId]);
+			return app1.playerProxy.invokePlayer(playerId, 'login', [connectorId]);
 		}).then(function(){
 			return app1.playerProxy.invokePlayer(playerId, 'notify', ['route', 'should in server1']);
 		}).then(function(){
@@ -41,7 +41,7 @@ describe('area test', function(){
 			//Should work after area transfer to another server
 			return app2.playerProxy.invokePlayer(playerId, 'notify', ['route', 'should in server2']);
 		}).then(function(){
-			return app2.playerProxy.invokePlayer(playerId, 'disconnect');
+			return app2.playerProxy.invokePlayer(playerId, 'logout');
 		}).then(function(){
 			return app2.playerBackend.removePlayer(playerId);
 		}).then(function(){
