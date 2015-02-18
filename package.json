@@ -23,7 +23,7 @@
 		"postinstall": ""
 	},
 	"dependencies": {
-		"lodash": "~2.4.1",
+		"lodash": "~3.2.0",
 		"grunt-cli": "~0.1.13",
 		"q": "~1.1.2",
 		"require-directory": "~2.0.0",
