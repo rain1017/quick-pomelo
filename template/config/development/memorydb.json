@@ -1,0 +1,21 @@
+{
+	"redisConfig" : {
+		"host" : "127.0.0.1",
+		"port" : 6379
+	},
+	"backend" : "mongoose",
+	"backendConfig" : {
+		"uri" : "mongodb://localhost/quick-pomelo",
+		"options" : {
+			"server" : {
+				"socketOptions" : {
+					"keepAlive" : 1
+				}
+			}
+		}
+	},
+	"slaveConfig" : {
+		"host" : "127.0.0.1",
+		"port" : 6379
+	}
+}

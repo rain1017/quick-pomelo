@@ -17,7 +17,6 @@ app.configure('all', function() {
 
 	app.enable('systemMonitor');
 
-	// rpc client configurations
 	app.set('proxyConfig', {
 		cacheMsg : true,
 		interval : 30,
@@ -32,9 +31,10 @@ app.configure('all', function() {
 		timeout : 10 * 1000,
 	});
 
-	app.loadConfigBaseApp('redisConfig', 'redis.json');
-	app.loadConfigBaseApp('mongoConfig', 'mongodb.json');
+	// Configure memorydb
+	app.loadConfigBaseApp('memorydbConfig', 'memorydb.json');
 
+	// Configure logger
 	var loggerConfig = app.getBase() + '/config/log4js.json';
 	var loggerOpts = {
 		serverId : app.getServerId(),
@@ -42,6 +42,14 @@ app.configure('all', function() {
 	};
 	quick.configureLogger(loggerConfig, loggerOpts);
 	pomeloLogger.configure(loggerConfig, loggerOpts);
+
+	// Load components
+	app.load(quick.components.memorydb);
+	app.load(quick.components.controllers);
+	app.load(quick.components.routes);
+
+	// Configure filter
+	app.filter(quick.filters.transaction(app));
 
 	// Add beforeStop hook
 	app.lifecycleCbs[pomeloConstants.LIFECYCLE.BEFORE_SHUTDOWN] = function(app, shutdown, cancelShutDownTimer){
@@ -77,11 +85,6 @@ app.configure('all', function() {
 		};
 		cb(err, resp);
 	});
-
-	app.set('authFunc', function(auth){
-		var playerId = auth;
-		return playerId;
-	});
 });
 
 //Connector settings
@@ -94,47 +97,6 @@ app.configure('all', 'gate|connector', function() {
 	app.set('sessionConfig', {
 		singleSession : true,
 	});
-});
-
-
-app.configure('all', 'connector|area|autoscaling|allocator', function(){
-	app.route('area', quick.routes.area);
-
-	var opts = {
-		redisConfig : app.get('redisConfig'),
-		mongoConfig : app.get('mongoConfig'),
-		areaClasses : [require('./app/areas/room')],
-	};
-	app.load(quick.components.areaBackend, opts);
-
-	opts = {
-		mongoConfig : app.get('mongoConfig'),
-		playerClass : require('./app/player'),
-	};
-	app.load(quick.components.playerBackend, opts);
-
-	opts = {
-		cacheTimeout : 30 * 1000,
-	}
-	app.load(quick.components.areaProxy, opts);
-
-	opts = {};
-	app.load(quick.components.playerProxy, opts);
-});
-
-app.configure('all', 'area', function(){
-	var opts = {};
-	app.load(quick.components.areaServer, opts);
-});
-
-app.configure('all', 'autoscaling', function(){
-	var opts = {};
-	app.load(quick.components.autoScaling, opts);
-});
-
-app.configure('all', 'allocator', function(){
-	var opts = {};
-	app.load(quick.components.defaultAreaAllocator, opts);
 });
 
 app.configure('development', function(){

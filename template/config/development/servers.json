@@ -6,14 +6,16 @@
 		{"id": "connector-server-1", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13100, "clientPort": 3100, "frontend": true, "args": "--debug=5870"},
 		{"id": "connector-server-2", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13101, "clientPort": 3101, "frontend": true, "args": "--debug=5871"}
 	],
+	"player": [
+		{"id": "player-server-1", "host": "127.0.0.1", "port": 13200, "args": "--debug=5880"},
+		{"id": "player-server-2", "host": "127.0.0.1", "port": 13201, "args": "--debug=5881"}
+	],
 	"area": [
-		{"id": "area-server-1", "host": "127.0.0.1", "port": 13200, "args": "--debug=5880"},
-		{"id": "area-server-2", "host": "127.0.0.1", "port": 13201, "args": "--debug=5881"}
+		{"id": "area-server-1", "host": "127.0.0.1", "port": 13300, "args": "--debug=5890"},
+		{"id": "area-server-2", "host": "127.0.0.1", "port": 13301, "args": "--debug=5891"}
 	],
-	"autoscaling": [
-		{"id": "autoscaling-server", "host": "127.0.0.1", "port": 13011, "args": "--debug=5861"}
-	],
-	"allocator": [
-		{"id": "allocator-server", "host": "127.0.0.1", "port": 13012, "args": "--debug=5862"}
+	"team": [
+		{"id": "team-server-1", "host": "127.0.0.1", "port": 13400, "args": "--debug=5900"},
+		{"id": "team-server-2", "host": "127.0.0.1", "port": 13401, "args": "--debug=5901"}
 	]
 }
