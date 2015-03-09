@@ -1,10 +1,8 @@
 'use strict';
 
 var Q = require('q');
-var util = require('util');
-var sinon = require('sinon');
+var path = require('path');
 var logger = require('pomelo-logger').getLogger('test', __filename);
-var MockChannelService = require('./mock-channelservice');
 
 /*
  * @param opts.serverId
@@ -20,7 +18,6 @@ var MockApp = function(opts){
 	this.components = {};
 	this.remoteApps = [];
 	this.rpc = {};
-	this.channelService = new MockChannelService();
 };
 
 MockApp.prototype.start = function(cb){
@@ -108,6 +105,10 @@ MockApp.prototype.set = function(name, value, attach){
 	if(attach){
 		this[name] = value;
 	}
+};
+
+MockApp.prototype.getBase = function(){
+	return path.join(__dirname, '../..');
 };
 
 MockApp.prototype.setRemoteApps = function(apps){

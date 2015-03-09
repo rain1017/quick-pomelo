@@ -6,8 +6,8 @@ route.handler = function(session, msg){
 	return msg.areaId;
 };
 
-route.remote = function(routeParam, args){
-	return routeParam ? routeParam.areaId : null;
-};
+// route.remote = function(routeParam, args){
+// 	return routeParam;
+// };
 
 module.exports = route;

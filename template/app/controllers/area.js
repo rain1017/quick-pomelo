@@ -4,9 +4,6 @@ var Q = require('q');
 
 var Controller = function(app){
 	this.app = app;
-
-	this.Area = app.models.Area;
-	this.Player = app.models.Player;
 };
 
 var proto = Controller.prototype;
@@ -19,7 +16,7 @@ proto.create = function(opts){
 proto.remove = function(areaId){
 	var self = this;
 	return Q.fcall(function(){
-		return self.Area.findForUpdateQ(areaId);
+		return self.app.models.Area.findForUpdateQ(areaId);
 	})
 	.then(function(area){
 		if(!area){
@@ -32,26 +29,26 @@ proto.remove = function(areaId){
 			if(players.length > 0){
 				throw new Error('area is not empty');
 			}
-			return self.Area.removeQ(areaId);
+			return area.removeQ();
 		});
 	});
 };
 
 proto.getPlayers = function(areaId){
-	return this.Player.findByIndexQ('areaId', areaId);
+	return this.app.models.Player.findByIndexQ('areaId', areaId);
 };
 
 proto.join = function(areaId, playerId){
 	var player = null;
 	var self = this;
 	return Q.fcall(function(){
-		return self.Area.findForUpdateQ(areaId);
+		return self.app.models.Area.findForUpdateQ(areaId);
 	})
 	.then(function(area){
 		if(!area){
 			throw new Error('area ' + areaId + ' not exist');
 		}
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -71,13 +68,13 @@ proto.quit = function(playerId){
 	var player = null;
 	var self = this;
 	return Q.fcall(function(){
-		return self.Area.findForUpdateQ(areaId);
+		return self.app.models.Area.findForUpdateQ(areaId);
 	})
 	.then(function(area){
 		if(!area){
 			throw new Error('area ' + areaId + ' not exist');
 		}
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(ret){
 		player = ret;

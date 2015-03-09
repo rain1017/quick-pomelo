@@ -40,6 +40,8 @@
 		"blanket" : "~1.1.6",
 		"ws" : "~0.7.1",
 		"pomelo-protocol" : "~0.1.4",
-		"pomelo-protobuf" : "~0.4.0"
+		"pomelo-protobuf" : "~0.4.0",
+		"redis" : "~0.12.1",
+		"mongoose" : "~3.8.24"
 	}
 }

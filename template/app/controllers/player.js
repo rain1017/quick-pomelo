@@ -4,16 +4,15 @@ var Q = require('q');
 
 var Controller = function(app){
 	this.app = app;
-
-	this.Player = app.models.Player;
 };
 
 var proto = Controller.prototype;
 
 proto.create = function(opts){
-	var self = this;
-	var player = new self.Player(opts);
+	var player = new this.app.models.Player(opts);
 	var playerId = player._id;
+
+	var self = this;
 	return Q.fcall(function(){
 		return player.saveQ();
 	})
@@ -26,7 +25,7 @@ proto.create = function(opts){
 proto.remove = function(playerId){
 	var self = this;
 	return Q.fcall(function(){
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(player){
 		if(!player){
@@ -34,12 +33,12 @@ proto.remove = function(playerId){
 		}
 		return Q.fcall(function(){
 			if(!!player.areaId){
-				return self.app.controllers.area.playerQuit(player.areaId, playerId);
+				return self.app.controllers.area.quit(playerId);
 			}
 		})
 		.then(function(){
 			if(!!player.teamId){
-				return self.app.controllers.team.playerQuit(player.teamId, playerId);
+				return self.app.controllers.team.quit(playerId);
 			}
 		})
 		.then(function(){
@@ -47,7 +46,7 @@ proto.remove = function(playerId){
 			return self.app.controllers.push.quit(channelId, playerId);
 		})
 		.then(function(){
-			return self.Player.removeQ(playerId);
+			return player.removeQ();
 		});
 	});
 };
@@ -57,7 +56,7 @@ proto.connect = function(playerId, connectorId){
 	var player = null;
 	var oldConnectorId = null;
 	return Q.fcall(function(){
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -80,7 +79,7 @@ proto.disconnect = function(playerId){
 	var self = this;
 	var player = null;
 	return Q.fcall(function(){
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(ret){
 		player = ret;

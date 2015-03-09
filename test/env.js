@@ -2,139 +2,73 @@
 
 var should = require('should');
 var Q = require('q');
-var _ = require('lodash');
+Q.longStackSupport = true;
 var redis = require('redis');
 var mongoose = require('mongoose');
-var sinon = require('sinon');
 var logger = require('pomelo-logger').getLogger('test', __filename);
-var quick = require('../lib');
 var MockApp = require('./mocks/mockapp');
-var Room = require('./mocks/room');
-var Player = require('./mocks/player');
 
-var redisConfig = {host : '127.0.0.1', port : 6379};
-var mongoConfig = {uri: 'mongodb://localhost/quick-pomelo-test', options : {}};
+var memorydbConfig = {
+	redisConfig : {host : '127.0.0.1', port : 6379},
+	backend : 'mongoose',
+	backendConfig : {uri : 'mongodb://localhost/quick-pomelo-test', options: {}},
+	slaveConfig : {host : '127.0.0.1', port : 6379},
+};
 
-Q.longStackSupport = true;
+exports.clearRedis = function(redisConfig){
+	var client = redis.createClient(redisConfig.port, redisConfig.host);
+	return Q.nfcall(function(cb){
+		client.flushdb(cb);
+	})
+	.then(function(){
+		client.quit();
+	});
+};
 
-var flushdb = function(cb){
-	logger.debug('start flushdb');
-
+exports.clearMongo = function(mongoConfig){
 	var mongodb = null;
-	Q.nfcall(function(cb){
+	return Q.nfcall(function(cb){
 		mongodb = mongoose.connect(mongoConfig.uri, mongoConfig.options, cb);
 	}).then(function(){
 		return Q.ninvoke(mongodb.connection.db, 'dropDatabase');
 	}).then(function(){
 		return Q.ninvoke(mongodb, 'disconnect');
-	}).then(function(){
-		var client = redis.createClient(redisConfig.port, redisConfig.host);
-		client.flushdb();
-		client.end();
+	});
+};
+
+exports.cleardb = function(cb){
+	logger.debug('start flushdb');
+	return Q.fcall(function(){
+		return exports.clearRedis(memorydbConfig.redisConfig);
+	})
+	.then(function(){
+		return exports.clearRedis(memorydbConfig.slaveConfig);
+	})
+	.then(function(){
+		return exports.clearMongo(memorydbConfig.backendConfig);
 	})
 	.then(function(){
 		logger.debug('done flushdb');
-		cb();
-	}).catch(cb);
+	})
+	.nodeify(cb);
 };
 
-var env = {
+exports.before = function(){
 
-	/*
-	 * @params serverId
-	 * @params role
-	 * @params componentOpts - {name : opts}
-	 */
-	createMockApp : function(serverId, role, componentOpts){
-		componentOpts = componentOpts || {};
-
-		var app = new MockApp({serverId : serverId, serverType : role});
-
-		var areaBackendOpts = componentOpts.areaBackend || {};
-		areaBackendOpts.redisConfig = redisConfig;
-		areaBackendOpts.mongoConfig = mongoConfig;
-		areaBackendOpts.areaClasses = [Room];
-		app.load(quick.components.areaBackend, areaBackendOpts);
-
-		var playerBackendOpts = componentOpts.playerBackend || {};
-		playerBackendOpts.mongoConfig = mongoConfig;
-		playerBackendOpts.playerClass = Player;
-		app.load(quick.components.playerBackend, playerBackendOpts);
-
-		app.load(quick.components.areaProxy, componentOpts.areaProxy || {});
-		app.load(quick.components.playerProxy, componentOpts.playerProxy || {});
-
-		if(role === 'area'){
-			app.load(quick.components.areaServer, componentOpts.areaServer || {});
-		}
-		if(role === 'autoscaling'){
-			app.load(quick.components.autoScaling, componentOpts.autoScaling || {});
-		}
-		if(role === 'allocator'){
-			app.load(quick.components.defaultAreaAllocator, componentOpts.defaultAreaAllocator || {});
-		}
-
-		app.setRpc('area', 	{
-			quickRemote : {
-				invokeAreaServer: sinon.spy(function(serverId, method, args, cb){
-					var remoteApp = app.getRemoteApp(serverId);
-					if(remoteApp){
-						Q.fcall(function(){
-							return remoteApp.areaServer[method].apply(remoteApp.areaServer, args);
-						}).then(function(ret){
-							cb(null, ret);
-						}, cb);
-					}
-					else{
-						cb(null);
-					}
-				})
-			}
-		});
-
-		app.setRpc('autoscaling', {
-			quickRemote : {
-				reportServerStatus: sinon.spy(function(route, serverId, loadAve, cb){
-					cb();
-				})
-			}
-		});
-
-		app.setRpc('allocator', {
-			quickRemote : {
-				joinDefaultArea: sinon.spy(function(route, playerId, cb){
-					var remoteApp = app.getRemoteAppsByType('allocator')[0];
-					if(remoteApp){
-						Q.fcall(function(){
-							return remoteApp.defaultAreaAllocator.joinDefaultArea(playerId);
-						}).then(function(ret){
-							cb(null, ret);
-						}, cb);
-					}
-					else{
-						cb();
-					}
-				})
-			}
-		});
-		return app;
-	},
-
-	before : function(){
-
-	},
-
-	beforeEach : function(cb){
-		flushdb(cb);
-	},
-
-	afterEach : function(){
-
-	},
-
-	after : function(cb){
-		flushdb(cb);
-	},
 };
 
-module.exports = env;
+exports.beforeEach = function(cb){
+	exports.cleardb(cb);
+};
+
+exports.afterEach = function(){
+
+};
+
+exports.after = function(cb){
+	exports.cleardb(cb);
+};
+
+exports.createMockApp = function(serverId, serverType){
+	return new MockApp({serverId : serverId, serverType : serverType});
+};

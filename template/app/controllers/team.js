@@ -4,22 +4,19 @@ var Q = require('q');
 
 var Controller = function(app){
 	this.app = app;
-
-	this.Team = app.models.Team;
-	this.Player = app.models.Player;
 };
 
 var proto = Controller.prototype;
 
 proto.create = function(opts){
-	var team = new this.Team(opts);
+	var team = new this.app.models.Team(opts);
 	return team.saveQ();
 };
 
 proto.remove = function(teamId){
 	var self = this;
 	return Q.fcall(function(){
-		return sekf.Team.findForUpdateQ(teamId);
+		return self.app.models.Team.findForUpdateQ(teamId);
 	})
 	.then(function(team){
 		if(!team){
@@ -32,26 +29,26 @@ proto.remove = function(teamId){
 			if(players.length > 0){
 				throw new Error('team is not empty');
 			}
-			return self.Team.removeQ(teamId);
+			return team.removeQ();
 		});
 	});
 };
 
 proto.getPlayers = function(teamId){
-	return this.Player.findByIndexQ('teamId', teamId);
+	return this.app.models.Player.findByIndexQ('teamId', teamId);
 };
 
 proto.join = function(teamId, playerId){
 	var player = null;
 	var self = this;
 	return Q.fcall(function(){
-		return self.Team.findForUpdateQ(teamId);
+		return self.app.models.Team.findForUpdateQ(teamId);
 	})
 	.then(function(team){
 		if(!team){
 			throw new Error('team ' + teamId + ' not exist');
 		}
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -71,13 +68,13 @@ proto.quit = function(playerId){
 	var player = null;
 	var self = this;
 	return Q.fcall(function(){
-		return self.Team.findForUpdateQ(teamId);
+		return self.app.models.Team.findForUpdateQ(teamId);
 	})
 	.then(function(team){
 		if(!team){
 			throw new Error('team ' + teamId + ' not exist');
 		}
-		return self.Player.findForUpdateQ(playerId);
+		return self.app.models.Player.findForUpdateQ(playerId);
 	})
 	.then(function(ret){
 		player = ret;
