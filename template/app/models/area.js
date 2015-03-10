@@ -8,6 +8,6 @@ module.exports = function(app){
 		name : {type : String},
 	}, {collection : 'areas'});
 
-	mdbgoose.Model('Area', AreaSchema);
+	mdbgoose.model('Area', AreaSchema);
 };
 

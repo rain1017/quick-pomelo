@@ -8,5 +8,5 @@ module.exports = function(app){
 		name : {type : String},
 	}, {collection : 'teams'});
 
-	mdbgoose.Model('Team', TeamSchema);
+	mdbgoose.model('Team', TeamSchema);
 };

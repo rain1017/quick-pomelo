@@ -11,5 +11,5 @@ module.exports = function(app){
 		name : {type : String},
 	}, {collection : 'players'});
 
-	mdbgoose.Model('Player', PlayerSchema);
+	mdbgoose.model('Player', PlayerSchema);
 };

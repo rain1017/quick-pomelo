@@ -6,14 +6,17 @@ Q.longStackSupport = true;
 var redis = require('redis');
 var mongoose = require('mongoose');
 var logger = require('pomelo-logger').getLogger('test', __filename);
-var MockApp = require('./mocks/mockapp');
+var App = require('./mocks/app');
 
 var memorydbConfig = {
+	_id : 's1',
 	redisConfig : {host : '127.0.0.1', port : 6379},
 	backend : 'mongoose',
 	backendConfig : {uri : 'mongodb://localhost/quick-pomelo-test', options: {}},
 	slaveConfig : {host : '127.0.0.1', port : 6379},
 };
+
+exports.memorydbConfig = memorydbConfig;
 
 exports.clearRedis = function(redisConfig){
 	var client = redis.createClient(redisConfig.port, redisConfig.host);
@@ -70,5 +73,5 @@ exports.after = function(cb){
 };
 
 exports.createMockApp = function(serverId, serverType){
-	return new MockApp({serverId : serverId, serverType : serverType});
+	return new App({serverId : serverId, serverType : serverType});
 };

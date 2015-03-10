@@ -4,19 +4,19 @@ var Q = require('q');
 var env = require('../../env');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
-var controllers = require('../../../lib/components/controllers');
+var routes = require('../../../lib/components/routes');
 
-describe('controllers test', function(){
+describe('routes test', function(){
 
-	it('load controllers', function(cb){
+	it('load routes', function(cb){
 		var app = env.createMockApp('server1', 'area');
-		app.load(controllers, {basePath : 'test/mocks/controllers'});
+		app.load(routes, {basePath : 'test/mocks/routes'});
 
 		return Q.fcall(function(){
 			return Q.ninvoke(app, 'start');
 		})
 		.then(function(){
-			(!!app.controllers.dummy).should.eql(true);
+			(!!app._routes.dummy).should.eql(true);
 		})
 		.fin(function(){
 			return Q.ninvoke(app, 'stop');

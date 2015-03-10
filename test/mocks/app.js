@@ -9,63 +9,59 @@ var logger = require('pomelo-logger').getLogger('test', __filename);
  * @param opts.components - {'name' : opts}
  * @param opts.rpc
  */
-var MockApp = function(opts){
+var App = function(opts){
 	opts = opts || {};
 	this.serverId = opts.serverId;
 	this.serverType = opts.serverType;
 
 	this.settings = {};
 	this.components = {};
+	this._routes = {};
 	this.remoteApps = [];
 	this.rpc = {};
 };
 
-MockApp.prototype.start = function(cb){
+var proto = App.prototype;
+
+proto.start = function(cb){
 	var self = this;
 	Q.fcall(function(){
 		return Q.ninvoke(self, 'optComponents', 'start');
-	}).then(function(){
+	})
+	.then(function(){
 		return Q.ninvoke(self, 'optComponents', 'afterStart');
-	}).then(function(ret){
-		cb(null, ret);
-	}, cb);
+	})
+	.nodeify(cb);
 };
 
-MockApp.prototype.stop = function(force, cb){
+proto.stop = function(force, cb){
 	var self = this;
 	Q.fcall(function(){
 		return Q.ninvoke(self, 'optComponents', 'beforeStop');
-	}).then(function(){
+	})
+	.then(function(){
 		return Q.ninvoke(self, 'stopComponents', force);
-	}).then(function(ret){
-		cb(null, ret);
-	}, cb);
+	})
+	.nodeify(cb);
 };
 
-MockApp.prototype.load = function(component, opts){
+proto.load = function(component, opts){
 	var instance = component(this, opts);
 	this.components[instance.name] = instance;
 };
 
-MockApp.prototype.optComponents = function(method, cb){
+proto.optComponents = function(method, cb){
 	var self = this;
-	Q.all(
-		Object.keys(self.components).map(function(name){
-			return Q.nfcall(function(cb){
-				if(typeof(self.components[name][method]) === 'function'){
-					self.components[name][method](cb);
-				}
-				else{
-					cb();
-				}
-			});
-		})
-	).then(function(){
-		cb();
-	}).catch(cb);
+	Q.all(Object.keys(self.components).map(function(name){
+		var component = self.components[name];
+		if(typeof(component[method]) === 'function'){
+			return Q.ninvoke(component, method);
+		}
+	}))
+	.nodeify(cb);
 };
 
-MockApp.prototype.stopComponents = function(force, cb){
+proto.stopComponents = function(force, cb){
 	if(typeof(force) === 'function'){
 		cb = force;
 		force = false;
@@ -83,46 +79,48 @@ MockApp.prototype.stopComponents = function(force, cb){
 				}
 			});
 		})
-	).then(function(){
-		cb();
-	}).catch(cb);
+	).nodeify(cb);
 };
 
-MockApp.prototype.getServerId = function(){
+proto.getServerId = function(){
 	return this.serverId;
 };
 
-MockApp.prototype.getServerType = function(){
+proto.getServerType = function(){
 	return this.serverType;
 };
 
-MockApp.prototype.get = function(name){
+proto.get = function(name){
 	return this.settings[name];
 };
 
-MockApp.prototype.set = function(name, value, attach){
+proto.set = function(name, value, attach){
 	this.settings[name] = value;
 	if(attach){
 		this[name] = value;
 	}
 };
 
-MockApp.prototype.getBase = function(){
+proto.getBase = function(){
 	return path.join(__dirname, '../..');
 };
 
-MockApp.prototype.setRemoteApps = function(apps){
+proto.route = function(serverType, fn){
+	this._routes[serverType] = fn;
+};
+
+proto.setRemoteApps = function(apps){
 	if(!(apps instanceof Array)){
 		apps = [apps];
 	}
 	this.remoteApps = apps;
 };
 
-MockApp.prototype.setRpc = function(serverType, rpc){
+proto.setRpc = function(serverType, rpc){
 	this.rpc[serverType] = rpc;
 };
 
-MockApp.prototype.getRemoteApp = function(serverId){
+proto.getRemoteApp = function(serverId){
 	for(var i in this.remoteApps){
 		if(this.remoteApps[i].getServerId() === serverId){
 			return this.remoteApps[i];
@@ -130,7 +128,7 @@ MockApp.prototype.getRemoteApp = function(serverId){
 	}
 };
 
-MockApp.prototype.getRemoteAppsByType = function(serverType){
+proto.getRemoteAppsByType = function(serverType){
 	var apps = [];
 	for(var i in this.remoteApps){
 		if(this.remoteApps[i].getServerType() === serverType){
@@ -140,5 +138,5 @@ MockApp.prototype.getRemoteAppsByType = function(serverType){
 	return apps;
 };
 
-module.exports = MockApp;
+module.exports = App;
 
