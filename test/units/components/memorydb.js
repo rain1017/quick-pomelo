@@ -2,9 +2,8 @@
 
 var Q = require('q');
 var env = require('../../env');
+var quick = require('../../../lib');
 var logger = require('pomelo-logger').getLogger('test', __filename);
-
-var memorydb = require('../../../lib/components/memorydb');
 
 describe('memorydb test', function(){
 	beforeEach(env.cleardb);
@@ -12,11 +11,11 @@ describe('memorydb test', function(){
 
 	it('load memorydb / parse schema', function(cb){
 		var app = env.createMockApp('server1', 'area');
-		var config = env.memorydbConfig;
+		var config = env.memorydbConfig();
 		config.modelsPath = 'test/mocks/models';
 
 		app.set('memorydbConfig', config);
-		app.load(memorydb);
+		app.load(quick.components.memorydb);
 
 		return Q.fcall(function(){
 			return Q.ninvoke(app, 'start');

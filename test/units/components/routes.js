@@ -2,15 +2,13 @@
 
 var Q = require('q');
 var env = require('../../env');
+var quick = require('../../../lib');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
-var routes = require('../../../lib/components/routes');
-
 describe('routes test', function(){
-
 	it('load routes', function(cb){
 		var app = env.createMockApp('server1', 'area');
-		app.load(routes, {basePath : 'test/mocks/routes'});
+		app.load(quick.components.routes, {basePath : 'test/mocks/routes'});
 
 		return Q.fcall(function(){
 			return Q.ninvoke(app, 'start');

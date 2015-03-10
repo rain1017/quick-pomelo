@@ -8,15 +8,20 @@ var mongoose = require('mongoose');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 var App = require('./mocks/app');
 
-var memorydbConfig = {
-	_id : 's1',
-	redisConfig : {host : '127.0.0.1', port : 6379},
-	backend : 'mongoose',
-	backendConfig : {uri : 'mongodb://localhost/quick-pomelo-test', options: {}},
-	slaveConfig : {host : '127.0.0.1', port : 6379},
+exports.memorydbConfig = function(){
+	return {
+		_id : 's1',
+		redisConfig : {host : '127.0.0.1', port : 6379},
+		backend : 'mongoose',
+		backendConfig : {uri : 'mongodb://localhost/quick-pomelo-test', options: {}},
+		slaveConfig : {host : '127.0.0.1', port : 6379},
+		modelsPath : 'lib/models',
+	};
 };
 
-exports.memorydbConfig = memorydbConfig;
+exports.controllersConfig = function(){
+	return {basePath : 'lib/controllers'};
+};
 
 exports.clearRedis = function(redisConfig){
 	var client = redis.createClient(redisConfig.port, redisConfig.host);
@@ -40,36 +45,22 @@ exports.clearMongo = function(mongoConfig){
 };
 
 exports.cleardb = function(cb){
+	var config = exports.memorydbConfig();
+
 	logger.debug('start flushdb');
 	return Q.fcall(function(){
-		return exports.clearRedis(memorydbConfig.redisConfig);
+		return exports.clearRedis(config.redisConfig);
 	})
 	.then(function(){
-		return exports.clearRedis(memorydbConfig.slaveConfig);
+		return exports.clearRedis(config.slaveConfig);
 	})
 	.then(function(){
-		return exports.clearMongo(memorydbConfig.backendConfig);
+		return exports.clearMongo(config.backendConfig);
 	})
 	.then(function(){
 		logger.debug('done flushdb');
 	})
 	.nodeify(cb);
-};
-
-exports.before = function(){
-
-};
-
-exports.beforeEach = function(cb){
-	exports.cleardb(cb);
-};
-
-exports.afterEach = function(){
-
-};
-
-exports.after = function(cb){
-	exports.cleardb(cb);
 };
 
 exports.createMockApp = function(serverId, serverType){

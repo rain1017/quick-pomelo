@@ -17,8 +17,6 @@ var App = function(opts){
 	this.settings = {};
 	this.components = {};
 	this._routes = {};
-	this.remoteApps = [];
-	this.rpc = {};
 };
 
 var proto = App.prototype;
@@ -109,33 +107,9 @@ proto.route = function(serverType, fn){
 	this._routes[serverType] = fn;
 };
 
-proto.setRemoteApps = function(apps){
-	if(!(apps instanceof Array)){
-		apps = [apps];
-	}
-	this.remoteApps = apps;
-};
-
-proto.setRpc = function(serverType, rpc){
-	this.rpc[serverType] = rpc;
-};
-
-proto.getRemoteApp = function(serverId){
-	for(var i in this.remoteApps){
-		if(this.remoteApps[i].getServerId() === serverId){
-			return this.remoteApps[i];
-		}
-	}
-};
-
-proto.getRemoteAppsByType = function(serverType){
-	var apps = [];
-	for(var i in this.remoteApps){
-		if(this.remoteApps[i].getServerType() === serverType){
-			apps.push(this.remoteApps[i]);
-		}
-	}
-	return apps;
+proto.rpcInvoke = function(serverId, opts, cb){
+	logger.info('rpcInvoke %s %j', serverId, opts);
+	cb(null);
 };
 
 module.exports = App;
