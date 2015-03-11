@@ -6,7 +6,6 @@ var pomelo = require('pomelo');
 var quick = require('quick-pomelo');
 var pomeloLogger = require('pomelo-logger');
 var pomeloConstants = require('pomelo/lib/util/constants');
-var pomeloAppUtil = require('pomelo/lib/util/appUtil');
 var logger = pomeloLogger.getLogger('pomelo', __filename);
 
 var app = pomelo.createApp();
@@ -56,6 +55,7 @@ app.configure('all', function() {
 		cancelShutDownTimer();
 
 		if(app.getServerType() === 'master'){
+
 			// Wait for all server stop
 			var tryShutdown = function(){
 				if(Object.keys(app.getServers()).length === 0){
@@ -69,12 +69,7 @@ app.configure('all', function() {
 			return;
 		}
 
-		Q.ninvoke(pomeloAppUtil, 'optComponents', app.loaded, 'beforeStop')
-		.then(function(){
-			shutdown();
-		}, function(e){
-			logger.error(e.stack);
-		});
+		shutdown();
 	};
 
 	app.set('errorHandler', function(err, msg, resp, session, cb){

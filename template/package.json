@@ -28,6 +28,7 @@
 		"pomelo": "~1.1.3",
 		"pomelo-cli": "~0.1.2",
 		"pomelo-logger": "~0.1.6",
+		"node-uuid": "~1.4.3",
 		"heapdump" : "~0.3.4"
 	},
 	"devDependencies": {

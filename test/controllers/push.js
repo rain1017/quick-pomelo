@@ -64,8 +64,17 @@ describe('push test', function(){
 					//get message history
 					return push.getMsgs('c1', 0)
 					.then(function(ret){
-						ret.seq.should.eql(0);
-						ret.msgs.should.eql(['hello1', 'hello2']);
+						ret.length.should.eql(2);
+						ret[0].should.eql({
+							route : 'chat',
+							msg : 'hello1',
+							seq : 0,
+						});
+						ret[1].should.eql({
+							route : 'chat',
+							msg : 'hello2',
+							seq : 1,
+						});
 					});
 				})
 				.then(function(){
@@ -77,8 +86,17 @@ describe('push test', function(){
 					return push.getMsgs('c1', 0, 3)
 					.then(function(ret){
 						//can get only latest 2 messages
-						ret.seq.should.eql(1);
-						ret.msgs.should.eql(['hello2', 'hello3']);
+						ret.length.should.eql(2);
+						ret[0].should.eql({
+							route : 'chat',
+							msg : 'hello2',
+							seq : 1,
+						});
+						ret[1].should.eql({
+							route : 'chat',
+							msg : 'hello3',
+							seq : 2,
+						});
 					});
 				})
 				.then(function(){

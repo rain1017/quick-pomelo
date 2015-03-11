@@ -85,13 +85,13 @@
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/handler-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/connector-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"handler"
+            "category":"connector"
         },
        	{
             "type": "dateFile",

@@ -2,12 +2,12 @@
 
 var route = {};
 
-route.handler = function(session, msg){
+route.handler = function(session, method, msg){
 	return msg.areaId;
 };
 
-// route.remote = function(routeParam, args){
-// 	return routeParam;
-// };
+route.remote = function(routeParam, method, args){
+	return routeParam;
+};
 
 module.exports = route;

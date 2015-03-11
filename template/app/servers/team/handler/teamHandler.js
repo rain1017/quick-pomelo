@@ -13,8 +13,9 @@ proto.create = function(msg, session, next){
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.team.createArea(opts);
-	}).nodeify(next);
+		return self.app.controllers.team.create(opts);
+	})
+	.nodeify(next);
 };
 
 proto.remove = function(msg, session, next){
@@ -25,8 +26,9 @@ proto.remove = function(msg, session, next){
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.team.removeArea(teamId);
-	}).nodeify(next);
+		return self.app.controllers.team.remove(teamId);
+	})
+	.nodeify(next);
 };
 
 proto.join = function(msg, session, next){
@@ -39,7 +41,8 @@ proto.join = function(msg, session, next){
 	var self = this;
 	Q.fcall(function(){
 		return self.app.controllers.team.join(teamId, playerId);
-	}).nodeify(next);
+	})
+	.nodeify(next);
 };
 
 proto.quit = function(msg, session, next){
@@ -52,7 +55,8 @@ proto.quit = function(msg, session, next){
 	var self = this;
 	Q.fcall(function(){
 		return self.app.controllers.team.quit(teamId, playerId);
-	}).nodeify(next);
+	})
+	.nodeify(next);
 };
 
 module.exports = function(app){

@@ -1,7 +1,8 @@
 'use strict';
 
 var Q = require('q');
-var logger = require('pomelo-logger').getLogger('handler', __filename);
+var util = require('util');
+var logger = require('pomelo-logger').getLogger('connector', __filename);
 
 var Handler = function(app){
 	this.app = app;
@@ -44,6 +45,7 @@ proto.login = function(msg, session, next){
 	})
 	.then(function(oldConnectorId){
 		if(oldConnectorId){
+			logger.warn('player %s already connected on %s, will kick', playerId, oldConnectorId);
 			// kick original connector
 			return Q.nfcall(function(cb){
 				self.app.rpc.connector.entryRemote.kick({frontendId : oldConnectorId}, playerId, cb);
@@ -63,13 +65,16 @@ proto.login = function(msg, session, next){
 			var autoConn = self.app.memorydb.autoConnect();
 			autoConn.execute(function(){
 				return Q.nfcall(function(cb){
-					self.logout({}, session, cb);
+					self.logout({closed : true}, session, cb);
 				});
 			})
 			.catch(function(e){
 				logger.warn(e);
 			});
 		});
+	})
+	.then(function(){
+		logger.info('player %s login', playerId);
 	})
 	.nodeify(next);
 };
@@ -85,7 +90,12 @@ proto.logout = function(msg, session, next){
 		return self.app.controllers.player.disconnect(playerId);
 	})
 	.then(function(){
-		return Q.ninvoke(session, 'unbind', playerId);
+		if(!msg.closed){
+			return Q.ninvoke(session, 'unbind', playerId);
+		}
+	})
+	.then(function(){
+		logger.info('player %s logout', playerId);
 	})
 	.nodeify(next);
 };

@@ -13,20 +13,25 @@ proto.create = function(msg, session, next){
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.player.createPlayer(opts);
-	}).nodeify(next);
+		return self.app.controllers.player.create(opts);
+	})
+	.nodeify(next);
 };
 
 proto.remove = function(msg, session, next){
-	var playerId = msg.playerId || session.uid;
+	var playerId = session.uid;
 	if(!playerId){
-		return next(new Error('playerId is missing'));
+		return next(new Error('player is not logged in'));
 	}
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.player.removePlayer(playerId);
-	}).nodeify(next);
+		return self.app.controllers.player.remove(playerId);
+	})
+	.then(function(){
+		return Q.ninvoke(session, 'unbind', playerId);
+	})
+	.nodeify(next);
 };
 
 module.exports = function(app){

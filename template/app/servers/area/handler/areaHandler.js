@@ -13,8 +13,9 @@ proto.create = function(msg, session, next){
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.area.createArea(opts);
-	}).nodeify(next);
+		return self.app.controllers.area.create(opts);
+	})
+	.nodeify(next);
 };
 
 proto.remove = function(msg, session, next){
@@ -25,8 +26,9 @@ proto.remove = function(msg, session, next){
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.area.removeArea(areaId);
-	}).nodeify(next);
+		return self.app.controllers.area.remove(areaId);
+	})
+	.nodeify(next);
 };
 
 proto.join = function(msg, session, next){
@@ -39,7 +41,8 @@ proto.join = function(msg, session, next){
 	var self = this;
 	Q.fcall(function(){
 		return self.app.controllers.area.join(areaId, playerId);
-	}).nodeify(next);
+	})
+	.nodeify(next);
 };
 
 proto.quit = function(msg, session, next){
@@ -52,7 +55,34 @@ proto.quit = function(msg, session, next){
 	var self = this;
 	Q.fcall(function(){
 		return self.app.controllers.area.quit(areaId, playerId);
-	}).nodeify(next);
+	})
+	.nodeify(next);
+};
+
+proto.push = function(msg, session, next){
+	var areaId = msg.areaId;
+	if(!areaId){
+		return next(new Error('areaId is missing'));
+	}
+
+	var self = this;
+	Q.fcall(function(){
+		return self.app.controllers.area.push(areaId, msg.playerIds, msg.route, msg.msg, msg.persistent);
+	})
+	.nodeify(next);
+};
+
+proto.getMsgs = function(msg, session, next){
+	var areaId = msg.areaId;
+	if(!areaId){
+		return next(new Error('areaId is missing'));
+	}
+
+	var self = this;
+	Q.fcall(function(){
+		return self.app.controllers.area.getMsgs(areaId, msg.seq, msg.count);
+	})
+	.nodeify(next);
 };
 
 module.exports = function(app){
