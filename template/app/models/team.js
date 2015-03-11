@@ -3,7 +3,7 @@
 module.exports = function(app){
 	var mdbgoose = app.memorydb.goose();
 
-	var TeamSchema = new Schema({
+	var TeamSchema = new mdbgoose.Schema({
 		_id : {type : String},
 		name : {type : String},
 	}, {collection : 'teams'});

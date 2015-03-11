@@ -46,7 +46,7 @@ proto.login = function(msg, session, next){
 		if(oldConnectorId){
 			// kick original connector
 			return Q.nfcall(function(cb){
-				self.app.rpc.connector.entryRemote.kick({frontendId : connecterId}, playerId, cb);
+				self.app.rpc.connector.entryRemote.kick({frontendId : oldConnectorId}, playerId, cb);
 			});
 		}
 	})

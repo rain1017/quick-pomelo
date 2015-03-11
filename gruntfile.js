@@ -5,7 +5,6 @@ module.exports = function(grunt) {
 	var watchFiles = {
 		libJS: ['gruntfile.js', 'index.js', 'lib/**/*.js'],
 		testJS: ['test/**/*.js'],
-		unitTestJS: ['test/units/**/*.js'],
 	};
 
 	// Project Configuration
@@ -35,7 +34,7 @@ module.exports = function(grunt) {
 		},
 		mochaTest: {
 			test : {
-				src: watchFiles.unitTestJS,
+				src: watchFiles.testJS,
 				options : {
 					reporter: 'spec',
 					timeout: 5 * 1000,
@@ -43,7 +42,7 @@ module.exports = function(grunt) {
 				}
 			},
 			coverage: {
-				src: watchFiles.unitTestJS,
+				src: watchFiles.testJS,
 				options : {
 					reporter: 'html-cov',
 					quiet: true,

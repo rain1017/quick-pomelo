@@ -1,20 +1,21 @@
 'use strict';
 
 var Q = require('q');
-var env = require('../../env');
-var quick = require('../../../lib');
+var env = require('../env');
+var quick = require('../../lib');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
+var dbConfig = env.dbConfig;
+dbConfig.modelsPath = 'lib/mocks/models';
+
 describe('memorydb test', function(){
-	beforeEach(env.cleardb);
-	after(env.cleardb);
+	beforeEach(env.dropDatabase.bind(null, dbConfig));
+	after(env.dropDatabase.bind(null, dbConfig));
 
 	it('load memorydb / parse schema', function(cb){
-		var app = env.createMockApp('server1', 'area');
-		var config = env.memorydbConfig();
-		config.modelsPath = 'test/mocks/models';
+		var app = quick.mocks.app({serverId : 'server1', serverType : 'area'});
 
-		app.set('memorydbConfig', config);
+		app.set('memorydbConfig', dbConfig);
 		app.load(quick.components.memorydb);
 
 		return Q.fcall(function(){

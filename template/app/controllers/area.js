@@ -9,7 +9,7 @@ var Controller = function(app){
 var proto = Controller.prototype;
 
 proto.create = function(opts){
-	var area = new this.Area(opts);
+	var area = new this.app.models.Area(opts);
 	return area.saveQ();
 };
 
@@ -64,22 +64,22 @@ proto.join = function(areaId, playerId){
 	});
 };
 
-proto.quit = function(playerId){
+proto.quit = function(areaId, playerId){
 	var player = null;
 	var self = this;
 	return Q.fcall(function(){
-		return self.app.models.Area.findForUpdateQ(areaId);
-	})
-	.then(function(area){
-		if(!area){
-			throw new Error('area ' + areaId + ' not exist');
-		}
 		return self.app.models.Player.findForUpdateQ(playerId);
+	})
+	.then(function(){
+		return self.app.models.Area.findForUpdateQ(areaId);
 	})
 	.then(function(ret){
 		player = ret;
 		if(!player){
 			throw new Error('player ' + playerId + ' not exist');
+		}
+		if(player.areaId !== areaId){
+			throw new Error('player ' + playerId + ' not in area ' + areaId);
 		}
 		player.areaId = '';
 		return player.saveQ();

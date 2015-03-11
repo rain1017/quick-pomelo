@@ -64,7 +64,7 @@ app.configure('all', function() {
 				else{
 					setTimeout(tryShutdown, 200);
 				}
-			}
+			};
 			tryShutdown();
 			return;
 		}

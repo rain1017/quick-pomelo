@@ -44,13 +44,14 @@ proto.join = function(msg, session, next){
 
 proto.quit = function(msg, session, next){
 	var playerId = session.uid;
-	if(!playerId){
-		return next(new Error('playerId is missing'));
+	var teamId = msg.teamId;
+	if(!playerId || !teamId){
+		return next(new Error('playerId or teamId is missing'));
 	}
 
 	var self = this;
 	Q.fcall(function(){
-		return self.app.controllers.team.quit(playerId);
+		return self.app.controllers.team.quit(teamId, playerId);
 	}).nodeify(next);
 };
 

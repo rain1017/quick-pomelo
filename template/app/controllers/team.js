@@ -64,7 +64,7 @@ proto.join = function(teamId, playerId){
 	});
 };
 
-proto.quit = function(playerId){
+proto.quit = function(teamId, playerId){
 	var player = null;
 	var self = this;
 	return Q.fcall(function(){
@@ -80,6 +80,9 @@ proto.quit = function(playerId){
 		player = ret;
 		if(!player){
 			throw new Error('player ' + playerId + ' not exist');
+		}
+		if(player.teamId !== teamId){
+			throw new Error('player ' + playerId + ' not in team ' + teamId);
 		}
 		player.teamId = '';
 		return player.saveQ();
