@@ -1,7 +1,7 @@
 {
 	"name": "quick-pomelo",
 	"description": "",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"author": "rain",
 	"private" : true,
 	"homepage" : "https://github.com/rain1017/quick-pomelo",
@@ -24,18 +24,11 @@
 	},
 	"dependencies": {
 		"lodash": "~3.2.0",
+		"underscore": "~1.8.2",
 		"grunt-cli": "~0.1.13",
 		"q": "~1.1.2",
 		"require-directory": "~2.0.0",
-		"pomelo-logger": "~0.1.6",
-		"redis" : "~0.12.1",
-		"hiredis" : "~0.1.17",
-		"global-events" : "~0.0.2",
-		"async-lock" : "~0.1.2",
-		"node-uuid" : "~1.4.2",
-		"mongoose" : "~3.8.21",
-		"mongoose-schema-extend" : "~0.1.7",
-		"usage" : "~0.5.0"
+		"pomelo-logger": "~0.1.6"
 	},
 	"devDependencies": {
 		"should": "~4.5.0",
@@ -48,6 +41,8 @@
 		"blanket" : "~1.1.6",
 		"ws" : "~0.7.1",
 		"pomelo-protocol" : "~0.1.4",
-		"pomelo-protobuf" : "~0.4.0"
+		"pomelo-protobuf" : "~0.4.0",
+		"redis" : "~0.12.1",
+		"mongoose" : "~3.8.24"
 	}
 }

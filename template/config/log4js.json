@@ -85,83 +85,43 @@
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/handler-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/connector-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"handler"
+            "category":"connector"
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/area-server-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/memorydb-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"area-server"
+            "category":"memorydb"
+        },
+        {
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/route-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"route"
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/area-backend-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/push-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"area-backend"
-        },
-       	{
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/area-proxy-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"area-proxy"
-        },
-       	{
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/player-backend-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"player-backend"
-        },
-       	{
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/player-proxy-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"player-proxy"
-        },
-       	{
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/area-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"area"
-        },
-		{
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/default-area-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"default-area"
+            "category":"push"
         },
        	{
             "type": "dateFile",
@@ -173,25 +133,25 @@
             ,"backups": 5,
             "category":"player"
         },
-       	{
+        {
             "type": "dateFile",
-            "filename": "${opts:base}/logs/autoscaling.log",
+            "filename": "${opts:base}/logs/area-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"autosaling"
+            "category":"area"
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/defaultarea-allocator.log",
+            "filename": "${opts:base}/logs/team-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"defaultarea-allocator"
+            "category":"team"
         }
     ],
 
