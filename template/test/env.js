@@ -64,13 +64,14 @@ env.dropRedis = function(redisConfig){
 };
 
 env.dropMongo = function(mongoConfig){
-	var mongodb = null;
+	var db = null;
 	return Q.nfcall(function(cb){
-		mongodb = require('mongoose').connect(mongoConfig.uri, mongoConfig.options, cb);
+		require('mongodb').MongoClient.connect(mongoConfig.uri, mongoConfig.options, cb);
+	}).then(function(ret){
+		db = ret;
+		return Q.ninvoke(db, 'dropDatabase');
 	}).then(function(){
-		return Q.ninvoke(mongodb.connection.db, 'dropDatabase');
-	}).then(function(){
-		return Q.ninvoke(mongodb, 'disconnect');
+		return Q.ninvoke(db, 'close');
 	});
 };
 
