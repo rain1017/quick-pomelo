@@ -1,7 +1,7 @@
 {
 	"name": "quick-pomelo",
 	"description": "",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"author": "rain",
 	"private" : true,
 	"homepage" : "https://github.com/rain1017/quick-pomelo",
@@ -23,11 +23,11 @@
 		"postinstall": ""
 	},
 	"dependencies": {
-		"memorydb": "rain1017/memorydb#ba9c068",
+		"memorydb": "rain1017/memorydb#1fd87a2",
 		"lodash": "~3.2.0",
 		"underscore": "~1.8.2",
 		"grunt-cli": "~0.1.13",
-		"q": "~1.1.2",
+		"q": "~1.2.0",
 		"require-directory": "~2.0.0",
 		"pomelo-logger": "~0.1.6"
 	},

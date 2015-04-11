@@ -10,10 +10,10 @@ var env = {};
 Object.defineProperty(env, 'dbConfig', {
 	get : function(){
 		return {
-			redisConfig : {host : '127.0.0.1', port : 6379},
-			backend : 'mongoose',
-			backendConfig : {uri : 'mongodb://localhost/quick-pomelo-test', options: {}},
-			slaveConfig : {host : '127.0.0.1', port : 6379},
+			shard : 's1',
+			redis : {host : '127.0.0.1', port : 6379},
+			backend : {engine : 'mongodb', url : 'mongodb://localhost/quick-pomelo-test'},
+			slave : {host : '127.0.0.1', port : 6379},
 			modelsPath : 'lib/models',
 		};
 	}
@@ -22,13 +22,13 @@ Object.defineProperty(env, 'dbConfig', {
 env.dropDatabase = function(dbConfig, cb){
 	logger.debug('start dropDatabase');
 	return Q.fcall(function(){
-		return env.dropRedis(dbConfig.redisConfig);
+		return env.dropRedis(dbConfig.redis);
 	})
 	.then(function(){
-		return env.dropRedis(dbConfig.slaveConfig);
+		return env.dropRedis(dbConfig.slave);
 	})
 	.then(function(){
-		return env.dropMongo(dbConfig.backendConfig);
+		return env.dropMongo(dbConfig.backend);
 	})
 	.then(function(){
 		logger.debug('done dropDatabase');
@@ -49,7 +49,7 @@ env.dropRedis = function(redisConfig){
 env.dropMongo = function(mongoConfig){
 	var db = null;
 	return Q.nfcall(function(cb){
-		require('mongodb').MongoClient.connect(mongoConfig.uri, mongoConfig.options, cb);
+		require('mongodb').MongoClient.connect(mongoConfig.url, mongoConfig.options, cb);
 	}).then(function(ret){
 		db = ret;
 		return Q.ninvoke(db, 'dropDatabase');

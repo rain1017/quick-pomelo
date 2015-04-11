@@ -12,7 +12,7 @@ describe('push test', function(){
 	after(env.dropDatabase.bind(null, dbConfig));
 
 	it('push test', function(cb){
-		var app = quick.mocks.app({serverId : 'server1', serverType : 'area'});
+		var app = quick.mocks.app({serverId : 's1', serverType : 'area'});
 
 		app.set('memorydbConfig', dbConfig);
 		app.set('controllersConfig', {basePath : 'lib/controllers'});

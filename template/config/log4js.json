@@ -85,6 +85,26 @@
         },
        	{
             "type": "dateFile",
+            "filename": "${opts:base}/logs/memorydb-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"memorydb"
+        },
+        {
+            "type": "dateFile",
+            "filename": "${opts:base}/logs/memorydb-client-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"memorydb-client"
+        },
+       	{
+            "type": "dateFile",
             "filename": "${opts:base}/logs/connector-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
@@ -160,5 +180,5 @@
 
     "replaceConsole": true,
 
-    "lineDebug": true
+    "lineDebug": false
 }

@@ -1,10 +1,10 @@
 'use strict';
 
 var Q = require('q');
+var pomeloLogger = require('pomelo-logger');
 var util = require('util');
 var pomelo = require('pomelo');
 var quick = require('quick-pomelo');
-var pomeloLogger = require('pomelo-logger');
 var pomeloConstants = require('pomelo/lib/util/constants');
 var logger = pomeloLogger.getLogger('pomelo', __filename);
 
@@ -32,6 +32,15 @@ app.configure('all', function() {
 
 	// Configure memorydb
 	app.loadConfigBaseApp('memorydbConfig', 'memorydb.json');
+	var mdbConfig = app.get('memorydbConfig');
+	mdbConfig.shard = app.getServerId();
+	var serverInfo = app.getCurServer();
+	mdbConfig.slave = {host : serverInfo.slaveHost, port : serverInfo.slavePort};
+
+	// Load components
+	app.load(quick.components.memorydb);
+	app.load(quick.components.controllers);
+	app.load(quick.components.routes);
 
 	// Configure logger
 	var loggerConfig = app.getBase() + '/config/log4js.json';
@@ -39,13 +48,9 @@ app.configure('all', function() {
 		serverId : app.getServerId(),
 		base: app.getBase(),
 	};
-	quick.configureLogger(loggerConfig, loggerOpts);
 	pomeloLogger.configure(loggerConfig, loggerOpts);
-
-	// Load components
-	app.load(quick.components.memorydb);
-	app.load(quick.components.controllers);
-	app.load(quick.components.routes);
+	quick.logger.configure(loggerConfig, loggerOpts);
+	quick.memorydb.logger.configure(loggerConfig, loggerOpts);
 
 	// Configure filter
 	app.filter(quick.filters.transaction(app));
@@ -96,12 +101,19 @@ app.configure('all', 'gate|connector', function() {
 
 app.configure('development', function(){
 	require('heapdump');
-	require('q').longStackSupport = true;
+	Q.longStackSupport = true;
+	quick.q.longStackSupport = true;
+	quick.memorydb.q.longStackSupport = true;
+
 	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.ALL);
+	quick.logger.setGlobalLogLevel(quick.logger.levels.ALL);
+	quick.memorydb.logger.setGlobalLogLevel(quick.memorydb.logger.levels.ALL);
 });
 
 app.configure('production', function(){
 	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.INFO);
+	quick.logger.setGlobalLogLevel(quick.logger.levels.INFO);
+	quick.memorydb.logger.setGlobalLogLevel(quick.memorydb.logger.levels.INFO);
 });
 
 process.on('uncaughtException', function(err) {

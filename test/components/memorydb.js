@@ -40,7 +40,7 @@ describe('memorydb test', function(){
 				});
 			});
 		})
-		.then(function(){
+		.fin(function(){
 			return Q.ninvoke(app, 'stop');
 		})
 		.nodeify(cb);
