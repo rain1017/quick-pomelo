@@ -24,9 +24,9 @@ env.createApp = function(serverId, serverType){
 	var app = quick.mocks.app({serverId : serverId, serverType : serverType});
 
 	app.setBase(path.join(__dirname, '..'));
-	app.set('memorydbConfig', env.dbConfig);
+	app.set('memdbConfig', env.dbConfig);
 
-	app.load(quick.components.memorydb);
+	app.load(quick.components.memdb);
 	app.load(quick.components.controllers);
 	return app;
 };

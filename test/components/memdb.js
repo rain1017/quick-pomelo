@@ -8,21 +8,21 @@ var logger = require('pomelo-logger').getLogger('test', __filename);
 var dbConfig = env.dbConfig;
 dbConfig.modelsPath = 'lib/mocks/models';
 
-describe('memorydb test', function(){
+describe('memdb test', function(){
 	beforeEach(env.dropDatabase.bind(null, dbConfig));
 	after(env.dropDatabase.bind(null, dbConfig));
 
-	it('load memorydb / parse schema', function(cb){
+	it('load memdb / parse schema', function(cb){
 		var app = quick.mocks.app({serverId : 'server1', serverType : 'area'});
 
-		app.set('memorydbConfig', dbConfig);
-		app.load(quick.components.memorydb);
+		app.set('memdbConfig', dbConfig);
+		app.load(quick.components.memdb);
 
 		return Q.fcall(function(){
 			return Q.ninvoke(app, 'start');
 		})
 		.then(function(){
-			var autoconn = app.memorydb.autoConnect();
+			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
 				return Q.fcall(function(){
 					var dummy = new app.models.Dummy({_id : 'd1', name : 'dummy', groupId : 'g1'});

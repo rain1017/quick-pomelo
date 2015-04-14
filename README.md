@@ -1,5 +1,5 @@
 # quick-pomelo
-Rapid and robust game server framework based on pomelo and memorydb
+Rapid and robust game server framework based on pomelo and memdb
 
 ## Why Quick?
 
@@ -18,7 +18,7 @@ Document (like mysql's row) based locking mechanism is used to control concurren
 
 ### High Availability
 
-All server (which perserve memorydb's data) is backed by one or more redis replication. All commited data can be restored after server failure. You will never lose any commited data.
+All server (which perserve memdb's data) is backed by one or more redis replication. All commited data can be restored after server failure. You will never lose any commited data.
 
 ## Quick's Philosophy
 
@@ -28,7 +28,7 @@ A typical realtime game server framework is stateful (for performance), all stat
 2. User must call specific server to access data, and in-request rpc is errorprone.
 3. In memory data will be lost on server failure, it's very difficult to support HA.
 
-Thanks to memorydb, quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memorydb. You can now get all benifits from a typical stateless web server, without losing performance and scalibility of in memory stateful server (As long as you access same data from the same server). [read more about memorydb](https://github.com/rain1017/memorydb).
+Thanks to memdb, quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benifits from a typical stateless web server, without losing performance and scalibility of in memory stateful server (As long as you access same data from the same server). [read more about memdb](https://github.com/rain1017/memdb).
 
 ## Quick Sample
 

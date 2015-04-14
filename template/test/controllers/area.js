@@ -17,7 +17,7 @@ describe('area test', function(){
 		.then(function(){
 			var areaController = app.controllers.area;
 			var playerController = app.controllers.player;
-			var autoconn = app.memorydb.autoConnect();
+			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
 				var areaId = 'a1', playerId = 'p1';
 				return Q.fcall(function(){

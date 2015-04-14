@@ -30,15 +30,15 @@ app.configure('all', function() {
 		timeout : 10 * 1000,
 	});
 
-	// Configure memorydb
-	app.loadConfigBaseApp('memorydbConfig', 'memorydb.json');
-	var mdbConfig = app.get('memorydbConfig');
+	// Configure memdb
+	app.loadConfigBaseApp('memdbConfig', 'memdb.json');
+	var mdbConfig = app.get('memdbConfig');
 	mdbConfig.shard = app.getServerId();
 	var serverInfo = app.getCurServer();
 	mdbConfig.slave = {host : serverInfo.slaveHost, port : serverInfo.slavePort};
 
 	// Load components
-	app.load(quick.components.memorydb);
+	app.load(quick.components.memdb);
 	app.load(quick.components.controllers);
 	app.load(quick.components.routes);
 
@@ -50,7 +50,7 @@ app.configure('all', function() {
 	};
 	pomeloLogger.configure(loggerConfig, loggerOpts);
 	quick.logger.configure(loggerConfig, loggerOpts);
-	quick.memorydb.logger.configure(loggerConfig, loggerOpts);
+	quick.memdb.logger.configure(loggerConfig, loggerOpts);
 
 	// Configure filter
 	app.filter(quick.filters.transaction(app));
@@ -103,17 +103,17 @@ app.configure('development', function(){
 	require('heapdump');
 	Q.longStackSupport = true;
 	quick.q.longStackSupport = true;
-	quick.memorydb.q.longStackSupport = true;
+	quick.memdb.q.longStackSupport = true;
 
 	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.ALL);
 	quick.logger.setGlobalLogLevel(quick.logger.levels.ALL);
-	quick.memorydb.logger.setGlobalLogLevel(quick.memorydb.logger.levels.ALL);
+	quick.memdb.logger.setGlobalLogLevel(quick.memdb.logger.levels.ALL);
 });
 
 app.configure('production', function(){
 	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.INFO);
 	quick.logger.setGlobalLogLevel(quick.logger.levels.INFO);
-	quick.memorydb.logger.setGlobalLogLevel(quick.memorydb.logger.levels.INFO);
+	quick.memdb.logger.setGlobalLogLevel(quick.memdb.logger.levels.INFO);
 });
 
 process.on('uncaughtException', function(err) {

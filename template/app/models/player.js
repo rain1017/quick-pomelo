@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(app){
-	var mdbgoose = app.memorydb.goose;
+	var mdbgoose = app.memdb.goose;
 
 	var PlayerSchema = new mdbgoose.Schema({
 		_id : {type : String},

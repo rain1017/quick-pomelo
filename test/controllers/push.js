@@ -14,11 +14,11 @@ describe('push test', function(){
 	it('push test', function(cb){
 		var app = quick.mocks.app({serverId : 's1', serverType : 'area'});
 
-		app.set('memorydbConfig', dbConfig);
+		app.set('memdbConfig', dbConfig);
 		app.set('controllersConfig', {basePath : 'lib/controllers'});
 		app.set('pushConfig', {maxMsgCount : 2});
 
-		app.load(quick.components.memorydb);
+		app.load(quick.components.memdb);
 		app.load(quick.components.controllers);
 
 		return Q.fcall(function(){
@@ -26,7 +26,7 @@ describe('push test', function(){
 		})
 		.then(function(){
 			var push = app.controllers.push;
-			var autoconn = app.memorydb.autoConnect();
+			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
 				return Q.fcall(function(){
 					//p1 join c1 (connector s1)

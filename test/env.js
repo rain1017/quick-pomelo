@@ -50,10 +50,12 @@ env.dropMongo = function(mongoConfig){
 	var db = null;
 	return Q.nfcall(function(cb){
 		require('mongodb').MongoClient.connect(mongoConfig.url, mongoConfig.options, cb);
-	}).then(function(ret){
+	})
+	.then(function(ret){
 		db = ret;
 		return Q.ninvoke(db, 'dropDatabase');
-	}).then(function(){
+	})
+	.then(function(){
 		return Q.ninvoke(db, 'close');
 	});
 };

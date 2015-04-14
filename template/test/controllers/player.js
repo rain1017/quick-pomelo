@@ -18,7 +18,7 @@ describe('player test', function(){
 			var playerController = app.controllers.player;
 			var area = app.controllers.area;
 
-			var autoconn = app.memorydb.autoConnect();
+			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
 				var playerId = null;
 				return Q.fcall(function(){

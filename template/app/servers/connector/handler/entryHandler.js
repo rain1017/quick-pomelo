@@ -62,7 +62,7 @@ proto.login = function(msg, session, next){
 				return;
 			}
 			// auto logout on disconnect
-			var autoConn = self.app.memorydb.autoConnect();
+			var autoConn = self.app.memdb.autoConnect();
 			autoConn.execute(function(){
 				return Q.nfcall(function(cb){
 					self.logout({closed : true}, session, cb);

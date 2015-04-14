@@ -23,7 +23,7 @@
 		"postinstall": ""
 	},
 	"dependencies": {
-		"memorydb": "rain1017/memorydb#1fd87a2",
+		"memdb": "rain1017/memdb",
 		"lodash": "~3.2.0",
 		"underscore": "~1.8.2",
 		"grunt-cli": "~0.1.13",
@@ -41,9 +41,7 @@
 		"load-grunt-tasks": "~2.0.0",
 		"blanket" : "~1.1.6",
 		"ws" : "~0.7.1",
-		"pomelo-protocol" : "~0.1.4",
-		"pomelo-protobuf" : "~0.4.0",
 		"redis" : "~0.12.1",
-		"mongodb" : "~1.4.34"
+		"mongodb" : "~2.0.27"
 	}
 }

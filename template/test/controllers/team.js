@@ -17,7 +17,7 @@ describe('team test', function(){
 		.then(function(){
 			var teamController = app.controllers.team;
 			var playerController = app.controllers.player;
-			var autoconn = app.memorydb.autoConnect();
+			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
 				var teamId = 't1', playerId = 'p1';
 				return Q.fcall(function(){
