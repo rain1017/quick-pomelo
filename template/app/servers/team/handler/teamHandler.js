@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 
 var Handler = function(app){
 	this.app = app;
@@ -11,9 +11,9 @@ var proto = Handler.prototype;
 proto.create = function(msg, session, next){
 	var opts = msg.opts;
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.team.create(opts);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.team.create(opts);
 	})
 	.nodeify(next);
 };
@@ -24,9 +24,9 @@ proto.remove = function(msg, session, next){
 		return next(new Error('teamId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.team.remove(teamId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.team.remove(teamId);
 	})
 	.nodeify(next);
 };
@@ -38,9 +38,9 @@ proto.join = function(msg, session, next){
 		return next(new Error('playerId or teamId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.team.join(teamId, playerId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.team.join(teamId, playerId);
 	})
 	.nodeify(next);
 };
@@ -52,9 +52,9 @@ proto.quit = function(msg, session, next){
 		return next(new Error('playerId or teamId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.team.quit(teamId, playerId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.team.quit(teamId, playerId);
 	})
 	.nodeify(next);
 };

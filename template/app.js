@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var pomeloLogger = require('pomelo-logger');
 var util = require('util');
 var pomelo = require('pomelo');
@@ -101,9 +101,9 @@ app.configure('all', 'gate|connector', function() {
 
 app.configure('development', function(){
 	require('heapdump');
-	Q.longStackSupport = true;
-	quick.q.longStackSupport = true;
-	quick.memdb.q.longStackSupport = true;
+	P.longStackTraces();
+	quick.Promise.longStackTraces();
+	quick.memdb.Promise.longStackTraces();
 
 	pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.ALL);
 	quick.logger.setGlobalLogLevel(quick.logger.levels.ALL);

@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var env = require('../env');
 var quick = require('../../lib');
 var logger = require('pomelo-logger').getLogger('test', __filename);
@@ -12,14 +12,14 @@ describe('controllers test', function(){
 		app.set('controllersConfig', {basePath : 'lib/mocks/controllers'});
 		app.load(quick.components.controllers);
 
-		return Q.fcall(function(){
-			return Q.ninvoke(app, 'start');
+		return P.try(function(){
+			return P.promisify(app.start, app)();
 		})
 		.then(function(){
 			(!!app.controllers.dummy).should.eql(true);
 		})
-		.fin(function(){
-			return Q.ninvoke(app, 'stop');
+		.finally(function(){
+			return P.promisify(app.stop, app)();
 		})
 		.nodeify(cb);
 	});

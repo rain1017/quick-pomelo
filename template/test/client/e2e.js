@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var quick = require('quick-pomelo');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
@@ -11,7 +11,7 @@ var main = function(){
 	var client = null;
 	var playerId = 'p1', areaId = 'a1';
 
-	return Q.fcall(function(){
+	return P.try(function(){
 		client = quick.mocks.client(gateServer);
 		return client.connect();
 	})
@@ -67,7 +67,7 @@ var main = function(){
 	.catch(function(e){
 		logger.error('%j', e);
 	})
-	.fin(function(){
+	.finally(function(){
 		process.exit();
 	});
 };

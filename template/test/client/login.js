@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var quick = require('quick-pomelo');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
@@ -15,7 +15,7 @@ var main = function(){
 
 	var playerId = 'p1';
 
-	return Q.fcall(function(){
+	return P.try(function(){
 		return client1.connect();
 	})
 	.then(function(){
@@ -62,7 +62,7 @@ var main = function(){
 	.catch(function(e){
 		logger.error('%j', e);
 	})
-	.fin(function(){
+	.finally(function(){
 		process.exit();
 	});
 };

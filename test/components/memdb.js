@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var env = require('../env');
 var quick = require('../../lib');
 var logger = require('pomelo-logger').getLogger('test', __filename);
@@ -18,30 +18,30 @@ describe('memdb test', function(){
 		app.set('memdbConfig', dbConfig);
 		app.load(quick.components.memdb);
 
-		return Q.fcall(function(){
-			return Q.ninvoke(app, 'start');
+		return P.try(function(){
+			return P.promisify(app.start, app)();
 		})
 		.then(function(){
 			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
-				return Q.fcall(function(){
+				return P.try(function(){
 					var dummy = new app.models.Dummy({_id : 'd1', name : 'dummy', groupId : 'g1'});
-					return dummy.saveQ();
+					return dummy.saveAsync();
 				})
 				.then(function(){
-					return app.models.Dummy.findByIndexQ('groupId', 'g1');
+					return app.models.Dummy.findByIndexAsync('groupId', 'g1');
 				})
 				.then(function(dummys){
 					dummys.length.should.eql(1);
 					dummys[0].groupId.should.eql('g1');
 					dummys[0].name.should.eql('dummy');
 
-					return dummys[0].removeQ();
+					return dummys[0].removeAsync();
 				});
 			});
 		})
-		.fin(function(){
-			return Q.ninvoke(app, 'stop');
+		.finally(function(){
+			return P.promisify(app.stop, app)();
 		})
 		.nodeify(cb);
 	});

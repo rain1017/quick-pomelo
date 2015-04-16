@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var uuid = require('node-uuid');
 var logger = require('pomelo-logger').getLogger('player', __filename);
 
@@ -17,13 +17,13 @@ proto.create = function(opts){
 	}
 	var playerId = player._id;
 
-	var self = this;
-	return Q.fcall(function(){
-		return player.saveQ();
+	return P.bind(this)
+	.then(function(){
+		return player.saveAsync();
 	})
 	.then(function(){
 		var channelId = 'p.' + playerId;
-		return self.app.controllers.push.join(channelId, playerId);
+		return this.app.controllers.push.join(channelId, playerId);
 	})
 	.then(function(){
 		logger.info('create %j => %s', opts, playerId);
@@ -32,30 +32,31 @@ proto.create = function(opts){
 };
 
 proto.remove = function(playerId){
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Player.findForUpdateQ(playerId);
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(player){
 		if(!player){
 			throw new Error('player ' + playerId + ' not exist');
 		}
-		return Q.fcall(function(){
+		return P.bind(this)
+		.then(function(){
 			if(!!player.areaId){
-				return self.app.controllers.area.quit(player.areaId, playerId);
+				return this.app.controllers.area.quit(player.areaId, playerId);
 			}
 		})
 		.then(function(){
 			if(!!player.teamId){
-				return self.app.controllers.team.quit(player.teamId, playerId);
+				return this.app.controllers.team.quit(player.teamId, playerId);
 			}
 		})
 		.then(function(){
 			var channelId = 'p.' + playerId;
-			return self.app.controllers.push.quit(channelId, playerId);
+			return this.app.controllers.push.quit(channelId, playerId);
 		})
 		.then(function(){
-			return player.removeQ();
+			return player.removeAsync();
 		});
 	})
 	.then(function(){
@@ -64,11 +65,12 @@ proto.remove = function(playerId){
 };
 
 proto.connect = function(playerId, connectorId){
-	var self = this;
 	var player = null;
 	var oldConnectorId = null;
-	return Q.fcall(function(){
-		return self.app.models.Player.findForUpdateQ(playerId);
+
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -77,10 +79,10 @@ proto.connect = function(playerId, connectorId){
 		}
 		oldConnectorId = player.connectorId;
 		player.connectorId = connectorId;
-		return player.saveQ();
+		return player.saveAsync();
 	})
 	.then(function(){
-		return self.app.controllers.push.connect(playerId, connectorId);
+		return this.app.controllers.push.connect(playerId, connectorId);
 	})
 	.then(function(){
 		logger.info('connect %s %s => %s', playerId, connectorId, oldConnectorId);
@@ -89,10 +91,11 @@ proto.connect = function(playerId, connectorId){
 };
 
 proto.disconnect = function(playerId){
-	var self = this;
 	var player = null;
-	return Q.fcall(function(){
-		return self.app.models.Player.findForUpdateQ(playerId);
+
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -100,10 +103,10 @@ proto.disconnect = function(playerId){
 			throw new Error('player ' + playerId + ' not exist');
 		}
 		player.connectorId = '';
-		return player.saveQ();
+		return player.saveAsync();
 	})
 	.then(function(){
-		return self.app.controllers.push.disconnect(playerId);
+		return this.app.controllers.push.disconnect(playerId);
 	})
 	.then(function(){
 		logger.info('disconnect %s', playerId);

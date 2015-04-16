@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 
 var Handler = function(app){
 	this.app = app;
@@ -11,9 +11,9 @@ var proto = Handler.prototype;
 proto.create = function(msg, session, next){
 	var opts = msg.opts;
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.player.create(opts);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.player.create(opts);
 	})
 	.nodeify(next);
 };
@@ -24,12 +24,12 @@ proto.remove = function(msg, session, next){
 		return next(new Error('player is not logged in'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.player.remove(playerId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.player.remove(playerId);
 	})
 	.then(function(){
-		return Q.ninvoke(session, 'unbind', playerId);
+		return P.promisify(session.unbind, session)(playerId);
 	})
 	.nodeify(next);
 };

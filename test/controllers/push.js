@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var env = require('../env');
 var quick = require('../../lib');
 var logger = require('pomelo-logger').getLogger('test', __filename);
@@ -21,14 +21,14 @@ describe('push test', function(){
 		app.load(quick.components.memdb);
 		app.load(quick.components.controllers);
 
-		return Q.fcall(function(){
-			return Q.ninvoke(app, 'start');
+		return P.try(function(){
+			return P.promisify(app.start, app)();
 		})
 		.then(function(){
 			var push = app.controllers.push;
 			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
-				return Q.fcall(function(){
+				return P.try(function(){
 					//p1 join c1 (connector s1)
 					return push.join('c1', 'p1', 's1');
 				})
@@ -111,7 +111,7 @@ describe('push test', function(){
 			});
 		})
 		.then(function(){
-			return Q.ninvoke(app, 'stop');
+			return P.promisify(app.stop, app)();
 		})
 		.nodeify(cb);
 	});

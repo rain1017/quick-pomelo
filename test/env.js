@@ -1,8 +1,8 @@
 'use strict';
 
 var should = require('should');
-var Q = require('q');
-Q.longStackSupport = true;
+var P = require('bluebird');
+P.longStackTraces();
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
 var env = {};
@@ -20,8 +20,13 @@ Object.defineProperty(env, 'dbConfig', {
 });
 
 env.dropDatabase = function(dbConfig, cb){
+	if(typeof(dbConfig) === 'function'){
+		cb = dbConfig;
+		dbConfig = env.dbConfig;
+	}
+
 	logger.debug('start dropDatabase');
-	return Q.fcall(function(){
+	return P.try(function(){
 		return env.dropRedis(dbConfig.redis);
 	})
 	.then(function(){
@@ -38,8 +43,8 @@ env.dropDatabase = function(dbConfig, cb){
 
 env.dropRedis = function(redisConfig){
 	var client = require('redis').createClient(redisConfig.port, redisConfig.host);
-	return Q.nfcall(function(cb){
-		client.flushdb(cb);
+	return P.try(function(){
+		return P.promisify(client.flushdb, client)();
 	})
 	.then(function(){
 		client.quit();
@@ -48,15 +53,16 @@ env.dropRedis = function(redisConfig){
 
 env.dropMongo = function(mongoConfig){
 	var db = null;
-	return Q.nfcall(function(cb){
-		require('mongodb').MongoClient.connect(mongoConfig.url, mongoConfig.options, cb);
+	return P.try(function(){
+		var client = require('mongodb').MongoClient;
+		return P.promisify(client.connect, client)(mongoConfig.url, mongoConfig.options);
 	})
 	.then(function(ret){
 		db = ret;
-		return Q.ninvoke(db, 'dropDatabase');
+		return P.promisify(db.dropDatabase, db)();
 	})
 	.then(function(){
-		return Q.ninvoke(db, 'close');
+		return P.promisify(db.close, db)();
 	});
 };
 

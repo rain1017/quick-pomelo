@@ -1,7 +1,7 @@
 'use strict';
 
-var Q = require('q');
-Q.longStackSupport = true;
+var P = require('bluebird');
+P.longStackTraces();
 var should = require('should');
 var path = require('path');
 var quick = require('quick-pomelo');
@@ -38,7 +38,7 @@ env.dropDatabase = function(dbConfig, cb){
 	}
 
 	logger.debug('start dropDatabase');
-	return Q.fcall(function(){
+	return P.try(function(){
 		return env.dropRedis(dbConfig.redis);
 	})
 	.then(function(){
@@ -55,8 +55,8 @@ env.dropDatabase = function(dbConfig, cb){
 
 env.dropRedis = function(redisConfig){
 	var client = require('redis').createClient(redisConfig.port, redisConfig.host);
-	return Q.nfcall(function(cb){
-		client.flushdb(cb);
+	return P.try(function(){
+		return P.promisify(client.flushdb, client)();
 	})
 	.then(function(){
 		client.quit();
@@ -65,13 +65,16 @@ env.dropRedis = function(redisConfig){
 
 env.dropMongo = function(mongoConfig){
 	var db = null;
-	return Q.nfcall(function(cb){
-		require('mongodb').MongoClient.connect(mongoConfig.url, mongoConfig.options, cb);
-	}).then(function(ret){
+	return P.try(function(){
+		var client = require('mongodb').MongoClient;
+		return P.promisify(client.connect, client)(mongoConfig.url, mongoConfig.options);
+	})
+	.then(function(ret){
 		db = ret;
-		return Q.ninvoke(db, 'dropDatabase');
-	}).then(function(){
-		return Q.ninvoke(db, 'close');
+		return P.promisify(db.dropDatabase, db)();
+	})
+	.then(function(){
+		return P.promisify(db.close, db)();
 	});
 };
 

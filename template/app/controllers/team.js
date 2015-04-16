@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var uuid = require('node-uuid');
 var logger = require('pomelo-logger').getLogger('team', __filename);
 
@@ -17,8 +17,9 @@ proto.create = function(opts){
 	}
 	var teamId = team._id;
 
-	return Q.fcall(function(){
-		return team.saveQ();
+	return P.bind(this)
+	.then(function(){
+		return team.saveAsync();
 	})
 	.then(function(){
 		logger.info('create %j => %j', opts, teamId);
@@ -27,22 +28,23 @@ proto.create = function(opts){
 };
 
 proto.remove = function(teamId){
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Team.findForUpdateQ(teamId);
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Team.findForUpdateAsync(teamId);
 	})
 	.then(function(team){
 		if(!team){
 			throw new Error('team ' + teamId + ' not exist');
 		}
-		return Q.fcall(function(){
-			return self.getPlayers(teamId);
+		return P.bind(this)
+		.then(function(){
+			return this.getPlayers(teamId);
 		})
 		.then(function(players){
 			if(players.length > 0){
 				throw new Error('team is not empty');
 			}
-			return team.removeQ();
+			return team.removeAsync();
 		});
 	})
 	.then(function(){
@@ -51,20 +53,21 @@ proto.remove = function(teamId){
 };
 
 proto.getPlayers = function(teamId){
-	return this.app.models.Player.findByIndexQ('teamId', teamId);
+	return this.app.models.Player.findByIndexAsync('teamId', teamId);
 };
 
 proto.join = function(teamId, playerId){
 	var player = null;
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Team.findForUpdateQ(teamId);
+
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Team.findForUpdateAsync(teamId);
 	})
 	.then(function(team){
 		if(!team){
 			throw new Error('team ' + teamId + ' not exist');
 		}
-		return self.app.models.Player.findForUpdateQ(playerId);
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -72,11 +75,11 @@ proto.join = function(teamId, playerId){
 			throw new Error('player ' + playerId + ' not exist');
 		}
 		player.teamId = teamId;
-		return player.saveQ();
+		return player.saveAsync();
 	})
 	.then(function(){
 		var channelId = 't.' + teamId;
-		return self.app.controllers.push.join(channelId, playerId, player.connectorId);
+		return this.app.controllers.push.join(channelId, playerId, player.connectorId);
 	})
 	.then(function(){
 		logger.info('join %s %s', teamId, playerId);
@@ -85,13 +88,14 @@ proto.join = function(teamId, playerId){
 
 proto.quit = function(teamId, playerId){
 	var player = null;
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Player.findForUpdateQ(playerId);
+
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
-		return self.app.models.Team.findForUpdateQ(teamId);
+		return this.app.models.Team.findForUpdateAsync(teamId);
 	})
 	.then(function(){
 		if(!player){
@@ -101,11 +105,11 @@ proto.quit = function(teamId, playerId){
 			throw new Error('player ' + playerId + ' not in team ' + teamId);
 		}
 		player.teamId = '';
-		return player.saveQ();
+		return player.saveAsync();
 	})
 	.then(function(){
 		var channelId = 't.' + teamId;
-		return self.app.controllers.push.quit(channelId, playerId);
+		return this.app.controllers.push.quit(channelId, playerId);
 	})
 	.then(function(){
 		logger.info('quit %s %s', teamId, playerId);

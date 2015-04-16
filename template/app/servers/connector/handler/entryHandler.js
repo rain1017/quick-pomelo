@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var util = require('util');
 var logger = require('pomelo-logger').getLogger('connector', __filename);
 
@@ -29,9 +29,9 @@ proto.login = function(msg, session, next){
 	}
 
 	var playerId = null;
-	var self = this;
 
-	return Q.fcall(function(){
+	return P.bind(this)
+	.then(function(){
 		return authFunc(token);
 	})
 	.then(function(ret){
@@ -41,22 +41,22 @@ proto.login = function(msg, session, next){
 		}
 	})
 	.then(function(){
-		return self.app.controllers.player.connect(playerId, session.frontendId);
+		return this.app.controllers.player.connect(playerId, session.frontendId);
 	})
 	.then(function(oldConnectorId){
 		if(oldConnectorId){
 			logger.warn('player %s already connected on %s, will kick', playerId, oldConnectorId);
 			// kick original connector
-			return Q.nfcall(function(cb){
-				self.app.rpc.connector.entryRemote.kick({frontendId : oldConnectorId}, playerId, cb);
-			});
+			var entryRemote = this.app.rpc.connector.entryRemote;
+			return P.promisify(entryRemote.kick, entryRemote)({frontendId : oldConnectorId}, playerId);
 		}
 	})
 	.then(function(){
-		return Q.ninvoke(session, 'bind', playerId);
+		return P.promisify(session.bind, session)(playerId);
 	})
 	.then(function(){
 		// OnDisconnect
+		var self = this;
 		session.on('closed', function(session, reason){
 			if(reason === 'kick' || !session.uid){
 				return;
@@ -64,9 +64,7 @@ proto.login = function(msg, session, next){
 			// auto logout on disconnect
 			var autoConn = self.app.memdb.autoConnect();
 			autoConn.execute(function(){
-				return Q.nfcall(function(cb){
-					self.logout({closed : true}, session, cb);
-				});
+				return P.promisify(self.logout, self)({closed : true}, session);
 			})
 			.catch(function(e){
 				logger.warn(e);
@@ -85,13 +83,13 @@ proto.logout = function(msg, session, next){
 		return next(new Error('playerId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.player.disconnect(playerId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.player.disconnect(playerId);
 	})
 	.then(function(){
 		if(!msg.closed){
-			return Q.ninvoke(session, 'unbind', playerId);
+			return P.promisify(session.unbind, session)(playerId);
 		}
 	})
 	.then(function(){

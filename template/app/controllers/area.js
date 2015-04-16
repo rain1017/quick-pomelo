@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var uuid = require('node-uuid');
 var logger = require('pomelo-logger').getLogger('area', __filename);
 
@@ -17,8 +17,9 @@ proto.create = function(opts){
 	}
 	var areaId = area._id;
 
-	return Q.fcall(function(){
-		return area.saveQ();
+	return P.bind(this)
+	.then(function(){
+		return area.saveAsync();
 	})
 	.then(function(){
 		logger.info('create %j => %j', opts, areaId);
@@ -27,22 +28,23 @@ proto.create = function(opts){
 };
 
 proto.remove = function(areaId){
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Area.findForUpdateQ(areaId);
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Area.findForUpdateAsync(areaId);
 	})
 	.then(function(area){
 		if(!area){
 			throw new Error('area ' + areaId + ' not exist');
 		}
-		return Q.fcall(function(){
-			return self.getPlayers(areaId);
+		return P.bind(this)
+		.then(function(){
+			return this.getPlayers(areaId);
 		})
 		.then(function(players){
 			if(players.length > 0){
 				throw new Error('area is not empty');
 			}
-			return area.removeQ();
+			return area.removeAsync();
 		});
 	})
 	.then(function(){
@@ -51,20 +53,21 @@ proto.remove = function(areaId){
 };
 
 proto.getPlayers = function(areaId){
-	return this.app.models.Player.findByIndexQ('areaId', areaId);
+	return this.app.models.Player.findByIndexAsync('areaId', areaId);
 };
 
 proto.join = function(areaId, playerId){
 	var player = null;
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Area.findForUpdateQ(areaId);
+
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Area.findForUpdateAsync(areaId);
 	})
 	.then(function(area){
 		if(!area){
 			throw new Error('area ' + areaId + ' not exist');
 		}
-		return self.app.models.Player.findForUpdateQ(playerId);
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -72,11 +75,11 @@ proto.join = function(areaId, playerId){
 			throw new Error('player ' + playerId + ' not exist');
 		}
 		player.areaId = areaId;
-		return player.saveQ();
+		return player.saveAsync();
 	})
 	.then(function(){
 		var channelId = 'a.' + areaId;
-		return self.app.controllers.push.join(channelId, playerId, player.connectorId);
+		return this.app.controllers.push.join(channelId, playerId, player.connectorId);
 	})
 	.then(function(){
 		logger.info('join %s %s', areaId, playerId);
@@ -85,13 +88,14 @@ proto.join = function(areaId, playerId){
 
 proto.quit = function(areaId, playerId){
 	var player = null;
-	var self = this;
-	return Q.fcall(function(){
-		return self.app.models.Player.findForUpdateQ(playerId);
+
+	return P.bind(this)
+	.then(function(){
+		return this.app.models.Player.findForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
-		return self.app.models.Area.findForUpdateQ(areaId);
+		return this.app.models.Area.findForUpdateAsync(areaId);
 	})
 	.then(function(){
 		if(!player){
@@ -101,11 +105,11 @@ proto.quit = function(areaId, playerId){
 			throw new Error('player ' + playerId + ' not in area ' + areaId);
 		}
 		player.areaId = '';
-		return player.saveQ();
+		return player.saveAsync();
 	})
 	.then(function(){
 		var channelId = 'a.' + areaId;
-		return self.app.controllers.push.quit(channelId, playerId);
+		return this.app.controllers.push.quit(channelId, playerId);
 	})
 	.then(function(){
 		logger.info('quit %s %s', areaId, playerId);

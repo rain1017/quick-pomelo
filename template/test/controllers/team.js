@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 var env = require('../env');
 var logger = require('pomelo-logger').getLogger('test', __filename);
 
@@ -11,8 +11,8 @@ describe('team test', function(){
 	it('team test', function(cb){
 		var app = env.createApp('server1', 'team');
 
-		return Q.fcall(function(){
-			return Q.ninvoke(app, 'start');
+		return P.try(function(){
+			return P.promisify(app.start, app)();
 		})
 		.then(function(){
 			var teamController = app.controllers.team;
@@ -20,7 +20,7 @@ describe('team test', function(){
 			var autoconn = app.memdb.autoConnect();
 			return autoconn.execute(function(){
 				var teamId = 't1', playerId = 'p1';
-				return Q.fcall(function(){
+				return P.try(function(){
 					return playerController.create({_id : playerId, name : 'rain'});
 				})
 				.then(function(){
@@ -59,7 +59,7 @@ describe('team test', function(){
 			});
 		})
 		.then(function(){
-			return Q.ninvoke(app, 'stop');
+			return P.promisify(app.stop, app)();
 		})
 		.nodeify(cb);
 	});

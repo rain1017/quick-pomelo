@@ -1,6 +1,6 @@
 'use strict';
 
-var Q = require('q');
+var P = require('bluebird');
 
 var Handler = function(app){
 	this.app = app;
@@ -11,9 +11,9 @@ var proto = Handler.prototype;
 proto.create = function(msg, session, next){
 	var opts = msg.opts;
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.area.create(opts);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.area.create(opts);
 	})
 	.nodeify(next);
 };
@@ -24,9 +24,9 @@ proto.remove = function(msg, session, next){
 		return next(new Error('areaId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.area.remove(areaId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.area.remove(areaId);
 	})
 	.nodeify(next);
 };
@@ -38,9 +38,9 @@ proto.join = function(msg, session, next){
 		return next(new Error('playerId or areaId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.area.join(areaId, playerId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.area.join(areaId, playerId);
 	})
 	.nodeify(next);
 };
@@ -52,9 +52,9 @@ proto.quit = function(msg, session, next){
 		return next(new Error('playerId or areaId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.area.quit(areaId, playerId);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.area.quit(areaId, playerId);
 	})
 	.nodeify(next);
 };
@@ -65,9 +65,9 @@ proto.push = function(msg, session, next){
 		return next(new Error('areaId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.area.push(areaId, msg.playerIds, msg.route, msg.msg, msg.persistent);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.area.push(areaId, msg.playerIds, msg.route, msg.msg, msg.persistent);
 	})
 	.nodeify(next);
 };
@@ -78,9 +78,9 @@ proto.getMsgs = function(msg, session, next){
 		return next(new Error('areaId is missing'));
 	}
 
-	var self = this;
-	Q.fcall(function(){
-		return self.app.controllers.area.getMsgs(areaId, msg.seq, msg.count);
+	P.bind(this)
+	.then(function(){
+		return this.app.controllers.area.getMsgs(areaId, msg.seq, msg.count);
 	})
 	.nodeify(next);
 };
