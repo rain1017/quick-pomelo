@@ -11,9 +11,9 @@ Object.defineProperty(env, 'dbConfig', {
 	get : function(){
 		return {
 			shard : 's1',
-			redis : {host : '127.0.0.1', port : 6379},
+			redis : {host : '127.0.0.1', port : 6379, db : 1},
 			backend : {engine : 'mongodb', url : 'mongodb://localhost/quick-pomelo-test'},
-			slave : {host : '127.0.0.1', port : 6379},
+			slave : {host : '127.0.0.1', port : 6379, db : 1},
 			modelsPath : 'lib/models',
 		};
 	}
@@ -43,6 +43,7 @@ env.dropDatabase = function(dbConfig, cb){
 
 env.dropRedis = function(redisConfig){
 	var client = require('redis').createClient(redisConfig.port, redisConfig.host);
+	client.select(redisConfig.db);
 	return P.try(function(){
 		return P.promisify(client.flushdb, client)();
 	})
