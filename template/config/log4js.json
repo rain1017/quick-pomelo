@@ -85,23 +85,23 @@
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/memorydb-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/memdb-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"memorydb"
+            "category":"memdb"
         },
         {
             "type": "dateFile",
-            "filename": "${opts:base}/logs/memorydb-client-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/memdb-client-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"memorydb-client"
+            "category":"memdb-client"
         },
        	{
             "type": "dateFile",
@@ -115,13 +115,13 @@
         },
        	{
             "type": "dateFile",
-            "filename": "${opts:base}/logs/memorydb-${opts:serverId}.log",
+            "filename": "${opts:base}/logs/memdb-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
                 "type": "basic"
               }
             ,"backups": 5,
-            "category":"memorydb"
+            "category":"memdb"
         },
         {
             "type": "dateFile",
