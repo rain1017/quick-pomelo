@@ -30,7 +30,7 @@ proto.create = function(opts){
 proto.remove = function(teamId){
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Team.findForUpdateAsync(teamId);
+		return this.app.models.Team.findByIdForUpdateAsync(teamId);
 	})
 	.then(function(team){
 		if(!team){
@@ -53,7 +53,7 @@ proto.remove = function(teamId){
 };
 
 proto.getPlayers = function(teamId){
-	return this.app.models.Player.findByIndexAsync('teamId', teamId);
+	return this.app.models.Player.findAsync({teamId : teamId});
 };
 
 proto.join = function(teamId, playerId){
@@ -61,13 +61,13 @@ proto.join = function(teamId, playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Team.findForUpdateAsync(teamId);
+		return this.app.models.Team.findByIdForUpdateAsync(teamId);
 	})
 	.then(function(team){
 		if(!team){
 			throw new Error('team ' + teamId + ' not exist');
 		}
-		return this.app.models.Player.findForUpdateAsync(playerId);
+		return this.app.models.Player.findByIdForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -91,11 +91,11 @@ proto.quit = function(teamId, playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Player.findForUpdateAsync(playerId);
+		return this.app.models.Player.findByIdForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
-		return this.app.models.Team.findForUpdateAsync(teamId);
+		return this.app.models.Team.findByIdForUpdateAsync(teamId);
 	})
 	.then(function(){
 		if(!player){

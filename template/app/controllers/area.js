@@ -30,7 +30,7 @@ proto.create = function(opts){
 proto.remove = function(areaId){
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Area.findForUpdateAsync(areaId);
+		return this.app.models.Area.findByIdForUpdateAsync(areaId);
 	})
 	.then(function(area){
 		if(!area){
@@ -53,7 +53,7 @@ proto.remove = function(areaId){
 };
 
 proto.getPlayers = function(areaId){
-	return this.app.models.Player.findByIndexAsync('areaId', areaId);
+	return this.app.models.Player.findAsync({areaId : areaId});
 };
 
 proto.join = function(areaId, playerId){
@@ -61,13 +61,13 @@ proto.join = function(areaId, playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Area.findForUpdateAsync(areaId);
+		return this.app.models.Area.findByIdForUpdateAsync(areaId);
 	})
 	.then(function(area){
 		if(!area){
 			throw new Error('area ' + areaId + ' not exist');
 		}
-		return this.app.models.Player.findForUpdateAsync(playerId);
+		return this.app.models.Player.findByIdForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -91,11 +91,11 @@ proto.quit = function(areaId, playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Player.findForUpdateAsync(playerId);
+		return this.app.models.Player.findByIdForUpdateAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
-		return this.app.models.Area.findForUpdateAsync(areaId);
+		return this.app.models.Area.findByIdForUpdateAsync(areaId);
 	})
 	.then(function(){
 		if(!player){
