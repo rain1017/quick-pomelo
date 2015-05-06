@@ -34,7 +34,7 @@ proto.create = function(opts){
 proto.remove = function(playerId){
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Player.findByIdForUpdateAsync(playerId);
+		return this.app.models.Player.findLockedAsync(playerId);
 	})
 	.then(function(player){
 		if(!player){
@@ -70,7 +70,7 @@ proto.connect = function(playerId, connectorId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Player.findByIdForUpdateAsync(playerId);
+		return this.app.models.Player.findLockedAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -95,7 +95,7 @@ proto.disconnect = function(playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Player.findByIdForUpdateAsync(playerId);
+		return this.app.models.Player.findLockedAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;

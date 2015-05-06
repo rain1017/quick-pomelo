@@ -30,7 +30,7 @@ proto.create = function(opts){
 proto.remove = function(teamId){
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Team.findByIdForUpdateAsync(teamId);
+		return this.app.models.Team.findLockedAsync(teamId);
 	})
 	.then(function(team){
 		if(!team){
@@ -61,13 +61,13 @@ proto.join = function(teamId, playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Team.findByIdForUpdateAsync(teamId);
+		return this.app.models.Team.findLockedAsync(teamId);
 	})
 	.then(function(team){
 		if(!team){
 			throw new Error('team ' + teamId + ' not exist');
 		}
-		return this.app.models.Player.findByIdForUpdateAsync(playerId);
+		return this.app.models.Player.findLockedAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
@@ -91,11 +91,11 @@ proto.quit = function(teamId, playerId){
 
 	return P.bind(this)
 	.then(function(){
-		return this.app.models.Player.findByIdForUpdateAsync(playerId);
+		return this.app.models.Player.findLockedAsync(playerId);
 	})
 	.then(function(ret){
 		player = ret;
-		return this.app.models.Team.findByIdForUpdateAsync(teamId);
+		return this.app.models.Team.findLockedAsync(teamId);
 	})
 	.then(function(){
 		if(!player){
