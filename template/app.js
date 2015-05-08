@@ -51,6 +51,8 @@ app.configure('all', function() {
 	pomeloLogger.configure(loggerConfig, loggerOpts);
 	quick.logger.configure(loggerConfig, loggerOpts);
 	quick.memdb.logger.configure(loggerConfig, loggerOpts);
+	// Inject logger to print memdb transaction
+	quick.memdb.injectLogger(pomeloLogger);
 
 	// Configure filter
 	app.filter(quick.filters.transaction(app));
