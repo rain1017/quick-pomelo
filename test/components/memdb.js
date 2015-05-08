@@ -29,7 +29,7 @@ describe('memdb test', function(){
 					return dummy.saveAsync();
 				})
 				.then(function(){
-					return app.models.Dummy.findByIndexAsync('groupId', 'g1');
+					return app.models.Dummy.findAsync({groupId : 'g1'});
 				})
 				.then(function(dummys){
 					dummys.length.should.eql(1);
@@ -40,7 +40,7 @@ describe('memdb test', function(){
 				});
 			});
 		})
-		.finally(function(){
+		.then(function(){
 			return P.promisify(app.stop, app)();
 		})
 		.nodeify(cb);
