@@ -22,27 +22,27 @@ describe('player test', function(){
 			return autoconn.execute(function(){
 				var playerId = null;
 				return P.try(function(){
-					return playerController.create({name : 'rain'});
+					return playerController.createAsync({name : 'rain'});
 				})
 				.then(function(ret){
 					playerId = ret;
-					return playerController.connect(playerId, 'c1');
+					return playerController.connectAsync(playerId, 'c1');
 				})
 				.then(function(){
-					return playerController.push(playerId, 'notify', 'content', true);
+					return playerController.pushAsync(playerId, 'notify', 'content', true);
 				})
 				.then(function(){
-					return playerController.getMsgs(playerId, 0)
+					return playerController.getMsgsAsync(playerId, 0)
 					.then(function(ret){
 						ret.length.should.eql(1);
 						ret[0].msg.should.eql('content');
 					});
 				})
 				.then(function(){
-					return playerController.disconnect(playerId);
+					return playerController.disconnectAsync(playerId);
 				})
 				.then(function(){
-					return playerController.remove(playerId);
+					return playerController.removeAsync(playerId);
 				});
 			});
 		})

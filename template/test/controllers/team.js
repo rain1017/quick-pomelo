@@ -21,29 +21,29 @@ describe('team test', function(){
 			return autoconn.execute(function(){
 				var teamId = 't1', playerId = 'p1';
 				return P.try(function(){
-					return playerController.create({_id : playerId, name : 'rain'});
+					return playerController.createAsync({_id : playerId, name : 'rain'});
 				})
 				.then(function(){
-					return teamController.create({_id : teamId, name : 'team1'});
+					return teamController.createAsync({_id : teamId, name : 'team1'});
 				})
 				.then(function(){
-					return teamController.join(teamId, playerId);
+					return teamController.joinAsync(teamId, playerId);
 				})
 				.then(function(){
-					return teamController.getPlayers(teamId)
+					return teamController.getPlayersAsync(teamId)
 					.then(function(players){
 						players.length.should.eql(1);
 						players[0]._id.should.eql(playerId);
 					});
 				})
 				.then(function(){
-					return playerController.connect(playerId, 'c1');
+					return playerController.connectAsync(playerId, 'c1');
 				})
 				.then(function(){
-					return teamController.push(teamId, null, 'chat', 'hello', true);
+					return teamController.pushAsync(teamId, null, 'chat', 'hello', true);
 				})
 				.then(function(){
-					return teamController.getMsgs(teamId, 0)
+					return teamController.getMsgsAsync(teamId, 0)
 					.then(function(msgs){
 						msgs.length.should.eql(1);
 						msgs[0].msg.should.eql('hello');
@@ -51,10 +51,10 @@ describe('team test', function(){
 				})
 				.then(function(){
 					//Should automatically quit team
-					return playerController.remove(playerId);
+					return playerController.removeAsync(playerId);
 				})
 				.then(function(){
-					return teamController.remove(teamId);
+					return teamController.removeAsync(teamId);
 				});
 			});
 		})

@@ -41,7 +41,7 @@ proto.login = function(msg, session, next){
 		}
 	})
 	.then(function(){
-		return this.app.controllers.player.connect(playerId, session.frontendId);
+		return this.app.controllers.player.connectAsync(playerId, session.frontendId);
 	})
 	.then(function(oldConnectorId){
 		if(oldConnectorId){
@@ -85,7 +85,7 @@ proto.logout = function(msg, session, next){
 
 	P.bind(this)
 	.then(function(){
-		return this.app.controllers.player.disconnect(playerId);
+		return this.app.controllers.player.disconnectAsync(playerId);
 	})
 	.then(function(){
 		if(!msg.closed){

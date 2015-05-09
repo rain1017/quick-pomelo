@@ -10,11 +10,7 @@ var proto = Handler.prototype;
 
 proto.create = function(msg, session, next){
 	var opts = msg.opts;
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.area.create(opts);
-	})
+	return this.app.controllers.area.createAsync(opts)
 	.nodeify(next);
 };
 
@@ -23,11 +19,7 @@ proto.remove = function(msg, session, next){
 	if(!areaId){
 		return next(new Error('areaId is missing'));
 	}
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.area.remove(areaId);
-	})
+	return this.app.controllers.area.removeAsync(areaId)
 	.nodeify(next);
 };
 
@@ -37,11 +29,7 @@ proto.join = function(msg, session, next){
 	if(!playerId || !areaId){
 		return next(new Error('playerId or areaId is missing'));
 	}
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.area.join(areaId, playerId);
-	})
+	return this.app.controllers.area.joinAsync(areaId, playerId)
 	.nodeify(next);
 };
 
@@ -51,11 +39,7 @@ proto.quit = function(msg, session, next){
 	if(!playerId || !areaId){
 		return next(new Error('playerId or areaId is missing'));
 	}
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.area.quit(areaId, playerId);
-	})
+	return this.app.controllers.area.quitAsync(areaId, playerId)
 	.nodeify(next);
 };
 
@@ -64,11 +48,7 @@ proto.push = function(msg, session, next){
 	if(!areaId){
 		return next(new Error('areaId is missing'));
 	}
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.area.push(areaId, msg.playerIds, msg.route, msg.msg, msg.persistent);
-	})
+	return this.app.controllers.area.pushAsync(areaId, msg.playerIds, msg.route, msg.msg, msg.persistent)
 	.nodeify(next);
 };
 
@@ -77,11 +57,7 @@ proto.getMsgs = function(msg, session, next){
 	if(!areaId){
 		return next(new Error('areaId is missing'));
 	}
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.area.getMsgs(areaId, msg.seq, msg.count);
-	})
+	return this.app.controllers.area.getMsgsAsync(areaId, msg.seq, msg.count)
 	.nodeify(next);
 };
 

@@ -35,7 +35,7 @@ app.configure('all', function() {
 	var mdbConfig = app.get('memdbConfig');
 	mdbConfig.shard = app.getServerId();
 	var serverInfo = app.getCurServer();
-	mdbConfig.slave = {host : serverInfo.slaveHost, port : serverInfo.slavePort};
+	mdbConfig.slave = {host : serverInfo.slaveHost, port : serverInfo.slavePort, db : serverInfo.slaveDb};
 
 	// Load components
 	app.load(quick.components.memdb);

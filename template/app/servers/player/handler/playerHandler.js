@@ -10,11 +10,7 @@ var proto = Handler.prototype;
 
 proto.create = function(msg, session, next){
 	var opts = msg.opts;
-
-	P.bind(this)
-	.then(function(){
-		return this.app.controllers.player.create(opts);
-	})
+	return this.app.controllers.player.createAsync(opts)
 	.nodeify(next);
 };
 
@@ -26,7 +22,7 @@ proto.remove = function(msg, session, next){
 
 	P.bind(this)
 	.then(function(){
-		return this.app.controllers.player.remove(playerId);
+		return this.app.controllers.player.removeAsync(playerId);
 	})
 	.then(function(){
 		return P.promisify(session.unbind, session)(playerId);
