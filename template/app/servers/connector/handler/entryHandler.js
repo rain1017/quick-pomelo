@@ -62,8 +62,8 @@ proto.login = function(msg, session, next){
 				return;
 			}
 			// auto logout on disconnect
-			var autoConn = self.app.memdb.autoConnect();
-			autoConn.execute(function(){
+			var goose = self.app.memdb.goose;
+			goose.transaction(function(){
 				return P.promisify(self.logout, self)({closed : true}, session);
 			})
 			.catch(function(e){

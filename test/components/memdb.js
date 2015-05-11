@@ -22,8 +22,11 @@ describe('memdb test', function(){
 			return P.promisify(app.start, app)();
 		})
 		.then(function(){
-			var autoconn = app.memdb.autoConnect();
-			return autoconn.execute(function(){
+			return app.memdb.autoConnect();
+		})
+		.then(function(ret){
+			var autoconn = ret;
+			return autoconn.transaction(function(){
 				return P.try(function(){
 					var dummy = new app.models.Dummy({_id : 'd1', name : 'dummy', groupId : 'g1'});
 					return dummy.saveAsync();

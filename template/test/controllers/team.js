@@ -17,8 +17,8 @@ describe('team test', function(){
 		.then(function(){
 			var teamController = app.controllers.team;
 			var playerController = app.controllers.player;
-			var autoconn = app.memdb.autoConnect();
-			return autoconn.execute(function(){
+			var goose = app.memdb.goose;
+			return goose.transaction(function(){
 				var teamId = 't1', playerId = 'p1';
 				return P.try(function(){
 					return playerController.createAsync({_id : playerId, name : 'rain'});

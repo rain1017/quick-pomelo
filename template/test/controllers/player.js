@@ -18,8 +18,8 @@ describe('player test', function(){
 			var playerController = app.controllers.player;
 			var area = app.controllers.area;
 
-			var autoconn = app.memdb.autoConnect();
-			return autoconn.execute(function(){
+			var goose = app.memdb.goose;
+			return goose.transaction(function(){
 				var playerId = null;
 				return P.try(function(){
 					return playerController.createAsync({name : 'rain'});

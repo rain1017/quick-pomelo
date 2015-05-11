@@ -25,9 +25,13 @@ describe('push test', function(){
 			return P.promisify(app.start, app)();
 		})
 		.then(function(){
+			return app.memdb.autoConnect();
+		})
+		.then(function(ret){
+			var autoconn = ret;
 			var push = app.controllers.push;
-			var autoconn = app.memdb.autoConnect();
-			return autoconn.execute(function(){
+
+			return autoconn.transaction(function(){
 				return P.try(function(){
 					//p1 join c1 (connector s1)
 					return push.joinAsync('c1', 'p1', 's1');
