@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>quick-pomelo by rain1017</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>quick-pomelo</h1>
+        <h2>Rapid and robust game server framework based on pomelo and memdb</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/rain1017/quick-pomelo/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/rain1017/quick-pomelo/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/rain1017/quick-pomelo" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h2>
+<a id="why-quick" class="anchor" href="#why-quick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why Quick?</h2>
+
+<h3>
+<a id="performance-and-scalable" class="anchor" href="#performance-and-scalable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance and Scalable</h3>
+
+<p>Data access is in local memory for most situations, which is extremely fast.</p>
+
+<p>Server cluster is horizontally scalable, you can simplely add more servers to increase system capacity.</p>
+
+<h3>
+<a id="transaction-and-concurrency-safe" class="anchor" href="#transaction-and-concurrency-safe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transaction and Concurrency safe</h3>
+
+<p>All data access inside a request is transaction guarded,
+changes will be either commited or rolledback (on exception) after one request. There is no chance to left dirty half-modified data.</p>
+
+<p>Document (like mysql's row) based locking mechanism is used to control concurrency.</p>
+
+<h3>
+<a id="high-availability" class="anchor" href="#high-availability" aria-hidden="true"><span class="octicon octicon-link"></span></a>High Availability</h3>
+
+<p>All server (which perserve memdb's data) is backed by one or more redis replication. All commited data can be restored after server failure. You will never lose any commited data.</p>
+
+<h2>
+<a id="quicks-philosophy" class="anchor" href="#quicks-philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick's Philosophy</h2>
+
+<p>A typical realtime game server framework is stateful (for performance), all states is kept in server local memory. However, this approach has significant drawbacks:</p>
+
+<ul>
+<li>Any exceptions (may be caused by bugs or unexpected client input) may result in non-consistent state (half-modified dirtydata), which is very difficult to recover.</li>
+<li>User must call specific server to access data, and in-request rpc is errorprone.</li>
+<li>In memory data will be lost on server failure, it's very difficult to support HA.</li>
+</ul>
+
+<p>Thanks to <a href="http://memdb.org">memdb</a>, quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benifits from a typical stateless web server, without losing performance and scalibility of in memory stateful server.</p>
+
+<h2>
+<a id="quick-sample" class="anchor" href="#quick-sample" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Sample</h2>
+
+<pre><code>TBD
+</code></pre>
+
+<h2>
+<a id="get-started" class="anchor" href="#get-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get Started</h2>
+
+<p>You can start your project with the template and modify it on your need. The template contains most common skeletons for a quick-pomelo game server.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
