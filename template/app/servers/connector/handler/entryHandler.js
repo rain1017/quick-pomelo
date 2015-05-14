@@ -41,7 +41,7 @@ proto.login = function(msg, session, next){
 		}
 	})
 	.then(function(){
-		return this.app.controllers.player.connect(playerId, session.frontendId);
+		return this.app.controllers.player.connectAsync(playerId, session.frontendId);
 	})
 	.then(function(oldConnectorId){
 		if(oldConnectorId){
@@ -62,8 +62,8 @@ proto.login = function(msg, session, next){
 				return;
 			}
 			// auto logout on disconnect
-			var autoConn = self.app.memdb.autoConnect();
-			autoConn.execute(function(){
+			var goose = self.app.memdb.goose;
+			goose.transaction(function(){
 				return P.promisify(self.logout, self)({closed : true}, session);
 			})
 			.catch(function(e){
@@ -85,7 +85,7 @@ proto.logout = function(msg, session, next){
 
 	P.bind(this)
 	.then(function(){
-		return this.app.controllers.player.disconnect(playerId);
+		return this.app.controllers.player.disconnectAsync(playerId);
 	})
 	.then(function(){
 		if(!msg.closed){

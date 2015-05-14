@@ -10,7 +10,7 @@ var Controller = function(app){
 
 var proto = Controller.prototype;
 
-proto.create = function(opts){
+proto.createAsync = function(opts){
 	var player = new this.app.models.Player(opts);
 	if(!player._id){
 		player._id = uuid.v4();
@@ -23,7 +23,7 @@ proto.create = function(opts){
 	})
 	.then(function(){
 		var channelId = 'p.' + playerId;
-		return this.app.controllers.push.join(channelId, playerId);
+		return this.app.controllers.push.joinAsync(channelId, playerId);
 	})
 	.then(function(){
 		logger.info('create %j => %s', opts, playerId);
@@ -31,7 +31,7 @@ proto.create = function(opts){
 	});
 };
 
-proto.remove = function(playerId){
+proto.removeAsync = function(playerId){
 	return P.bind(this)
 	.then(function(){
 		return this.app.models.Player.findLockedAsync(playerId);
@@ -43,17 +43,17 @@ proto.remove = function(playerId){
 		return P.bind(this)
 		.then(function(){
 			if(!!player.areaId){
-				return this.app.controllers.area.quit(player.areaId, playerId);
+				return this.app.controllers.area.quitAsync(player.areaId, playerId);
 			}
 		})
 		.then(function(){
 			if(!!player.teamId){
-				return this.app.controllers.team.quit(player.teamId, playerId);
+				return this.app.controllers.team.quitAsync(player.teamId, playerId);
 			}
 		})
 		.then(function(){
 			var channelId = 'p.' + playerId;
-			return this.app.controllers.push.quit(channelId, playerId);
+			return this.app.controllers.push.quitAsync(channelId, playerId);
 		})
 		.then(function(){
 			return player.removeAsync();
@@ -64,7 +64,7 @@ proto.remove = function(playerId){
 	});
 };
 
-proto.connect = function(playerId, connectorId){
+proto.connectAsync = function(playerId, connectorId){
 	var player = null;
 	var oldConnectorId = null;
 
@@ -82,7 +82,7 @@ proto.connect = function(playerId, connectorId){
 		return player.saveAsync();
 	})
 	.then(function(){
-		return this.app.controllers.push.connect(playerId, connectorId);
+		return this.app.controllers.push.connectAsync(playerId, connectorId);
 	})
 	.then(function(){
 		logger.info('connect %s %s => %s', playerId, connectorId, oldConnectorId);
@@ -90,7 +90,7 @@ proto.connect = function(playerId, connectorId){
 	});
 };
 
-proto.disconnect = function(playerId){
+proto.disconnectAsync = function(playerId){
 	var player = null;
 
 	return P.bind(this)
@@ -106,21 +106,21 @@ proto.disconnect = function(playerId){
 		return player.saveAsync();
 	})
 	.then(function(){
-		return this.app.controllers.push.disconnect(playerId);
+		return this.app.controllers.push.disconnectAsync(playerId);
 	})
 	.then(function(){
 		logger.info('disconnect %s', playerId);
 	});
 };
 
-proto.push = function(playerId, route, msg, persistent){
+proto.pushAsync = function(playerId, route, msg, persistent){
 	var channelId = 'p.' + playerId;
-	return this.app.controllers.push.push(channelId, null, route, msg, persistent);
+	return this.app.controllers.push.pushAsync(channelId, null, route, msg, persistent);
 };
 
-proto.getMsgs = function(playerId, seq, count){
+proto.getMsgsAsync = function(playerId, seq, count){
 	var channelId = 'p.' + playerId;
-	return this.app.controllers.push.getMsgs(channelId, seq, count);
+	return this.app.controllers.push.getMsgsAsync(channelId, seq, count);
 };
 
 module.exports = function(app){

@@ -17,33 +17,33 @@ describe('area test', function(){
 		.then(function(){
 			var areaController = app.controllers.area;
 			var playerController = app.controllers.player;
-			var autoconn = app.memdb.autoConnect();
-			return autoconn.execute(function(){
+			var goose = app.memdb.goose;
+			return goose.transaction(function(){
 				var areaId = 'a1', playerId = 'p1';
 				return P.try(function(){
-					return playerController.create({_id : playerId, name : 'rain'});
+					return playerController.createAsync({_id : playerId, name : 'rain'});
 				})
 				.then(function(){
-					return areaController.create({_id : areaId, name : 'area1'});
+					return areaController.createAsync({_id : areaId, name : 'area1'});
 				})
 				.then(function(){
-					return areaController.join(areaId, playerId);
+					return areaController.joinAsync(areaId, playerId);
 				})
 				.then(function(){
-					return areaController.getPlayers(areaId)
+					return areaController.getPlayersAsync(areaId)
 					.then(function(players){
 						players.length.should.eql(1);
 						players[0]._id.should.eql(playerId);
 					});
 				})
 				.then(function(){
-					return playerController.connect(playerId, 'c1');
+					return playerController.connectAsync(playerId, 'c1');
 				})
 				.then(function(){
-					return areaController.push(areaId, null, 'chat', 'hello', true);
+					return areaController.pushAsync(areaId, null, 'chat', 'hello', true);
 				})
 				.then(function(){
-					return areaController.getMsgs(areaId, 0)
+					return areaController.getMsgsAsync(areaId, 0)
 					.then(function(msgs){
 						msgs.length.should.eql(1);
 						msgs[0].msg.should.eql('hello');
@@ -51,10 +51,10 @@ describe('area test', function(){
 				})
 				.then(function(){
 					//Should automatically quit area
-					return playerController.remove(playerId);
+					return playerController.removeAsync(playerId);
 				})
 				.then(function(){
-					return areaController.remove(areaId);
+					return areaController.removeAsync(areaId);
 				});
 			});
 		})
