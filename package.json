@@ -1,49 +1,49 @@
 {
-	"name": "quick-pomelo",
-	"description": "",
-	"version": "0.1.1",
-	"author": "rain",
-	"private" : true,
-	"homepage" : "https://github.com/rain1017/quick-pomelo",
-	"repository" : {
-		"type" : "git",
-		"url" : "https://github.com/rain1017/quick-pomelo.git"
-	},
-	"bugs" : {
-		"url" : "https://github.com/rain1017/quick-pomelo/issues"
-	},
-	"keywords" : [
-	],
-	"engines": {
-		"node": "0.10.x"
-	},
-	"scripts": {
-		"start": "grunt",
-		"test": "grunt test",
-		"postinstall": ""
-	},
-	"dependencies": {
-		"memdb": "rain1017/memdb",
-		"lodash": "~3.2.0",
-		"underscore": "~1.8.2",
-		"grunt-cli": "~0.1.13",
-		"bluebird": "~2.9.24",
-		"require-directory": "~2.0.0",
-		"pomelo-logger": "~0.1.6",
-		"pomelo-protocol": "~0.1.5",
-		"pomelo-protobuf": "~0.4.0"
-	},
-	"devDependencies": {
-		"should": "~4.5.0",
-		"sinon": "~1.12.2",
-		"grunt-env": "~0.4.2",
-		"grunt-contrib-jshint": "~0.10.0",
-		"grunt-contrib-clean": "~0.6.0",
-		"grunt-mocha-test": "~0.12.6",
-		"load-grunt-tasks": "~2.0.0",
-		"blanket" : "~1.1.6",
-		"ws" : "~0.7.1",
-		"redis" : "~0.12.1",
-		"mongodb" : "~2.0.27"
-	}
+    "name": "quick-pomelo",
+    "description": "",
+    "version": "0.1.1",
+    "author": "rain",
+    "private" : true,
+    "homepage" : "https://github.com/rain1017/quick-pomelo",
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/rain1017/quick-pomelo.git"
+    },
+    "bugs" : {
+        "url" : "https://github.com/rain1017/quick-pomelo/issues"
+    },
+    "keywords" : [
+    ],
+    "engines": {
+        "node": "0.10.x"
+    },
+    "scripts": {
+        "start": "grunt",
+        "test": "grunt test",
+        "postinstall": ""
+    },
+    "dependencies": {
+        "memdb": "rain1017/memdb",
+        "lodash": "~3.2.0",
+        "underscore": "~1.8.2",
+        "grunt-cli": "~0.1.13",
+        "bluebird": "~2.9.24",
+        "require-directory": "~2.0.0",
+        "pomelo-logger": "~0.1.6",
+        "pomelo-protocol": "~0.1.5",
+        "pomelo-protobuf": "~0.4.0"
+    },
+    "devDependencies": {
+        "should": "~4.5.0",
+        "sinon": "~1.12.2",
+        "grunt-env": "~0.4.2",
+        "grunt-contrib-jshint": "~0.10.0",
+        "grunt-contrib-clean": "~0.6.0",
+        "grunt-mocha-test": "~0.12.6",
+        "load-grunt-tasks": "~2.0.0",
+        "blanket" : "~1.1.6",
+        "ws" : "~0.7.1",
+        "redis" : "~0.12.1",
+        "mongodb" : "~2.0.27"
+    }
 }

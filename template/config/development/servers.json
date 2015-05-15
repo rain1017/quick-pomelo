@@ -1,21 +1,21 @@
 {
-	"gate": [
-	    {"id": "gate-server", "host": "127.0.0.1", "port": 13010, "clientPort": 3010, "frontend": true, "args": "--debug=5860", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
-	],
-	"connector": [
-		{"id": "connector-server-1", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13100, "clientPort": 3100, "frontend": true, "args": "--debug=5870", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
-		{"id": "connector-server-2", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13101, "clientPort": 3101, "frontend": true, "args": "--debug=5871", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
-	],
-	"player": [
-		{"id": "player-server-1", "host": "127.0.0.1", "port": 13200, "args": "--debug=5880", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
-		{"id": "player-server-2", "host": "127.0.0.1", "port": 13201, "args": "--debug=5881", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
-	],
-	"area": [
-		{"id": "area-server-1", "host": "127.0.0.1", "port": 13300, "args": "--debug=5890", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
-		{"id": "area-server-2", "host": "127.0.0.1", "port": 13301, "args": "--debug=5891", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
-	],
-	"team": [
-		{"id": "team-server-1", "host": "127.0.0.1", "port": 13400, "args": "--debug=5900", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
-		{"id": "team-server-2", "host": "127.0.0.1", "port": 13401, "args": "--debug=5901", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
-	]
+    "gate": [
+        {"id": "gate-server", "host": "127.0.0.1", "port": 13010, "clientPort": 3010, "frontend": true, "args": "--debug=5860", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
+    ],
+    "connector": [
+        {"id": "connector-server-1", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13100, "clientPort": 3100, "frontend": true, "args": "--debug=5870", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
+        {"id": "connector-server-2", "host": "127.0.0.1", "clientHost":"127.0.0.1", "port": 13101, "clientPort": 3101, "frontend": true, "args": "--debug=5871", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
+    ],
+    "player": [
+        {"id": "player-server-1", "host": "127.0.0.1", "port": 13200, "args": "--debug=5880", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
+        {"id": "player-server-2", "host": "127.0.0.1", "port": 13201, "args": "--debug=5881", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
+    ],
+    "area": [
+        {"id": "area-server-1", "host": "127.0.0.1", "port": 13300, "args": "--debug=5890", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
+        {"id": "area-server-2", "host": "127.0.0.1", "port": 13301, "args": "--debug=5891", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
+    ],
+    "team": [
+        {"id": "team-server-1", "host": "127.0.0.1", "port": 13400, "args": "--debug=5900", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1},
+        {"id": "team-server-2", "host": "127.0.0.1", "port": 13401, "args": "--debug=5901", "slaveHost" : "127.0.0.1", "slavePort": 6379, "slaveDb": 1}
+    ]
 }

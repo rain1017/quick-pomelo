@@ -83,7 +83,7 @@
             ,"backups": 5,
             "category":"pomelo-rpc"
         },
-       	{
+        {
             "type": "dateFile",
             "filename": "${opts:base}/logs/memorydb-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
@@ -103,7 +103,7 @@
             ,"backups": 5,
             "category":"memorydb-client"
         },
-       	{
+        {
             "type": "dateFile",
             "filename": "${opts:base}/logs/connector-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
@@ -113,7 +113,7 @@
             ,"backups": 5,
             "category":"connector"
         },
-       	{
+        {
             "type": "dateFile",
             "filename": "${opts:base}/logs/memorydb-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
@@ -133,7 +133,7 @@
             ,"backups": 5,
             "category":"route"
         },
-       	{
+        {
             "type": "dateFile",
             "filename": "${opts:base}/logs/push-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
@@ -143,7 +143,7 @@
             ,"backups": 5,
             "category":"push"
         },
-       	{
+        {
             "type": "dateFile",
             "filename": "${opts:base}/logs/player-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
@@ -163,7 +163,7 @@
             ,"backups": 5,
             "category":"area"
         },
-       	{
+        {
             "type": "dateFile",
             "filename": "${opts:base}/logs/team-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
