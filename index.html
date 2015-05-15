@@ -1,83 +1,94 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <title>quick-pomelo by rain1017</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">quick-pomelo</h1>
-      <h2 class="project-tagline">Rapid and robust game server framework based on pomelo and memdb</h2>
-      <a href="https://github.com/rain1017/quick-pomelo" class="btn">View on GitHub</a>
-      <a href="https://github.com/rain1017/quick-pomelo/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/rain1017/quick-pomelo/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <section class="main-content">
-      <h2>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>quick-pomelo by rain1017</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>quick-pomelo</h1>
+        <h2>Rapid and robust game server framework based on pomelo and memdb</h2>
+        <a href="https://github.com/rain1017/quick-pomelo" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <p>Rapid and robust game server framework based on pomelo and memdb</p>
+
+<h2>
 <a id="why-quick" class="anchor" href="#why-quick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why Quick?</h2>
 
 <ul>
 <li><p><strong>Performance</strong> : Data access is mainly based on in process memory, which is extremely fast.</p></li>
-<li><p><strong>Scalable</strong> : System is horizontally scalable, you can simplely add more servers to increase system capacity.</p></li>
+<li><p><strong>Scalable</strong> : System is horizontally scalable, you can simply add more servers to increase system capacity.</p></li>
 <li><p><strong>Transaction</strong> : Full transaction support like traditional database, data consistency is guaranteed.</p></li>
-<li><p><strong>High Availability</strong> : Each server is backed by one or more replica, you will never lose any commited data.</p></li>
+<li><p><strong>High Availability</strong> : Each server is backed by one or more replica, you will never lose any committed data.</p></li>
+<li><p><strong>'MVC' Architecture</strong> : Define data model using 'mongoose'.</p></li>
 </ul>
-
-<h2>
-<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h2>
-
-<h3>
-<a id="pomelo" class="anchor" href="#pomelo" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/NetEase/pomelo">Pomelo</a>
-</h3>
-
-<p>Quick-pomelo is based on pomelo, you should first understand the pomelo framework.</p>
-
-<h3>
-<a id="memdb" class="anchor" href="#memdb" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/rain1017/memdb">MemDB</a>
-</h3>
-
-<p>Quick-pomelo use memdb to manage data model and data access, so understanding memdb is required.</p>
 
 <h2>
 <a id="documents" class="anchor" href="#documents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documents</h2>
 
-<h3>
-<a id="the-wiki" class="anchor" href="#the-wiki" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/rain1017/quick-pomelo/wiki">The Wiki</a>
-</h3>
+<ul>
+<li><strong><a href="https://github.com/rain1017/quick-pomelo/wiki">The Wiki</a></strong></li>
+</ul>
 
-<h3>
-<a id="demo-game斗地主" class="anchor" href="#demo-game%E6%96%97%E5%9C%B0%E4%B8%BB" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/rain1017/quick-pomelo-demo">Demo Game(斗地主)</a>
-</h3>
+<h2>
+<a id="demos" class="anchor" href="#demos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demos</h2>
+
+<ul>
+<li><strong><a href="https://github.com/rain1017/quick-pomelo-demo">Demo Game(斗地主)</a></strong></li>
+</ul>
 
 <h2>
 <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Start</h2>
 
 <h3>
-<a id="start-with-template" class="anchor" href="#start-with-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start with template</h3>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
 
-<p>First copy the template to your working directory. The template contains most common skeletons for a quick-pomelo game server.</p>
+<h4>
+<a id="pomelo" class="anchor" href="#pomelo" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/NetEase/pomelo">Pomelo</a>
+</h4>
+
+<p>Quick-pomelo is based on pomelo, you should first understand the pomelo framework.</p>
+
+<h4>
+<a id="memdb" class="anchor" href="#memdb" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/rain1017/memdb">MemDB</a>
+</h4>
+
+<p>Quick-pomelo use memdb to manage data model and data access, so understanding memdb is required.</p>
 
 <h3>
 <a id="install-dependencies" class="anchor" href="#install-dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install dependencies</h3>
 
 <ul>
-<li>Install <a href="https://nodejs.org/download/">Node.js v0.12</a>
+<li>Install <a href="https://nodejs.org/download">Node.js v0.12</a>
 </li>
 <li>Install <a href="http://redis.io/download">Redis</a>
 </li>
 <li>Install <a href="https://www.mongodb.org/downloads">MongoDB</a>
 </li>
-<li>Install node dependencies</li>
 </ul>
 
-<pre><code>npm install
-</code></pre>
+<h3>
+<a id="start-with-template" class="anchor" href="#start-with-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start with template</h3>
+
+<p>First copy the template to your working directory. The template contains most common skeletons for a quick-pomelo game server.</p>
 
 <h3>
 <a id="define-models" class="anchor" href="#define-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Define models</h3>
@@ -117,7 +128,7 @@
     <span class="pl-k">yield</span> player.saveAsync();
 };
 
-<span class="pl-c1">proto</span>.<span class="pl-en">removePlayer</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">playerId</span>){
+<span class="pl-c1">proto</span>.<span class="pl-en">removePlayerAsync</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">playerId</span>){
     <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.app.models.Player.findLockedAsync(playerId);
     <span class="pl-k">if</span>(<span class="pl-k">!</span>player){
         <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">'</span>player not exist<span class="pl-pds">'</span></span>);
@@ -171,7 +182,8 @@
 <h3>
 <a id="start-server" class="anchor" href="#start-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start server</h3>
 
-<pre><code>node app.js
+<pre><code>npm install
+node app.js
 </code></pre>
 
 <h3>
@@ -190,16 +202,25 @@
 </ul>
 
 <p>Thanks to <a href="http://memdb.org">memdb</a>, quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benefits from a typical stateless web server, without losing performance and scalability of in memory stateful server.</p>
+        </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/rain1017/quick-pomelo">quick-pomelo</a> is maintained by <a href="https://github.com/rain1017">rain1017</a>.</span>
+        <aside id="sidebar">
+          <a href="https://github.com/rain1017/quick-pomelo/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/rain1017/quick-pomelo/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+          <p class="repo-owner"><a href="https://github.com/rain1017/quick-pomelo"></a> is maintained by <a href="https://github.com/rain1017">rain1017</a>.</p>
 
-    </section>
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
 
   
   </body>
 </html>
-
