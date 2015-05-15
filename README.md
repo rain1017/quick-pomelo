@@ -11,10 +11,15 @@ Rapid and robust game server framework based on pomelo and memdb
 
 - [x] __High Availability__ : Each server is backed by one or more replica, you will never lose any committed data.
 
+- [x] __'MVC' Architecture__ : Define data model using 'mongoose'.
+
 ## Documents
 
-### [The Wiki](https://github.com/rain1017/quick-pomelo/wiki)
-### [Demo Game(斗地主)](https://github.com/rain1017/quick-pomelo-demo)
+* __[The Wiki](https://github.com/rain1017/quick-pomelo/wiki)__
+
+## Demos
+
+* __[Demo Game(斗地主)](https://github.com/rain1017/quick-pomelo-demo)__
 
 ## Quick Start
 
