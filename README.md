@@ -14,12 +14,10 @@ Rapid and robust game server framework based on pomelo and memdb
 ## Prerequisties
 
 ### [Pomelo](https://github.com/NetEase/pomelo)
-A fast, scalable, distributed game server framework for Node.js.
 
 Quick-pomelo is based on pomelo, you should first understand the pomelo framework.
 
 ### [MemDB](https://github.com/rain1017/memdb)
-Distributed transactional in memory database.
 
 Quick-pomelo use memdb to manage data model and data access, so understanding memdb is required.
 
@@ -142,7 +140,7 @@ module.exports = function(app){
 node app.js
 ```
 
-__Well done! Congratulations!__
+### Well done! Congratulations!
 
 
 ## Quick's Philosophy
@@ -156,3 +154,26 @@ A typical realtime game server framework is stateful for the sake of performance
 
 Thanks to [memdb](http://memdb.org), quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benifits from a typical stateless web server, without losing performance and scalibility of in memory stateful server.
 
+
+## License
+(The MIT License)
+
+Copyright (c) 2015 rain1017
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
