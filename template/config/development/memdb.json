@@ -1,13 +1,13 @@
 {
-	"redis" : {
-		"host" : "127.0.0.1",
-		"port" : 6379,
-		"db" : 1,
-		"options" : {}
-	},
-	"backend" : {
-		"engine" : "mongodb",
-		"url" : "mongodb://localhost/quick-pomelo-test",
-		"options" : {}
-	}
+    "redis" : {
+        "host" : "127.0.0.1",
+        "port" : 6379,
+        "db" : 1,
+        "options" : {}
+    },
+    "backend" : {
+        "engine" : "mongodb",
+        "url" : "mongodb://localhost/quick-pomelo-test",
+        "options" : {}
+    }
 }
