@@ -1,13 +1,83 @@
 {
-    "redis" : {
-        "host" : "127.0.0.1",
-        "port" : 6379,
-        "db" : 1,
-        "options" : {}
-    },
     "backend" : {
         "engine" : "mongodb",
         "url" : "mongodb://localhost/quick-pomelo-test",
         "options" : {}
+    },
+    "locking" : {
+        "host" : "127.0.0.1",
+        "port" : 6379,
+        "db" : 1
+    },
+    "event" : {
+        "host" : "127.0.0.1",
+        "port" : 6379,
+        "db" : 2
+    },
+
+    "shards" : {
+        "gate-server" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 3
+            }
+        },
+        "connector-server-1" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 4
+            }
+        },
+        "connector-server-2" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 5
+            }
+        },
+        "player-server-1" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 6
+            }
+        },
+        "player-server-2" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 7
+            }
+        },
+        "area-server-1" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 8
+            }
+        },
+        "area-server-2" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 9
+            }
+        },
+        "team-server-1" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 10
+            }
+        },
+        "team-server-2" : {
+            "slave" : {
+                "host" : "127.0.0.1",
+                "port" : 6379,
+                "db" : 11
+            }
+        }
     }
 }
