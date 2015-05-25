@@ -1,12 +1,11 @@
 'use strict';
 
-var P = require('bluebird');
-var pomeloLogger = require('pomelo-logger');
 var util = require('util');
 var pomelo = require('pomelo');
 var quick = require('quick-pomelo');
 var pomeloConstants = require('pomelo/lib/util/constants');
-var logger = pomeloLogger.getLogger('pomelo', __filename);
+var P = quick.Promise;
+var logger = quick.logger.getLogger('pomelo', __filename);
 
 var app = pomelo.createApp();
 app.set('name', 'quick-pomelo');
@@ -39,7 +38,7 @@ app.configure('all', function() {
         // Override shard specific config
         mdbConfig[key] = shardConfig[key];
     }
-    mdbConfig.shard = shardId;
+    mdbConfig.shardId = shardId;
     delete mdbConfig.shards;
 
     // Load components
@@ -53,11 +52,7 @@ app.configure('all', function() {
         serverId : app.getServerId(),
         base: app.getBase(),
     };
-    pomeloLogger.configure(loggerConfig, loggerOpts);
     quick.logger.configure(loggerConfig, loggerOpts);
-    quick.memdb.logger.configure(loggerConfig, loggerOpts);
-    // Inject logger to print memdb transaction
-    quick.memdb.injectLogger(pomeloLogger);
 
     // Configure filter
     app.filter(quick.filters.transaction(app));
@@ -108,19 +103,12 @@ app.configure('all', 'gate|connector', function() {
 
 app.configure('development', function(){
     require('heapdump');
-    P.longStackTraces();
     quick.Promise.longStackTraces();
-    quick.memdb.Promise.longStackTraces();
-
-    pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.ALL);
     quick.logger.setGlobalLogLevel(quick.logger.levels.ALL);
-    quick.memdb.logger.setGlobalLogLevel(quick.memdb.logger.levels.ALL);
 });
 
 app.configure('production', function(){
-    pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.INFO);
     quick.logger.setGlobalLogLevel(quick.logger.levels.INFO);
-    quick.memdb.logger.setGlobalLogLevel(quick.memdb.logger.levels.INFO);
 });
 
 process.on('uncaughtException', function(err) {

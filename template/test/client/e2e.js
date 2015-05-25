@@ -1,8 +1,8 @@
 'use strict';
 
-var P = require('bluebird');
 var quick = require('quick-pomelo');
-var logger = require('pomelo-logger').getLogger('test', __filename);
+var P = quick.Promise;
+var logger = quick.logger.getLogger('test', __filename);
 
 var main = function(){
     var gateServer = {host : '127.0.0.1', port : 3010};

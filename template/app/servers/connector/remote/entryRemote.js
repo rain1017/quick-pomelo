@@ -1,5 +1,5 @@
 'use strict';
-var logger = require('pomelo-logger').getLogger('connector', __filename);
+var logger = require('quick-pomelo').logger.getLogger('connector', __filename);
 
 var Remote = function(app){
     this.app = app;

@@ -1,18 +1,18 @@
 'use strict';
 
-var P = require('bluebird');
-P.longStackTraces();
 var should = require('should');
 var path = require('path');
 var quick = require('quick-pomelo');
-var logger = require('pomelo-logger').getLogger('test', __filename);
+var logger = quick.logger.getLogger('test', __filename);
+var P = quick.Promise;
+P.longStackTraces();
 
 var env = {};
 
 Object.defineProperty(env, 'dbConfig', {
     get : function(){
         return {
-            shard : 's1',
+            shardId : 's1',
             backend : {engine : 'mongodb', url : 'mongodb://localhost/quick-pomelo-test'},
             locking : {host : '127.0.0.1', port : 6379, db : 1},
             event : {host : '127.0.0.1', port : 6379, db : 1},

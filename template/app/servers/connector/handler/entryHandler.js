@@ -1,8 +1,9 @@
 'use strict';
 
-var P = require('bluebird');
 var util = require('util');
-var logger = require('pomelo-logger').getLogger('connector', __filename);
+var quick = require('quick-pomelo');
+var P = quick.Promise;
+var logger = quick.logger.getLogger('connector', __filename);
 
 var Handler = function(app){
     this.app = app;

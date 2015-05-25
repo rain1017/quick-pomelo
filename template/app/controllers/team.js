@@ -1,8 +1,9 @@
 'use strict';
 
-var P = require('bluebird');
+var quick = require('quick-pomelo');
+var P = quick.Promise;
+var logger = quick.logger.getLogger('team', __filename);
 var uuid = require('node-uuid');
-var logger = require('pomelo-logger').getLogger('team', __filename);
 
 var Controller = function(app){
     this.app = app;

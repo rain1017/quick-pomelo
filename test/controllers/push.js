@@ -1,9 +1,9 @@
 'use strict';
 
-var P = require('bluebird');
 var env = require('../env');
 var quick = require('../../lib');
-var logger = require('pomelo-logger').getLogger('test', __filename);
+var P = quick.Promise;
+var logger = quick.logger.getLogger('test', __filename);
 
 var dbConfig = env.dbConfig;
 

@@ -27,9 +27,7 @@
         "lodash": "~3.2.0",
         "underscore": "~1.8.2",
         "grunt-cli": "~0.1.13",
-        "bluebird": "~2.9.24",
         "require-directory": "~2.0.0",
-        "pomelo-logger": "~0.1.6",
         "pomelo-protocol": "~0.1.5",
         "pomelo-protobuf": "~0.4.0"
     },

@@ -1,6 +1,6 @@
 'use strict';
 
-var P = require('bluebird');
+var P = require('quick-pomelo').Promise;
 
 var Handler = function(app){
     this.app = app;
