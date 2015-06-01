@@ -23,7 +23,7 @@ proto.createAsync = function(opts){
         return player.saveAsync();
     })
     .then(function(){
-        var channelId = 'p.' + playerId;
+        var channelId = 'p:' + playerId;
         return this.app.controllers.push.joinAsync(channelId, playerId);
     })
     .then(function(){
@@ -35,7 +35,7 @@ proto.createAsync = function(opts){
 proto.removeAsync = function(playerId){
     return P.bind(this)
     .then(function(){
-        return this.app.models.Player.findLockedAsync(playerId);
+        return this.app.models.Player.findAsync(playerId);
     })
     .then(function(player){
         if(!player){
@@ -53,7 +53,7 @@ proto.removeAsync = function(playerId){
             }
         })
         .then(function(){
-            var channelId = 'p.' + playerId;
+            var channelId = 'p:' + playerId;
             return this.app.controllers.push.quitAsync(channelId, playerId);
         })
         .then(function(){
@@ -71,7 +71,7 @@ proto.connectAsync = function(playerId, connectorId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Player.findLockedAsync(playerId);
+        return this.app.models.Player.findAsync(playerId);
     })
     .then(function(ret){
         player = ret;
@@ -96,7 +96,7 @@ proto.disconnectAsync = function(playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Player.findLockedAsync(playerId);
+        return this.app.models.Player.findAsync(playerId);
     })
     .then(function(ret){
         player = ret;
@@ -115,12 +115,12 @@ proto.disconnectAsync = function(playerId){
 };
 
 proto.pushAsync = function(playerId, route, msg, persistent){
-    var channelId = 'p.' + playerId;
+    var channelId = 'p:' + playerId;
     return this.app.controllers.push.pushAsync(channelId, null, route, msg, persistent);
 };
 
 proto.getMsgsAsync = function(playerId, seq, count){
-    var channelId = 'p.' + playerId;
+    var channelId = 'p:' + playerId;
     return this.app.controllers.push.getMsgsAsync(channelId, seq, count);
 };
 

@@ -31,7 +31,7 @@ proto.createAsync = function(opts){
 proto.removeAsync = function(areaId){
     return P.bind(this)
     .then(function(){
-        return this.app.models.Area.findLockedAsync(areaId);
+        return this.app.models.Area.findAsync(areaId);
     })
     .then(function(area){
         if(!area){
@@ -62,13 +62,13 @@ proto.joinAsync = function(areaId, playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Area.findLockedAsync(areaId);
+        return this.app.models.Area.findAsync(areaId);
     })
     .then(function(area){
         if(!area){
             throw new Error('area ' + areaId + ' not exist');
         }
-        return this.app.models.Player.findLockedAsync(playerId);
+        return this.app.models.Player.findAsync(playerId);
     })
     .then(function(ret){
         player = ret;
@@ -79,7 +79,7 @@ proto.joinAsync = function(areaId, playerId){
         return player.saveAsync();
     })
     .then(function(){
-        var channelId = 'a.' + areaId;
+        var channelId = 'a:' + areaId;
         return this.app.controllers.push.joinAsync(channelId, playerId, player.connectorId);
     })
     .then(function(){
@@ -92,11 +92,11 @@ proto.quitAsync = function(areaId, playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Player.findLockedAsync(playerId);
+        return this.app.models.Player.findAsync(playerId);
     })
     .then(function(ret){
         player = ret;
-        return this.app.models.Area.findLockedAsync(areaId);
+        return this.app.models.Area.findAsync(areaId);
     })
     .then(function(){
         if(!player){
@@ -109,7 +109,7 @@ proto.quitAsync = function(areaId, playerId){
         return player.saveAsync();
     })
     .then(function(){
-        var channelId = 'a.' + areaId;
+        var channelId = 'a:' + areaId;
         return this.app.controllers.push.quitAsync(channelId, playerId);
     })
     .then(function(){
@@ -121,12 +121,12 @@ proto.quitAsync = function(areaId, playerId){
  * playerIds - [playerId], set null to push all
  */
 proto.pushAsync = function(areaId, playerIds, route, msg, persistent){
-    var channelId = 'a.' + areaId;
+    var channelId = 'a:' + areaId;
     return this.app.controllers.push.pushAsync(channelId, playerIds, route, msg, persistent);
 };
 
 proto.getMsgsAsync = function(areaId, seq, count){
-    var channelId = 'a.' + areaId;
+    var channelId = 'a:' + areaId;
     return this.app.controllers.push.getMsgsAsync(channelId, seq, count);
 };
 
