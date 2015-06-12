@@ -1,83 +1,40 @@
 {
-    "backend" : {
-        "engine" : "mongodb",
-        "url" : "mongodb://localhost/quick-pomelo-test",
-        "options" : {}
-    },
-    "locking" : {
-        "host" : "127.0.0.1",
-        "port" : 6379,
-        "db" : 1
-    },
-    "event" : {
-        "host" : "127.0.0.1",
-        "port" : 6379,
-        "db" : 2
-    },
-
     "shards" : {
         "gate-server" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 3
-            }
+            "host" : "127.0.0.1",
+            "port" : 31017
         },
         "connector-server-1" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 4
-            }
+            "host" : "127.0.0.1",
+            "port" : 31017
         },
         "connector-server-2" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 5
-            }
+            "host" : "127.0.0.1",
+            "port" : 31018
         },
         "player-server-1" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 6
-            }
+            "host" : "127.0.0.1",
+            "port" : 31017
         },
         "player-server-2" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 7
-            }
+            "host" : "127.0.0.1",
+            "port" : 31018
         },
         "area-server-1" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 8
-            }
+            "host" : "127.0.0.1",
+            "port" : 31019
         },
         "area-server-2" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 9
-            }
+            "host" : "127.0.0.1",
+            "port" : 31020
         },
         "team-server-1" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 10
-            }
+            "host" : "127.0.0.1",
+            "port" : 31021
         },
         "team-server-2" : {
-            "slave" : {
-                "host" : "127.0.0.1",
-                "port" : 6379,
-                "db" : 11
-            }
+            "host" : "127.0.0.1",
+            "port" : 31022
         }
     }
 }

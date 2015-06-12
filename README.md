@@ -55,8 +55,8 @@ module.exports = function(app){
 
     var PlayerSchema = new mdbgoose.Schema({
         _id : {type : String},
-        areaId : {type : String, index : true},
-        teamId : {type : String, index : true},
+        areaId : {type : String},
+        teamId : {type : String},
         connectorId : {type : String},
         name : {type : String},
     }, {collection : 'players'});
@@ -84,7 +84,7 @@ proto.createPlayerAsync = function(opts){
 };
 
 proto.removePlayerAsync = function(playerId){
-    var player = yield this.app.models.Player.findLockedAsync(playerId);
+    var player = yield this.app.models.Player.findAsync(playerId);
     if(!player){
         throw new Error('player not exist');
     }

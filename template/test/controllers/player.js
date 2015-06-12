@@ -6,11 +6,9 @@ var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
 describe('player test', function(){
-    beforeEach(env.dropDatabase);
-    after(env.dropDatabase);
 
     it('create/remove/connect/disconnect', function(cb){
-        var app = env.createApp('server1', 'area');
+        var app = env.createApp('player-server-1', 'player');
 
         return P.try(function(){
             return P.promisify(app.start, app)();
@@ -45,7 +43,7 @@ describe('player test', function(){
                 .then(function(){
                     return playerController.removeAsync(playerId);
                 });
-            });
+            }, app.getServerId());
         })
         .then(function(){
             return P.promisify(app.stop, app)();

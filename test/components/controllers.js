@@ -8,7 +8,7 @@ var logger = quick.logger.getLogger('test', __filename);
 describe('controllers test', function(){
 
     it('load controllers', function(cb){
-        var app = quick.mocks.app({serverId : 'server1', serverType : 'area'});
+        var app = quick.mocks.app({serverId : 'area1', serverType : 'area'});
         app.set('controllersConfig', {basePath : 'lib/mocks/controllers'});
         app.load(quick.components.controllers);
 

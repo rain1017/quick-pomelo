@@ -5,16 +5,13 @@ var quick = require('../../lib');
 var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
-var dbConfig = env.dbConfig;
-
 describe('push test', function(){
-    beforeEach(env.dropDatabase.bind(null, dbConfig));
-    after(env.dropDatabase.bind(null, dbConfig));
 
     it('push test', function(cb){
-        var app = quick.mocks.app({serverId : 's1', serverType : 'area'});
+        var app = quick.mocks.app({serverId : 'area1', serverType : 'area'});
 
-        app.set('memdbConfig', dbConfig);
+        app.set('memdbConfig', env.memdbConfig);
+
         app.set('controllersConfig', {basePath : 'lib/controllers'});
         app.set('pushConfig', {maxMsgCount : 2});
 
@@ -25,10 +22,7 @@ describe('push test', function(){
             return P.promisify(app.start, app)();
         })
         .then(function(){
-            return app.memdb.autoConnect();
-        })
-        .then(function(ret){
-            var autoconn = ret;
+            var autoconn = app.memdb.goose.autoconn;
             var push = app.controllers.push;
 
             return autoconn.transaction(function(){

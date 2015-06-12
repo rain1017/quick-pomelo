@@ -31,15 +31,6 @@ app.configure('all', function() {
 
     // Configure memdb
     app.loadConfigBaseApp('memdbConfig', 'memdb.json');
-    var mdbConfig = app.get('memdbConfig');
-    var shardId = app.getServerId();
-    var shardConfig = mdbConfig.shards[shardId];
-    for(var key in shardConfig){
-        // Override shard specific config
-        mdbConfig[key] = shardConfig[key];
-    }
-    mdbConfig.shardId = shardId;
-    delete mdbConfig.shards;
 
     // Load components
     app.load(quick.components.memdb);

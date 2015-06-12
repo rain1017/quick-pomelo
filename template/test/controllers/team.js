@@ -6,11 +6,9 @@ var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
 describe('team test', function(){
-    beforeEach(env.dropDatabase);
-    after(env.dropDatabase);
 
     it('team test', function(cb){
-        var app = env.createApp('server1', 'team');
+        var app = env.createApp('team-server-1', 'team');
 
         return P.try(function(){
             return P.promisify(app.start, app)();
@@ -57,7 +55,7 @@ describe('team test', function(){
                 .then(function(){
                     return teamController.removeAsync(teamId);
                 });
-            });
+            }, app.getServerId());
         })
         .then(function(){
             return P.promisify(app.stop, app)();
