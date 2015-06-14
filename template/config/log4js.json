@@ -85,16 +85,6 @@
         },
         {
             "type": "dateFile",
-            "filename": "${opts:base}/logs/memdb-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"memdb"
-        },
-        {
-            "type": "dateFile",
             "filename": "${opts:base}/logs/memdb-client-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {
@@ -112,16 +102,6 @@
               }
             ,"backups": 5,
             "category":"connector"
-        },
-        {
-            "type": "dateFile",
-            "filename": "${opts:base}/logs/memdb-${opts:serverId}.log",
-            "pattern": "-yyyyMMdd",
-            "layout": {
-                "type": "basic"
-              }
-            ,"backups": 5,
-            "category":"memdb"
         },
         {
             "type": "dateFile",

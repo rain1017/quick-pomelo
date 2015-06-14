@@ -1,10 +1,8 @@
 'use strict';
 /*
- * MemDB config template
+ * MemDB server config template
  *
  * Please modify it on your needs
- * copy this file to /etc/memdb.js or ~/.memdb.js
- *
  * This is plain javascript, you can add any js code here, just export the config
  */
 
@@ -44,7 +42,7 @@ module.exports = {
     log : {
         // Log file path
         path : '/tmp',
-        // Log Level (one of 'ALL', 'TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR')
+        // Log Level (one of 'ALL', 'TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF')
         // Please set to WARN on production
         level : 'WARN',
     },
@@ -55,24 +53,12 @@ module.exports = {
         longStackTraces : false,
     },
 
-    // Delay for flush changes to backend storage
-    // set it to large value to improve performance if the data delay in backend storage is not an issue.
-    persistentDelay : 300000, // number in ms, default 300,000
+    // user for memdbcluster ssh login, default current user
+    // when start using memdbcluster, make sure you have ssh permission (without password) on all servers,
+    // and the memdb version, install folder, config files are all the same in all servers
+    user : process.env.USER,
 
-    // Idle time before document is removed from memory.
-    // Larger value can improve performance but use more memory.
-    // Set it to large value if the documents accessed via this hard is limited.
-    // Do not access too many different documents in a short time, which may exhault memory and trigger heavy GC operation.
-    idleTimeout : 600000, // number in ms, default 600,000
-
-    // GC will be triggered when memory usage reach this limit
-    // GC can be very heavy, please adjust idleTimeout to avoid GC.
-    memoryLimit : 1024, // number in MB, default 1024
-
-    // Disable redis replica, DO NOT turn on this in production.
-    disableSlave : false, // default false
-
-    // Collection settings, modify it on your need
+    // Collection settings (for index), modify it on your need
     collections : require('./.memdb.index'),
 
 
@@ -117,5 +103,25 @@ module.exports = {
             host : '127.0.0.1',
             port : 31022,
         },
-    }
+    },
+
+    // *** additional settings ***
+    // These settings are unstable and may change in later version
+
+    // Delay for flush changes to backend storage
+    // set it to large value to improve performance if the data delay in backend storage is not an issue.
+    persistentDelay : 300 * 1000, // number in ms, default 300,000
+
+    // Idle time before document is removed from memory.
+    // Larger value can improve performance but use more memory.
+    // Set it to large value if the documents accessed via this hard is limited.
+    // Do not access too many different documents in a short time, which may exhault memory and trigger heavy GC operation.
+    idleTimeout : 600 * 1000, // number in ms, default 600,000
+
+    // GC will be triggered when memory usage reach this limit
+    // GC can be very heavy, please adjust idleTimeout to avoid GC.
+    memoryLimit : 1024, // number in MB, default 1024
+
+    // Disable redis replica, DO NOT turn on this in production.
+    disableSlave : false, // default false
 };

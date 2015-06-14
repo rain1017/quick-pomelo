@@ -17,7 +17,6 @@ module.exports =  {
                 },
             },
             {
-                // Index keys (compound index)
                 keys : ['teamId'],
                 valueIgnore : {
                     teamId : [''],

@@ -3,7 +3,7 @@ Rapid and robust game server framework based on pomelo and memdb
 
 ## Why Quick?
 
-- [x] __Performance__ : Data access is mainly based on in process memory, which is extremely fast.
+- [x] __Performance__ : In memory data access which is extremely fast.
 
 - [x] __Scalable__ : System is horizontally scalable, you can simply add more servers to increase system capacity.
 
@@ -27,17 +27,21 @@ Rapid and robust game server framework based on pomelo and memdb
 
 #### [Pomelo](https://github.com/NetEase/pomelo)
 
-Quick-pomelo is based on pomelo, you should first understand the pomelo framework.
+Quick-pomelo is based on pomelo, have a draft idea of pomelo framework is required.
 
 #### [MemDB](https://github.com/rain1017/memdb)
 
-Quick-pomelo use memdb to manage data model and data access, so understanding memdb is required.
+Quick-pomelo use memdb for underlaying data storage, so understanding memdb is required.
 
 ### Install dependencies
 
-* Install [Node.js v0.12](https://nodejs.org/download)
-* Install [Redis](http://redis.io/download)
-* Install [MongoDB](https://www.mongodb.org/downloads)
+* Install [Node.js](https://nodejs.org/download)
+* Install [Redis](http://redis.io/download) (required for memdb)
+* Install [MongoDB](https://www.mongodb.org/downloads) (required for memdb)
+* Install [MemDB](https://github.com/rain1017/memdb)
+```
+sudo npm install -g memdb-server
+```
 
 ### Start with template
 
@@ -138,6 +142,11 @@ module.exports = function(app){
 ```
 
 ### Start server
+Start memdb cluster
+```
+memdbcluster start --conf=[path to .memdb.js]
+```
+Start quick pomelo server
 ```
 npm install
 node app.js
@@ -159,24 +168,20 @@ Thanks to [memdb](http://memdb.org), quick pomelo un-invent the stateful approac
 
 
 ## License
-(The MIT License)
 
-Copyright (c) 2015 rain1017
+Quick Pomelo - Rapid and robust game server framework based on pomelo and memdb
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (C) rain1017
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

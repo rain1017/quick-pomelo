@@ -34,7 +34,7 @@ module.exports = {
         longStackTraces : true,
     },
 
-    collections : require('../.memdb.index'),
+    collections : require('../config/.memdb.index'),
 
     shards : {
         s1 : {
