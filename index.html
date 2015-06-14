@@ -32,7 +32,7 @@
 <a id="why-quick" class="anchor" href="#why-quick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why Quick?</h2>
 
 <ul>
-<li><p><strong>Performance</strong> : Data access is mainly based on in process memory, which is extremely fast.</p></li>
+<li><p><strong>Performance</strong> : In memory data access which is extremely fast.</p></li>
 <li><p><strong>Scalable</strong> : System is horizontally scalable, you can simply add more servers to increase system capacity.</p></li>
 <li><p><strong>Transaction</strong> : Full transaction support like traditional database, data consistency is guaranteed.</p></li>
 <li><p><strong>High Availability</strong> : Each server is backed by one or more replica, you will never lose any committed data.</p></li>
@@ -60,26 +60,31 @@
 <a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
 
 <h4>
-<a id="pomelo" class="anchor" href="#pomelo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pomelo</h4>
+<a id="pomelo" class="anchor" href="#pomelo" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/NetEase/pomelo">Pomelo</a>
+</h4>
 
-<p>Quick-pomelo is based on <strong><a href="https://github.com/NetEase/pomelo">pomelo</a></strong>, you should first understand the pomelo framework.</p>
+<p>Quick-pomelo is based on pomelo, have a draft idea of pomelo framework is required.</p>
 
 <h4>
-<a id="memdb" class="anchor" href="#memdb" aria-hidden="true"><span class="octicon octicon-link"></span></a>MemDB</h4>
+<a id="memdb" class="anchor" href="#memdb" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/rain1017/memdb">MemDB</a>
+</h4>
 
-<p>Quick-pomelo use <strong><a href="https://github.com/rain1017/memdb">memdb</a></strong> to manage data model and data access, so understanding memdb is required.</p>
+<p>Quick-pomelo use memdb for underlaying data storage, so understanding memdb is required.</p>
 
 <h3>
 <a id="install-dependencies" class="anchor" href="#install-dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install dependencies</h3>
 
 <ul>
-<li>Install <a href="https://nodejs.org/download">Node.js v0.12</a>
+<li>Install <a href="https://nodejs.org/download">Node.js</a>
 </li>
-<li>Install <a href="http://redis.io/download">Redis</a>
-</li>
-<li>Install <a href="https://www.mongodb.org/downloads">MongoDB</a>
+<li>Install <a href="http://redis.io/download">Redis</a> (required for memdb)</li>
+<li>Install <a href="https://www.mongodb.org/downloads">MongoDB</a> (required for memdb)</li>
+<li>Install <a href="https://github.com/rain1017/memdb">MemDB</a>
 </li>
 </ul>
+
+<pre><code>sudo npm install -g memdb-server
+</code></pre>
 
 <h3>
 <a id="start-with-template" class="anchor" href="#start-with-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start with template</h3>
@@ -97,8 +102,8 @@
 
     <span class="pl-k">var</span> PlayerSchema <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">mdbgoose.Schema</span>({
         _id <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
-        areaId <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>, index <span class="pl-k">:</span> <span class="pl-c1">true</span>},
-        teamId <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>, index <span class="pl-k">:</span> <span class="pl-c1">true</span>},
+        areaId <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
+        teamId <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
         connectorId <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
         name <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
     }, {collection <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>players<span class="pl-pds">'</span></span>});
@@ -125,7 +130,7 @@
 };
 
 <span class="pl-c1">proto</span>.<span class="pl-en">removePlayerAsync</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">playerId</span>){
-    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.app.models.Player.findLockedAsync(playerId);
+    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.app.models.Player.findAsync(playerId);
     <span class="pl-k">if</span>(<span class="pl-k">!</span>player){
         <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">'</span>player not exist<span class="pl-pds">'</span></span>);
     }
@@ -178,6 +183,13 @@
 <h3>
 <a id="start-server" class="anchor" href="#start-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start server</h3>
 
+<p>Start memdb cluster</p>
+
+<pre><code>memdbcluster start --conf=[path to .memdb.js]
+</code></pre>
+
+<p>Start quick pomelo server</p>
+
 <pre><code>npm install
 node app.js
 </code></pre>
@@ -198,6 +210,26 @@ node app.js
 </ul>
 
 <p>Thanks to <a href="http://memdb.org">memdb</a>, quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benefits from a typical stateless web server, without losing performance and scalability of in memory stateful server.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Quick Pomelo - Rapid and robust game server framework based on pomelo and memdb</p>
+
+<p>Copyright (C) rain1017</p>
+
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
         </section>
 
         <aside id="sidebar">
