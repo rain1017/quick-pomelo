@@ -25,8 +25,8 @@
     "dependencies": {
         "quick-pomelo": "#",
         "grunt-cli": "~0.1.13",
-        "pomelo": "~1.1.3",
-        "pomelo-cli": "~0.1.2",
+        "pomelo": "~1.1.9",
+        "pomelo-cli": "~0.1.3",
         "node-uuid": "~1.4.3",
         "heapdump" : "~0.3.4"
     },

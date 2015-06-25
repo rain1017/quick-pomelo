@@ -10,4 +10,3 @@ module.exports = function(app){
 
     mdbgoose.model('Area', AreaSchema);
 };
-

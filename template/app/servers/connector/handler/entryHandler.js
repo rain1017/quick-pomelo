@@ -66,9 +66,9 @@ proto.login = function(msg, session, next){
             var goose = self.app.memdb.goose;
             goose.transaction(function(){
                 return P.promisify(self.logout, self)({closed : true}, session);
-            })
+            }, self.app.getServerId())
             .catch(function(e){
-                logger.warn(e);
+                logger.error(e.stack);
             });
         });
     })

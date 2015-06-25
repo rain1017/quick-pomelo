@@ -109,6 +109,12 @@ describe('push test', function(){
             });
         })
         .then(function(){
+            app.event.emit('transactionSuccess');
+        }, function(err){
+            app.event.emit('transactionFail');
+            throw err;
+        })
+        .then(function(){
             return P.promisify(app.stop, app)();
         })
         .nodeify(cb);

@@ -73,7 +73,7 @@ module.exports = {
             // listen port
             port : 31017,
             // bind Ip
-            bindIp : '0.0.0.0',
+            bind : '0.0.0.0',
 
             // Add any shard specific settings here
             // slave : {
@@ -109,19 +109,25 @@ module.exports = {
     // These settings are unstable and may change in later version
 
     // Delay for flush changes to backend storage
-    // set it to large value to improve performance if the data delay in backend storage is not an issue.
-    persistentDelay : 300 * 1000, // number in ms, default 300,000
+    // Set it to large value to improve performance if the data delay in backend storage is not an issue.
+    // persistentDelay : 600 * 1000, // number in ms, default 10 min. 0 indicates never
 
     // Idle time before document is removed from memory.
     // Larger value can improve performance but use more memory.
-    // Set it to large value if the documents accessed via this hard is limited.
+    // Set it to large value if the documents accessed via this shard is limited.
     // Do not access too many different documents in a short time, which may exhault memory and trigger heavy GC operation.
-    idleTimeout : 600 * 1000, // number in ms, default 600,000
+    // idleTimeout : 1800 * 1000, // number in ms, default 30 min. 0 indicates never
 
     // GC will be triggered when memory usage reach this limit
     // GC can be very heavy, please adjust idleTimeout to avoid GC.
-    memoryLimit : 1024, // number in MB, default 1024
+    // memoryLimit : 1024, // number in MB, default 1024
 
     // Disable redis replica, DO NOT turn on this in production.
-    disableSlave : false, // default false
+    // disableSlave : false, // default false
+
+    // Slow query time
+    // slowQuery : 2000, // number in ms. default 2000
+
+    // Turn on heapdump module (https://www.npmjs.com/package/heapdump)
+    // heapdump : false, // default false
 };

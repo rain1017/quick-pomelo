@@ -6,6 +6,7 @@ var quick = require('quick-pomelo');
 var pomeloConstants = require('pomelo/lib/util/constants');
 var P = quick.Promise;
 var logger = quick.logger.getLogger('pomelo', __filename);
+var pomeloLogger = require('pomelo/node_modules/pomelo-logger');
 
 var app = pomelo.createApp();
 app.set('name', 'quick-pomelo');
@@ -95,11 +96,13 @@ app.configure('all', 'gate|connector', function() {
 app.configure('development', function(){
     require('heapdump');
     quick.Promise.longStackTraces();
-    quick.logger.setGlobalLogLevel(quick.logger.levels.ALL);
+    quick.logger.setGlobalLogLevel(quick.logger.levels.DEBUG);
+    pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.DEBUG);
 });
 
 app.configure('production', function(){
-    quick.logger.setGlobalLogLevel(quick.logger.levels.INFO);
+    quick.logger.setGlobalLogLevel(quick.logger.levels.WARN);
+    pomeloLogger.setGlobalLogLevel(pomeloLogger.levels.WARN);
 });
 
 process.on('uncaughtException', function(err) {

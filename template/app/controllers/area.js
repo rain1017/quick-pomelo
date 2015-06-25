@@ -31,7 +31,7 @@ proto.createAsync = function(opts){
 proto.removeAsync = function(areaId){
     return P.bind(this)
     .then(function(){
-        return this.app.models.Area.findAsync(areaId);
+        return this.app.models.Area.findByIdAsync(areaId);
     })
     .then(function(area){
         if(!area){
@@ -62,13 +62,13 @@ proto.joinAsync = function(areaId, playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Area.findAsync(areaId);
+        return this.app.models.Area.findByIdAsync(areaId);
     })
     .then(function(area){
         if(!area){
             throw new Error('area ' + areaId + ' not exist');
         }
-        return this.app.models.Player.findAsync(playerId);
+        return this.app.models.Player.findByIdAsync(playerId);
     })
     .then(function(ret){
         player = ret;
@@ -92,11 +92,11 @@ proto.quitAsync = function(areaId, playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Player.findAsync(playerId);
+        return this.app.models.Player.findByIdAsync(playerId);
     })
     .then(function(ret){
         player = ret;
-        return this.app.models.Area.findAsync(areaId);
+        return this.app.models.Area.findByIdAsync(areaId);
     })
     .then(function(){
         if(!player){

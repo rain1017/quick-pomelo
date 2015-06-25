@@ -31,7 +31,7 @@ proto.createAsync = function(opts){
 proto.removeAsync = function(teamId){
     return P.bind(this)
     .then(function(){
-        return this.app.models.Team.findAsync(teamId);
+        return this.app.models.Team.findByIdAsync(teamId);
     })
     .then(function(team){
         if(!team){
@@ -62,13 +62,13 @@ proto.joinAsync = function(teamId, playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Team.findAsync(teamId);
+        return this.app.models.Team.findByIdAsync(teamId);
     })
     .then(function(team){
         if(!team){
             throw new Error('team ' + teamId + ' not exist');
         }
-        return this.app.models.Player.findAsync(playerId);
+        return this.app.models.Player.findByIdAsync(playerId);
     })
     .then(function(ret){
         player = ret;
@@ -92,11 +92,11 @@ proto.quitAsync = function(teamId, playerId){
 
     return P.bind(this)
     .then(function(){
-        return this.app.models.Player.findAsync(playerId);
+        return this.app.models.Player.findByIdAsync(playerId);
     })
     .then(function(ret){
         player = ret;
-        return this.app.models.Team.findAsync(teamId);
+        return this.app.models.Team.findByIdAsync(teamId);
     })
     .then(function(){
         if(!player){
