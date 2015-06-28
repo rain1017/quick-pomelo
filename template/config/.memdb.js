@@ -23,13 +23,6 @@ module.exports = {
         db : 0,
     },
 
-    // Global event redis, all shards must connect to the same redis
-    event : {
-        host : '127.0.0.1',
-        port : 6379,
-        db : 0,
-    },
-
     // Data replication redis, one redis instance for each shard
     // You can override this in shard settings to choice different slave for each shard
     slave : {
@@ -73,6 +66,8 @@ module.exports = {
             // listen port
             port : 31017,
             // bind Ip
+            // DO NOT bind to localhost when deploy on multiple servers
+            // make sure servers can communicate with each other
             bind : '0.0.0.0',
 
             // Add any shard specific settings here

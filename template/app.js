@@ -1,5 +1,12 @@
 'use strict';
 
+/*
+ * quick pomelo template project
+ *
+ * start memdb first by:
+ * memdbcluster start -c ./config/.memdb.js
+ */
+
 var util = require('util');
 var pomelo = require('pomelo');
 var quick = require('quick-pomelo');

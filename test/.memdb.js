@@ -12,12 +12,6 @@ module.exports = {
         db : 0,
     },
 
-    event : {
-        host : '127.0.0.1',
-        port : 6379,
-        db : 0,
-    },
-
     slave : {
         host : '127.0.0.1',
         port : 6379,
