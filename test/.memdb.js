@@ -1,5 +1,7 @@
 'use strict';
 
+// memdb-server config for unit test
+
 module.exports = {
     backend : {
         engine : 'mongodb',

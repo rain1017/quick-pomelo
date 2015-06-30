@@ -23,7 +23,7 @@
         "postinstall": ""
     },
     "dependencies": {
-        "quick-pomelo": "#",
+        "quick-pomelo": "rain1017/quick-pomelo",
         "grunt-cli": "~0.1.13",
         "pomelo": "~1.1.9",
         "pomelo-cli": "~0.1.3",

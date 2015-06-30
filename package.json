@@ -15,7 +15,7 @@
     "keywords" : [
     ],
     "engines": {
-        "node": "0.10.x"
+        "node": ">=0.10.x"
     },
     "scripts": {
         "start": "grunt",
@@ -28,6 +28,7 @@
         "underscore": "~1.8.2",
         "grunt-cli": "~0.1.13",
         "require-directory": "~2.0.0",
+        "ws" : "~0.7.1",
         "pomelo-protocol": "~0.1.5",
         "pomelo-protobuf": "~0.4.0"
     },
@@ -40,7 +41,6 @@
         "grunt-mocha-test": "~0.12.6",
         "load-grunt-tasks": "~2.0.0",
         "blanket" : "~1.1.6",
-        "ws" : "~0.7.1",
         "redis" : "~0.12.1",
         "mongodb" : "~2.0.27"
     }

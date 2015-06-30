@@ -1,9 +1,24 @@
 'use strict';
 
 var should = require('should');
+var path = require('path');
 var quick = require('../lib');
+var memdb = require('memdb-client');
 var P = quick.Promise;
 P.longStackTraces();
+
+var memdbLauncher = new memdb.test.Launcher({conf : path.join(__dirname, '.memdb.js')});
+
+exports.initMemdb = function(cb){
+    return memdbLauncher.flushdb()
+    .then(function(){
+        return memdbLauncher.startCluster();
+    });
+};
+
+exports.closeMemdb = function(cb){
+    return memdbLauncher.stopCluster();
+};
 
 exports.memdbConfig = {
     backend : {

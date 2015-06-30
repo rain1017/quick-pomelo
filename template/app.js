@@ -44,6 +44,7 @@ app.configure('all', function() {
     app.load(quick.components.memdb);
     app.load(quick.components.controllers);
     app.load(quick.components.routes);
+    app.load(quick.components.timer);
 
     // Configure logger
     var loggerConfig = app.getBase() + '/config/log4js.json';
