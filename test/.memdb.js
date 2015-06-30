@@ -32,7 +32,7 @@ module.exports = {
     shards : {
         area1 : {
             host : '127.0.0.1',
-            port : 31017,
+            port : 32017,
         },
     },
 };

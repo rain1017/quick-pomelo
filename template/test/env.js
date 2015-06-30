@@ -7,8 +7,18 @@ var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 P.longStackTraces();
 
-logger.warn('Start memdb before any unit test by:');
-logger.warn('memdbd -c test/.memdb.js -s s1');
+var memdbLauncher = new quick.memdb.test.Launcher({conf : path.join(__dirname, '.memdb.js')});
+
+exports.initMemdb = function(){
+    return memdbLauncher.flushdb()
+    .then(function(){
+        return memdbLauncher.startCluster();
+    });
+};
+
+exports.closeMemdb = function(){
+    return memdbLauncher.stopCluster();
+};
 
 exports.memdbConfig = {
     backend : {

@@ -6,6 +6,12 @@ var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
 describe('player test', function(){
+    beforeEach(function(cb){
+        env.initMemdb().nodeify(cb);
+    });
+    afterEach(function(cb){
+        env.closeMemdb().nodeify(cb);
+    });
 
     it('create/remove/connect/disconnect', function(cb){
         var app = env.createApp('player-server-1', 'player');

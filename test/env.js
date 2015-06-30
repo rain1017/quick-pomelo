@@ -9,14 +9,14 @@ P.longStackTraces();
 
 var memdbLauncher = new memdb.test.Launcher({conf : path.join(__dirname, '.memdb.js')});
 
-exports.initMemdb = function(cb){
+exports.initMemdb = function(){
     return memdbLauncher.flushdb()
     .then(function(){
         return memdbLauncher.startCluster();
     });
 };
 
-exports.closeMemdb = function(cb){
+exports.closeMemdb = function(){
     return memdbLauncher.stopCluster();
 };
 
@@ -29,7 +29,7 @@ exports.memdbConfig = {
     shards : {
         area1 : {
             host : '127.0.0.1',
-            port : 31017,
+            port : 32017,
         }
     },
 

@@ -1,5 +1,7 @@
 'use strict';
 
+// memdb-server config for unit test
+
 module.exports = {
     backend : {
         engine : 'mongodb',
@@ -21,11 +23,11 @@ module.exports = {
 
     log : {
         path : '/tmp',
-        level : 'DEBUG',
+        level : 'INFO',
     },
 
     promise : {
-        longStackTraces : true,
+        longStackTraces : false,
     },
 
     collections : require('../config/.memdb.index'),
