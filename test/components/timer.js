@@ -13,7 +13,7 @@ describe('timer test', function(){
         env.closeMemdb().nodeify(cb);
     });
 
-    it('delay/interval', function(cb){
+    it('timeout/interval', function(cb){
         var app = quick.mocks.app({serverId : 'area1', serverType : 'area'});
 
         var config = JSON.parse(JSON.stringify(env.memdbConfig)); //clone
@@ -31,7 +31,7 @@ describe('timer test', function(){
 
             var Dummy = app.models.Dummy;
 
-            app.timer.loop('interval1', 300, function(){
+            app.timer.setInterval(function(){
                 return P.try(function(){
                     return Dummy.findByIdAsync(1);
                 })
@@ -42,9 +42,9 @@ describe('timer test', function(){
                     doc.count++;
                     return doc.saveAsync();
                 });
-            });
+            }, 300, 'interval1');
 
-            app.timer.delay('delay1', 700, function(){
+            app.timer.setTimeout(function(){
                 return P.try(function(){
                     return Dummy.findByIdAsync(1);
                 })
@@ -53,10 +53,15 @@ describe('timer test', function(){
                     return doc.removeAsync();
                 })
                 .then(function(){
-                    app.timer.cancel('interval1');
+                    app.timer.clear('interval1');
                     deferred.resolve();
                 });
-            });
+            }, 700, 'timeout1');
+
+            var timeout = app.timer.setTimeout(function(){
+                throw new Error('should not called');
+            }, 200);
+            clearTimeout(timeout);
 
             return deferred.promise;
         })
