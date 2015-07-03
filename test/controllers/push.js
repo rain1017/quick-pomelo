@@ -6,12 +6,8 @@ var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
 describe('push test', function(){
-    beforeEach(function(cb){
-        env.initMemdb().nodeify(cb);
-    });
-    afterEach(function(cb){
-        env.closeMemdb().nodeify(cb);
-    });
+    beforeEach(env.initMemdbSync);
+    afterEach(env.closeMemdbSync);
 
     it('push test', function(cb){
         var app = quick.mocks.app({serverId : 'area1', serverType : 'area'});

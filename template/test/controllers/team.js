@@ -6,12 +6,8 @@ var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
 describe('team test', function(){
-    beforeEach(function(cb){
-        env.initMemdb().nodeify(cb);
-    });
-    afterEach(function(cb){
-        env.closeMemdb().nodeify(cb);
-    });
+    beforeEach(env.initMemdbSync);
+    afterEach(env.closeMemdbSync);
 
     it('team test', function(cb){
         var app = env.createApp('team-server-1', 'team');
