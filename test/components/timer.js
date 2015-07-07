@@ -41,6 +41,10 @@ describe('timer test', function(){
             }, 300, 'interval1');
 
             app.timer.setTimeout(function(){
+                throw new Error('should not called');
+            }, 700, 'timeout1');
+
+            app.timer.setTimeout(function(){
                 return P.try(function(){
                     return Dummy.findByIdAsync(1);
                 })
@@ -53,6 +57,7 @@ describe('timer test', function(){
                     deferred.resolve();
                 });
             }, 700, 'timeout1');
+
 
             var timeout = app.timer.setTimeout(function(){
                 throw new Error('should not called');
