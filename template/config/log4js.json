@@ -125,6 +125,16 @@
         },
         {
             "type": "dateFile",
+            "filename": "${opts:base}/logs/timer-${opts:serverId}.log",
+            "pattern": "-yyyyMMdd",
+            "layout": {
+                "type": "basic"
+              }
+            ,"backups": 5,
+            "category":"timer"
+        },
+        {
+            "type": "dateFile",
             "filename": "${opts:base}/logs/player-${opts:serverId}.log",
             "pattern": "-yyyyMMdd",
             "layout": {

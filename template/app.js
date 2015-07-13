@@ -66,7 +66,7 @@ app.configure('all', function() {
             // Wait for all server stop
             var tryShutdown = function(){
                 if(Object.keys(app.getServers()).length === 0){
-                    shutdown();
+                    quick.logger.shutdown(shutdown);
                 }
                 else{
                     setTimeout(tryShutdown, 200);
@@ -76,7 +76,7 @@ app.configure('all', function() {
             return;
         }
 
-        shutdown();
+        quick.logger.shutdown(shutdown);
     };
 
     app.set('errorHandler', function(err, msg, resp, session, cb){
