@@ -1,9 +1,9 @@
 {
     "name": "quick-pomelo",
     "description": "",
-    "version": "0.1.1",
-    "author": "rain",
-    "private" : true,
+    "version": "0.2.0",
+    "author": "rain1017",
+    "private" : false,
     "homepage" : "https://github.com/rain1017/quick-pomelo",
     "repository" : {
         "type" : "git",
@@ -13,6 +13,8 @@
         "url" : "https://github.com/rain1017/quick-pomelo/issues"
     },
     "keywords" : [
+        "pomelo",
+        "memdb"
     ],
     "engines": {
         "node": ">=0.10.x"
@@ -23,7 +25,7 @@
         "postinstall": ""
     },
     "dependencies": {
-        "memdb-client": "rain1017/memdb-client",
+        "memdb-client": "~0.4.0",
         "lodash": "~3.2.0",
         "underscore": "~1.8.2",
         "grunt-cli": "~0.1.13",

@@ -6,23 +6,22 @@ module.exports = {
     backend : {
         engine : 'mongodb',
         url : 'mongodb://localhost/quick-pomelo-test',
-        options : {},
     },
 
     locking : {
         host : '127.0.0.1',
         port : 6379,
-        db : 1,
+        db : 0,
     },
 
     slave : {
         host : '127.0.0.1',
         port : 6379,
-        db : 1,
+        db : 0,
     },
 
     log : {
-        path : '/tmp',
+        //path : process.env.HOME + '/.memdb/log',
         level : 'INFO',
     },
 
@@ -30,12 +29,10 @@ module.exports = {
         longStackTraces : false,
     },
 
-    collections : require('../config/.memdb.index'),
-
     shards : {
-        s1 : {
+        area1 : {
             host : '127.0.0.1',
             port : 32017,
         },
-    }
+    },
 };
