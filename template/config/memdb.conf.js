@@ -34,7 +34,7 @@ module.exports = {
     // Log settings
     log : {
         // Log file path
-        path : '/tmp',
+        //path : '/tmp',
         // Log Level (one of 'ALL', 'TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF')
         // Please set to WARN on production
         level : 'WARN',
@@ -52,7 +52,7 @@ module.exports = {
     user : process.env.USER,
 
     // Collection settings (for index), modify it on your need
-    collections : require('./.memdb.index'),
+    collections : require('./memdb.index'),
 
 
     // *** Shard specific settings ***

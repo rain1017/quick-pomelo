@@ -87,11 +87,11 @@ proto.connectAsync = function(playerId, connectorId){
     })
     .then(function(){
         logger.info('connect %s %s => %s', playerId, connectorId, oldConnectorId);
-        return oldConnectorId;
+        return {oldConnectorId : oldConnectorId, player : player};
     });
 };
 
-proto.disconnectAsync = function(playerId){
+proto.disconnectAsync = function(playerId, reqId){
     var player = null;
 
     return P.bind(this)
@@ -104,6 +104,7 @@ proto.disconnectAsync = function(playerId){
             throw new Error('player ' + playerId + ' not exist');
         }
         player.connectorId = '';
+        player.reqId = reqId;
         return player.saveAsync();
     })
     .then(function(){

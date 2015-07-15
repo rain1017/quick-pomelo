@@ -56,6 +56,7 @@ app.configure('all', function() {
 
     // Configure filter
     app.filter(quick.filters.transaction(app));
+    app.globalFilter(quick.filters.reqId(app));
 
     // Add beforeStop hook
     app.lifecycleCbs[pomeloConstants.LIFECYCLE.BEFORE_SHUTDOWN] = function(app, shutdown, cancelShutDownTimer){

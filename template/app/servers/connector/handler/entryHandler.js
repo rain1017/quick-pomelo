@@ -44,15 +44,19 @@ proto.login = function(msg, session, next){
     .then(function(){
         return this.app.controllers.player.connectAsync(playerId, session.frontendId);
     })
-    .then(function(oldConnectorId){
+    .then(function(ret){
+        var oldConnectorId = ret.oldConnectorId;
         if(oldConnectorId){
             logger.warn('player %s already connected on %s, will kick', playerId, oldConnectorId);
             // kick original connector
             var entryRemote = this.app.rpc.connector.entryRemote;
             return P.promisify(entryRemote.kick, entryRemote)({frontendId : oldConnectorId}, playerId);
         }
+
+        return ret.player.reqId;
     })
-    .then(function(){
+    .then(function(reqId){
+        session.set('reqId', reqId);
         return P.promisify(session.bind, session)(playerId);
     })
     .then(function(){
@@ -71,9 +75,12 @@ proto.login = function(msg, session, next){
                 logger.error(e.stack);
             });
         });
+
+        return P.promisify(session.pushAll, session)();
     })
     .then(function(){
         logger.info('player %s login', playerId);
+        return {reqId : session.get('reqId')};
     })
     .nodeify(next);
 };
@@ -86,7 +93,7 @@ proto.logout = function(msg, session, next){
 
     P.bind(this)
     .then(function(){
-        return this.app.controllers.player.disconnectAsync(playerId);
+        return this.app.controllers.player.disconnectAsync(playerId, session.get('reqId'));
     })
     .then(function(){
         if(!msg.closed){
