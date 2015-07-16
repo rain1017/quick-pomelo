@@ -61,6 +61,11 @@ proto.removeAsync = function(playerId){
         });
     })
     .then(function(){
+        if(this.app.reqIdFilter){
+            return this.app.reqIdFilter.removeReqId(playerId);
+        }
+    })
+    .then(function(){
         logger.info('remove %s', playerId);
     });
 };
@@ -91,7 +96,7 @@ proto.connectAsync = function(playerId, connectorId){
     });
 };
 
-proto.disconnectAsync = function(playerId, reqId){
+proto.disconnectAsync = function(playerId){
     var player = null;
 
     return P.bind(this)
@@ -104,7 +109,6 @@ proto.disconnectAsync = function(playerId, reqId){
             throw new Error('player ' + playerId + ' not exist');
         }
         player.connectorId = '';
-        player.reqId = reqId;
         return player.saveAsync();
     })
     .then(function(){

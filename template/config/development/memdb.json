@@ -2,15 +2,15 @@
     "shards" : {
         "gate-server" : {
             "host" : "127.0.0.1",
-            "port" : 31017
+            "port" : 31047
         },
         "connector-server-1" : {
             "host" : "127.0.0.1",
-            "port" : 31017
+            "port" : 31047
         },
         "connector-server-2" : {
             "host" : "127.0.0.1",
-            "port" : 31018
+            "port" : 31047
         },
         "player-server-1" : {
             "host" : "127.0.0.1",
@@ -18,23 +18,23 @@
         },
         "player-server-2" : {
             "host" : "127.0.0.1",
-            "port" : 31018
+            "port" : 31017
         },
         "area-server-1" : {
             "host" : "127.0.0.1",
-            "port" : 31019
+            "port" : 31027
         },
         "area-server-2" : {
             "host" : "127.0.0.1",
-            "port" : 31020
+            "port" : 31027
         },
         "team-server-1" : {
             "host" : "127.0.0.1",
-            "port" : 31021
+            "port" : 31037
         },
         "team-server-2" : {
             "host" : "127.0.0.1",
-            "port" : 31022
+            "port" : 31037
         }
     }
 }

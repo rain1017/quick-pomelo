@@ -52,35 +52,34 @@ proto.login = function(msg, session, next){
             var entryRemote = this.app.rpc.connector.entryRemote;
             return P.promisify(entryRemote.kick, entryRemote)({frontendId : oldConnectorId}, playerId);
         }
-
-        return ret.player.reqId;
+    })
+    .then(function(){
+        return this.app.reqIdFilter.getReqId(playerId);
     })
     .then(function(reqId){
-        session.set('reqId', reqId);
-        return P.promisify(session.bind, session)(playerId);
-    })
-    .then(function(){
-        // OnDisconnect
         var self = this;
-        session.on('closed', function(session, reason){
-            if(reason === 'kick' || !session.uid){
-                return;
-            }
-            // auto logout on disconnect
-            var goose = self.app.memdb.goose;
-            goose.transaction(function(){
-                return P.promisify(self.logout, self)({closed : true}, session);
-            }, self.app.getServerId())
-            .catch(function(e){
-                logger.error(e.stack);
-            });
-        });
 
-        return P.promisify(session.pushAll, session)();
-    })
-    .then(function(){
-        logger.info('player %s login', playerId);
-        return {reqId : session.get('reqId')};
+        return P.promisify(session.bind, session)(playerId)
+        .then(function(){
+            // OnDisconnect
+            session.on('closed', function(session, reason){
+                if(reason === 'kick' || !session.uid){
+                    return;
+                }
+                // auto logout on disconnect
+                var goose = self.app.memdb.goose;
+                goose.transaction(function(){
+                    return P.promisify(self.logout, self)({closed : true}, session);
+                }, self.app.getServerId())
+                .catch(function(e){
+                    logger.error(e.stack);
+                });
+            });
+
+            logger.info('player %s login', playerId);
+
+            return {reqId : reqId};
+        });
     })
     .nodeify(next);
 };
@@ -93,7 +92,7 @@ proto.logout = function(msg, session, next){
 
     P.bind(this)
     .then(function(){
-        return this.app.controllers.player.disconnectAsync(playerId, session.get('reqId'));
+        return this.app.controllers.player.disconnectAsync(playerId);
     })
     .then(function(){
         if(!msg.closed){

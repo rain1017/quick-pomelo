@@ -13,17 +13,8 @@ Remote.prototype.kick = function(playerId, cb){
 
     var sessionService = this.app.get('sessionService');
 
-    P.try(function(){
-        var sessions = sessionService.getByUid(playerId);
-        if(sessions.length === 0){
-            throw new Error('session not exist for uid ' + playerId);
-        }
-        var reqId = sessions[0].get('reqId');
-
-        //TODO: unbind instead of kick
-        return P.promisify(sessionService.kick, sessionService)(playerId)
-        .thenReturn(reqId);
-    })
+    //TODO: unbind instead of kick
+    return P.promisify(sessionService.kick, sessionService)(playerId)
     .nodeify(cb);
 };
 

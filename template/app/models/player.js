@@ -5,7 +5,6 @@ module.exports = function(app){
 
     var PlayerSchema = new mdbgoose.Schema({
         _id : {type : String},
-        reqId : {type : Number, default : 0},
         areaId : {type : String},
         teamId : {type : String},
         connectorId : {type : String},
