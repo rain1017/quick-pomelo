@@ -25,7 +25,7 @@
         "postinstall": ""
     },
     "dependencies": {
-        "memdb-client": "~0.4.0",
+        "memdb-client": "rain1017/memdb-client",
         "lodash": "~3.2.0",
         "underscore": "~1.8.2",
         "grunt-cli": "~0.1.13",
