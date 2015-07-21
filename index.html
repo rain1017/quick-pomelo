@@ -149,13 +149,13 @@
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/routes/player.js</span>
 <span class="pl-c1">module</span>.exports <span class="pl-k">=</span> {
     <span class="pl-c">// Routing in handler</span>
-    <span class="pl-en">handler</span> : <span class="pl-k">function</span>(<span class="pl-smi">session</span>, <span class="pl-smi">method</span>, <span class="pl-smi">msg</span>){
+    <span class="pl-en">handler</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">session</span>, <span class="pl-smi">method</span>, <span class="pl-smi">msg</span>){
         <span class="pl-c">// Return a string routing key</span>
         <span class="pl-c">// Same routing key always route to the same backend server.</span>
         <span class="pl-k">return</span> session.uid <span class="pl-k">||</span> msg.playerId;
     },
     <span class="pl-c">// Routing in remote</span>
-    <span class="pl-en">remote</span> : <span class="pl-k">function</span>(<span class="pl-smi">routeParam</span>, <span class="pl-smi">method</span>, <span class="pl-smi">args</span>){
+    <span class="pl-en">remote</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">routeParam</span>, <span class="pl-smi">method</span>, <span class="pl-smi">args</span>){
         <span class="pl-k">return</span> routeParam;
     }
 };</pre></div>
@@ -249,6 +249,16 @@ along with this program.  If not, see <a href="http://www.gnu.org/licenses/">htt
       </div>
     </div>
 
-  
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-65398000-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
