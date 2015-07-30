@@ -15,11 +15,11 @@ Rapid and robust game server framework based on pomelo and memdb
 
 ## Documents
 
-* __[The Wiki](https://github.com/rain1017/quick-pomelo/wiki)__
+* __[The Wiki](https://github.com/memdb/quick-pomelo/wiki)__
 
 ## Demos
 
-* __[Demo Game(斗地主)](https://github.com/rain1017/quick-pomelo-demo)__
+* __[Demo Game(斗地主)](https://github.com/memdb/quick-pomelo-demo)__
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ Rapid and robust game server framework based on pomelo and memdb
 
 Quick-pomelo is based on pomelo, have a draft idea of pomelo framework is required.
 
-#### [MemDB](https://github.com/rain1017/memdb)
+#### [MemDB](https://github.com/memdb/memdb)
 
 Quick-pomelo use memdb for underlaying data storage, so understanding memdb is required.
 
@@ -38,7 +38,7 @@ Quick-pomelo use memdb for underlaying data storage, so understanding memdb is r
 * Install [Node.js](https://nodejs.org/download)
 * Install [Redis](http://redis.io/download) (required for memdb)
 * Install [MongoDB](https://www.mongodb.org/downloads) (required for memdb)
-* Install [MemDB](https://github.com/rain1017/memdb)
+* Install [MemDB](https://github.com/memdb/memdb)
 ```
 sudo npm install -g memdb-server
 ```
@@ -171,7 +171,7 @@ Thanks to [memdb](http://memdb.org), quick pomelo un-invent the stateful approac
 
 Quick Pomelo - Rapid and robust game server framework based on pomelo and memdb
 
-Copyright (C) rain1017
+Copyright (C) Memdb
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
