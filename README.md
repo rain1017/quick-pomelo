@@ -3,11 +3,9 @@ Rapid and robust game server framework based on pomelo and memdb
 
 ## Why Quick?
 
-- [x] __Performance__ : In memory data access which is extremely fast.
+- [x] __Horizontally Scalable__ : Performance grows linearly by adding more servers.
 
-- [x] __Scalable__ : System is horizontally scalable, you can simply add more servers to increase system capacity.
-
-- [x] __Transaction__ : Full transaction support like traditional database, data consistency is guaranteed.
+- [x] __ACID Transaction__ : Full [ACID](https://en.wikipedia.org/wiki/ACID) transaction support on distributed environment.
 
 - [x] __High Availability__ : Each server is backed by one or more replica, you will never lose any committed data.
 
@@ -144,12 +142,11 @@ module.exports = function(app){
 ### Start server
 Start memdb cluster
 ```
-memdbcluster start --conf=[path to .memdb.js]
+memdbcluster start --conf=[memdb.conf.js]
 ```
 Start quick pomelo server
 ```
-npm install
-node app.js
+pomelo start
 ```
 
 ### Well done! Congratulations!
@@ -171,7 +168,7 @@ Thanks to [memdb](http://memdb.org), quick pomelo un-invent the stateful approac
 
 Quick Pomelo - Rapid and robust game server framework based on pomelo and memdb
 
-Copyright (C) Memdb
+Copyright (C) MemDB
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
