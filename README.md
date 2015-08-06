@@ -1,5 +1,5 @@
 # quick-pomelo
-Rapid and robust game server framework based on pomelo and memdb
+Rapid and robust game server framework based on Pomelo and MemDB
 
 ## Why Quick?
 
@@ -161,24 +161,22 @@ A typical realtime game server framework is stateful for the sake of performance
 - We must remember which server the data is located, and use rpc to get data, which is error prone.
 - In memory data will be lost on server failure, it's very difficult to support HA
 
-Thanks to [memdb](http://memdb.org), quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benefits from a typical stateless web server, without losing performance and scalability of in memory stateful server.
+Thanks to [MemDB](http://memdb.org), quick pomelo un-invent the stateful approach and use a web server like 'MVC' based architecture. All servers become stateless and all states is stored in memdb. You can now get all benefits from a typical stateless web server, without losing performance and scalability of in memory stateful server.
 
 
 ## License
 
-Quick Pomelo - Rapid and robust game server framework based on pomelo and memdb
+Copyright 2015 MemDB.
 
-Copyright (C) MemDB
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License. See the AUTHORS file
+for names of contributors.
