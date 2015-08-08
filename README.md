@@ -1,6 +1,9 @@
 # quick-pomelo ![logo](https://github.com/memdb/memdb/wiki/images/logo.png)
 
-### Scalable, transactional and reliable game server framework based on Pomelo and MemDB
+[![Build Status](https://travis-ci.org/memdb/quick-pomelo.svg?branch=master)](https://travis-ci.org/memdb/quick-pomelo)
+[![Dependencies Status](https://david-dm.org/memdb/quick-pomelo.svg)](https://david-dm.org/memdb/quick-pomelo)
+
+__Scalable, transactional and reliable game server framework based on Pomelo and MemDB__
 
 - [x] __Horizontally Scalable__ : Performance grows linearly by adding more servers.
 
@@ -10,11 +13,9 @@
 
 - [x] __'MVC' Architecture__ : Define data model using 'mongoose'.
 
-## [The Wiki](https://github.com/memdb/quick-pomelo/wiki
+## [The Wiki](https://github.com/memdb/quick-pomelo/wiki)
 
-## Demos
-
-* __[Demo Game(斗地主)](https://github.com/memdb/quick-pomelo-demo)__
+## [Demo Game(斗地主)](https://github.com/memdb/quick-pomelo-demo)
 
 ## Quick Start
 

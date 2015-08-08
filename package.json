@@ -30,10 +30,10 @@
     },
     "dependencies": {
         "memdb-client": "~0.4.0",
-        "lodash": "~3.2.0",
+        "lodash": "~3.10.1",
         "underscore": "~1.8.2",
         "grunt-cli": "~0.1.13",
-        "require-directory": "~2.0.0",
+        "require-directory": "~2.1.1",
         "ws" : "~0.7.1",
         "pomelo-protocol": "~0.1.5",
         "pomelo-protobuf": "~0.4.0"
