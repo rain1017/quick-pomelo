@@ -8,4 +8,5 @@ services:
   - mongodb
 before_script:
   - npm install -g memdb/memdb
-  - memdbcluster start -c ./test/memdb.conf.js
+  - memdbcluster stop -c ./test/memdb.conf.js
+  - memdbcluster drop -c ./test/memdb.conf.js
