@@ -1,6 +1,6 @@
 {
     "name": "quick-pomelo",
-    "description": "Rapid and robust game server framework based on pomelo and memdb",
+    "description": "Scalable, transactional and reliable game server framework based on Pomelo and MemDB",
     "version": "0.2.0",
     "author": "rain1017",
     "private" : false,
@@ -17,10 +17,11 @@
         "pomelo",
         "memdb",
         "game",
-        "framework"
+        "framework",
+        "transaction"
     ],
     "engines": {
-        "node": ">=0.10.x"
+        "node": ">=0.12.5"
     },
     "scripts": {
         "start": "grunt",

@@ -1,8 +1,11 @@
 language: node_js
 node_js:
-  - "0.10"
+  - "0.12.7"
 env:
   - NODE_ENV=travis
 services:
-  - redis
+  - redis-server
   - mongodb
+install:
+  - sudo npm install -g memdb/memdb
+  - memdbcluster start -c ./test/memdb.conf.js

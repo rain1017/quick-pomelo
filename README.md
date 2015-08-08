@@ -1,7 +1,6 @@
-# quick-pomelo
-Rapid and robust game server framework based on Pomelo and MemDB
+# quick-pomelo ![logo](https://github.com/memdb/memdb/wiki/images/logo.png)
 
-## Why Quick?
+### Scalable, transactional and reliable game server framework based on Pomelo and MemDB
 
 - [x] __Horizontally Scalable__ : Performance grows linearly by adding more servers.
 
@@ -11,9 +10,7 @@ Rapid and robust game server framework based on Pomelo and MemDB
 
 - [x] __'MVC' Architecture__ : Define data model using 'mongoose'.
 
-## Documents
-
-* __[The Wiki](https://github.com/memdb/quick-pomelo/wiki)__
+## [The Wiki](https://github.com/memdb/quick-pomelo/wiki
 
 ## Demos
 
