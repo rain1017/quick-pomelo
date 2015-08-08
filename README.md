@@ -13,9 +13,9 @@ __Scalable, transactional and reliable game server framework based on Pomelo and
 
 - [x] __'MVC' Architecture__ : Define data model using 'mongoose'.
 
-## [The Wiki](https://github.com/memdb/quick-pomelo/wiki)
+### [The Wiki](https://github.com/memdb/quick-pomelo/wiki)
 
-## [Demo Game(斗地主)](https://github.com/memdb/quick-pomelo-demo)
+### [Demo Game(斗地主)](https://github.com/memdb/quick-pomelo-demo)
 
 ## Quick Start
 

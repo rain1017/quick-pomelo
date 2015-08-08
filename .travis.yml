@@ -6,6 +6,6 @@ env:
 services:
   - redis-server
   - mongodb
-install:
-  - sudo npm install -g memdb/memdb
+before_script:
+  - npm install -g memdb/memdb
   - memdbcluster start -c ./test/memdb.conf.js
