@@ -5,13 +5,13 @@
 
 __Scalable, transactional and reliable game server framework based on Pomelo and MemDB__
 
-- [x] __Horizontally Scalable__ : Performance grows linearly by adding more servers.
+- __Horizontally Scalable__ : Performance grows linearly by adding more servers.
 
-- [x] __ACID Transaction__ : Full [ACID](https://en.wikipedia.org/wiki/ACID) transaction support on distributed environment.
+- __ACID Transaction__ : Full [ACID](https://en.wikipedia.org/wiki/ACID) transaction support on distributed environment.
 
-- [x] __High Availability__ : Each server is backed by one or more replica, you will never lose any committed data.
+- __High Availability__ : Each server is backed by one or more replica, you will never lose any committed data.
 
-- [x] __'MVC' Architecture__ : Define data model using 'mongoose'.
+- __'MVC' Architecture__ : Define data model using 'mongoose'.
 
 ### [The Wiki](https://github.com/memdb/quick-pomelo/wiki)
 
