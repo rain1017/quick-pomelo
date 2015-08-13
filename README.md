@@ -3,19 +3,35 @@
 [![Build Status](https://travis-ci.org/memdb/quick-pomelo.svg?branch=master)](https://travis-ci.org/memdb/quick-pomelo)
 [![Dependencies Status](https://david-dm.org/memdb/quick-pomelo.svg)](https://david-dm.org/memdb/quick-pomelo)
 
-__Scalable, transactional and reliable game server framework based on Pomelo and MemDB__
+__Scalable, Transactional and Reliable Game Server Framework based on Pomelo and MemDB__
 
-- __Horizontally Scalable__ : Performance grows linearly by adding more servers.
+### Performance and Scalable
+* Fast in-memory data access.
+* Distributed architecture, system capacity is horizontally scalable. Performance can be linearly increased by simply add more servers.
 
-- __ACID Transaction__ : Full [ACID](https://en.wikipedia.org/wiki/ACID) transaction support on distributed environment.
+### Distributed ACID Transaction
+* [ACID](https://en.wikipedia.org/wiki/ACID)(Stands for Atomicity, Consistency, Isolation, Durability) transaction support on distributed environment.
+* Data atomicity and consistency guarantee, never leave dirty data in memory.
+* Concurrency and locking control, which make it very easy to write concurrency code. High performance on concurrent system.
 
-- __High Availability__ : Each server is backed by one or more replica, you will never lose any committed data.
+### High Availability
+* Each server is backed by one or more replica, no single point of failure.
 
-- __'MVC' Architecture__ : Define data model using 'mongoose'.
+### MVC Architecture
+* Simple and clear Module-Controller architecture.
+* Use [Mongoose](http://mongoose.com) to define data models.
 
-### [The Wiki](https://github.com/memdb/quick-pomelo/wiki)
+### Useful Built-in Modules
+* Very powerful built-in modules, like push module. You can build a full featured push/chat service with almost zero code.
 
-### [Demo Game(斗地主)](https://github.com/memdb/quick-pomelo-demo)
+## Links
+
+* Home Page: [http://www.quickpomelo.com](http://www.quickpomelo.com)
+* Github: [https://github.com/memdb/quick-pomelo](https://github.com/memdb/quck-pomelo)
+* Wiki: [https://github.com/memdb/quick-pomelo/wiki](https://github.com/memdb/quick-pomelo/wiki)
+* Demo Game: [https://github.com/memdb/quick-pomelo-demo](https://github.com/memdb/quick-pomelo-demo)
+* Mailing list: [memdbd@googlegroups.com](https://groups.google.com/forum/#!forum/memdbd)
+* Email: [memdbd@gmail.com](mailto:memdbd@gmail.com)
 
 ## Quick Start
 
@@ -34,9 +50,13 @@ Quick-pomelo use memdb for underlaying data storage, so understanding memdb is r
 * Install [Node.js](https://nodejs.org/download)
 * Install [Redis](http://redis.io/download) (required for memdb)
 * Install [MongoDB](https://www.mongodb.org/downloads) (required for memdb)
-* Install [MemDB](https://github.com/memdb/memdb)
+* Install [MemDB](https://github.com/memdb/memdb) globally
 ```
 sudo npm install -g memdb-server
+```
+* Install pomelo globally
+```
+sudo npm install -g memdb/pomelo
 ```
 
 ### Start with template
@@ -138,13 +158,18 @@ module.exports = function(app){
 ```
 
 ### Start server
-Start memdb cluster
+
+Before start
+* Make sure Redis and MongoDB has started.
+* Copy `./config/memdb.conf.js` to `~/.memdb/` (mkdir if not exist)
+* Start memdb cluster
 ```
-memdbcluster start --conf=[memdb.conf.js]
+memdbcluster start
 ```
-Start quick pomelo server
+
+Start server
 ```
-pomelo start
+pomelo start --harmony
 ```
 
 ### Well done! Congratulations!

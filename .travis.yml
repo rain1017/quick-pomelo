@@ -7,7 +7,7 @@ services:
   - redis-server
   - mongodb
 before_script:
-  - npm install -g memdb/memdb
+  - npm install -g memdb-server
   - mkdir ~/.memdb
   - memdbcluster stop -c ./test/memdb.conf.js
   - memdbcluster drop -c ./test/memdb.conf.js

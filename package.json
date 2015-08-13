@@ -1,7 +1,7 @@
 {
     "name": "quick-pomelo",
     "description": "Scalable, transactional and reliable game server framework based on Pomelo and MemDB",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "author": "rain1017",
     "private" : false,
     "homepage" : "https://github.com/memdb/quick-pomelo",
