@@ -20,7 +20,7 @@
     <header>
       <div class="inner">
         <h1>quick-pomelo</h1>
-        <h2>Scalable, transactional and reliable game server framework based on Pomelo and MemDB</h2>
+        <h2>Scalable, Transactional and Reliable Game Server Framework based on Pomelo and MemDB</h2>
         <a href="https://github.com/memdb/quick-pomelo" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
@@ -28,20 +28,63 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <ul>
-<li><p><strong>Horizontally Scalable</strong> : Performance grows linearly by adding more servers.</p></li>
-<li><p><strong>ACID Transaction</strong> : Full <a href="https://en.wikipedia.org/wiki/ACID">ACID</a> transaction support on distributed environment.</p></li>
-<li><p><strong>High Availability</strong> : Each server is backed by one or more replica, you will never lose any committed data.</p></li>
-<li><p><strong>'MVC' Architecture</strong> : Define data model using 'mongoose'.</p></li>
+          <h3>
+<a id="performance-and-scalable" class="anchor" href="#performance-and-scalable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance and Scalable</h3>
+
+<ul>
+<li>Fast in-memory data access.</li>
+<li>Distributed architecture, system capacity is horizontally scalable. Performance can be linearly increased by simply add more servers.</li>
 </ul>
 
 <h3>
-<a id="the-wiki" class="anchor" href="#the-wiki" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/memdb/quick-pomelo/wiki">The Wiki</a>
-</h3>
+<a id="distributed-acid-transaction" class="anchor" href="#distributed-acid-transaction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Distributed ACID Transaction</h3>
+
+<ul>
+<li>
+<a href="https://en.wikipedia.org/wiki/ACID">ACID</a>(Stands for Atomicity, Consistency, Isolation, Durability) transaction support on distributed environment.</li>
+<li>Data atomicity and consistency guarantee, never leave dirty data in memory.</li>
+<li>Concurrency and locking control, which make it very easy to write concurrency code. High performance on concurrent system.</li>
+</ul>
 
 <h3>
-<a id="demo-game斗地主" class="anchor" href="#demo-game%E6%96%97%E5%9C%B0%E4%B8%BB" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/memdb/quick-pomelo-demo">Demo Game(斗地主)</a>
-</h3>
+<a id="high-availability" class="anchor" href="#high-availability" aria-hidden="true"><span class="octicon octicon-link"></span></a>High Availability</h3>
+
+<ul>
+<li>Each server is backed by one or more replica, no single point of failure.</li>
+</ul>
+
+<h3>
+<a id="mvc-architecture" class="anchor" href="#mvc-architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>MVC Architecture</h3>
+
+<ul>
+<li>Simple and clear Module-Controller architecture.</li>
+<li>Use <a href="http://mongoose.com">Mongoose</a> to define data models.</li>
+</ul>
+
+<h3>
+<a id="useful-built-in-modules" class="anchor" href="#useful-built-in-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Useful Built-in Modules</h3>
+
+<ul>
+<li>Very powerful built-in modules, like push module. You can build a full featured push/chat service with almost zero code.</li>
+</ul>
+
+<h2>
+<a id="links" class="anchor" href="#links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Links</h2>
+
+<ul>
+<li>Home Page: <a href="http://www.quickpomelo.com">http://www.quickpomelo.com</a>
+</li>
+<li>Github: <a href="https://github.com/memdb/quck-pomelo">https://github.com/memdb/quick-pomelo</a>
+</li>
+<li>Wiki: <a href="https://github.com/memdb/quick-pomelo/wiki">https://github.com/memdb/quick-pomelo/wiki</a>
+</li>
+<li>Demo Game: <a href="https://github.com/memdb/quick-pomelo-demo">https://github.com/memdb/quick-pomelo-demo</a>
+</li>
+<li>Mailing list: <a href="https://groups.google.com/forum/#!forum/memdbd">memdbd@googlegroups.com</a>
+</li>
+<li>Email: <a href="mailto:memdbd@gmail.com">memdbd@gmail.com</a>
+</li>
+</ul>
 
 <h2>
 <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Start</h2>
@@ -69,11 +112,17 @@
 </li>
 <li>Install <a href="http://redis.io/download">Redis</a> (required for memdb)</li>
 <li>Install <a href="https://www.mongodb.org/downloads">MongoDB</a> (required for memdb)</li>
-<li>Install <a href="https://github.com/memdb/memdb">MemDB</a>
-</li>
+<li>Install <a href="https://github.com/memdb/memdb">MemDB</a> globally</li>
 </ul>
 
 <pre><code>sudo npm install -g memdb-server
+</code></pre>
+
+<ul>
+<li>Install pomelo globally</li>
+</ul>
+
+<pre><code>sudo npm install -g memdb/pomelo
 </code></pre>
 
 <h3>
@@ -88,7 +137,7 @@
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/models/player.js</span>
 <span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
-    <span class="pl-k">var</span> mdbgoose <span class="pl-k">=</span> app.memdb.goose;
+    <span class="pl-k">var</span> mdbgoose <span class="pl-k">=</span> app.<span class="pl-c1">memdb</span>.<span class="pl-c1">goose</span>;
 
     <span class="pl-k">var</span> PlayerSchema <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">mdbgoose.Schema</span>({
         _id <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
@@ -98,7 +147,7 @@
         name <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
     }, {collection <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>players<span class="pl-pds">'</span></span>});
 
-    mdbgoose.model(<span class="pl-s"><span class="pl-pds">'</span>Player<span class="pl-pds">'</span></span>, PlayerSchema);
+    mdbgoose.<span class="pl-c1">model</span>(<span class="pl-s"><span class="pl-pds">'</span>Player<span class="pl-pds">'</span></span>, PlayerSchema);
 };</pre></div>
 
 <h3>
@@ -108,23 +157,23 @@
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/controllers/player.js</span>
 <span class="pl-k">var</span> <span class="pl-en">Controller</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
-    <span class="pl-v">this</span>.app <span class="pl-k">=</span> app;
+    <span class="pl-v">this</span>.<span class="pl-c1">app</span> <span class="pl-k">=</span> app;
 };
 
 <span class="pl-k">var</span> proto <span class="pl-k">=</span> Controller.<span class="pl-c1">prototype</span>;
 
 <span class="pl-c1">proto</span>.<span class="pl-en">createPlayerAsync</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">opts</span>){
     <span class="pl-c">// Get model by this.app.models.[model]</span>
-    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">this.app</span>.models.Player(opts);
-    <span class="pl-k">yield</span> player.saveAsync();
+    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">this.app</span>.<span class="pl-c1">models</span>.<span class="pl-c1">Player</span>(opts);
+    <span class="pl-k">yield</span> player.<span class="pl-c1">saveAsync</span>();
 };
 
 <span class="pl-c1">proto</span>.<span class="pl-en">removePlayerAsync</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">playerId</span>){
-    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.app.models.Player.findAsync(playerId);
+    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.<span class="pl-c1">app</span>.<span class="pl-c1">models</span>.<span class="pl-c1">Player</span>.<span class="pl-c1">findAsync</span>(playerId);
     <span class="pl-k">if</span>(<span class="pl-k">!</span>player){
         <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">'</span>player not exist<span class="pl-pds">'</span></span>);
     }
-    <span class="pl-k">yield</span> player.removeAsync();
+    <span class="pl-k">yield</span> player.<span class="pl-c1">removeAsync</span>();
 };
 
 <span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
@@ -137,12 +186,12 @@
 <p>For each type of server, write a route in app/routes directory.</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/routes/player.js</span>
-<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> {
+<span class="pl-c1">module</span>.<span class="pl-c1">exports</span> <span class="pl-k">=</span> {
     <span class="pl-c">// Routing in handler</span>
     <span class="pl-en">handler</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">session</span>, <span class="pl-smi">method</span>, <span class="pl-smi">msg</span>){
         <span class="pl-c">// Return a string routing key</span>
         <span class="pl-c">// Same routing key always route to the same backend server.</span>
-        <span class="pl-k">return</span> session.uid <span class="pl-k">||</span> msg.playerId;
+        <span class="pl-k">return</span> session.<span class="pl-c1">uid</span> <span class="pl-k">||</span> msg.<span class="pl-c1">playerId</span>;
     },
     <span class="pl-c">// Routing in remote</span>
     <span class="pl-en">remote</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">routeParam</span>, <span class="pl-smi">method</span>, <span class="pl-smi">args</span>){
@@ -157,13 +206,13 @@
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/servers/player/playerHandler.js</span>
 <span class="pl-k">var</span> <span class="pl-en">Handler</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
-    <span class="pl-v">this</span>.app <span class="pl-k">=</span> app;
+    <span class="pl-v">this</span>.<span class="pl-c1">app</span> <span class="pl-k">=</span> app;
 };
 
 <span class="pl-c1">Handler</span>.<span class="pl-c1">prototype</span>.<span class="pl-en">createPlayer</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">msg</span>, <span class="pl-smi">session</span>, <span class="pl-smi">next</span>){
     <span class="pl-c">// Get controller by this.app.controllers.[controler]</span>
-    <span class="pl-k">return</span> <span class="pl-v">this</span>.app.<span class="pl-c1">controllers</span>.player.createPlayerAsync(msg.opts)
-    .nodeify(next); 
+    <span class="pl-k">return</span> <span class="pl-v">this</span>.<span class="pl-c1">app</span>.<span class="pl-c1">controllers</span>.<span class="pl-c1">player</span>.<span class="pl-c1">createPlayerAsync</span>(msg.<span class="pl-c1">opts</span>)
+    .<span class="pl-c1">nodeify</span>(next); 
 };
 
 <span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
@@ -173,14 +222,20 @@
 <h3>
 <a id="start-server" class="anchor" href="#start-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Start server</h3>
 
-<p>Start memdb cluster</p>
+<p>Before start</p>
 
-<pre><code>memdbcluster start --conf=[memdb.conf.js]
+<ul>
+<li>Make sure Redis and MongoDB has started.</li>
+<li>Copy <code>./config/memdb.conf.js</code> to <code>~/.memdb/</code> (mkdir if not exist)</li>
+<li>Start memdb cluster</li>
+</ul>
+
+<pre><code>memdbcluster start
 </code></pre>
 
-<p>Start quick pomelo server</p>
+<p>Start server</p>
 
-<pre><code>pomelo start
+<pre><code>pomelo start --harmony
 </code></pre>
 
 <h3>
