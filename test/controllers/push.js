@@ -20,7 +20,7 @@ var quick = require('../../lib');
 var P = quick.Promise;
 var logger = quick.logger.getLogger('test', __filename);
 
-describe.only('push test', function(){
+describe('push test', function(){
     beforeEach(env.initMemdbSync);
     afterEach(env.closeMemdbSync);
 

@@ -19,7 +19,7 @@
  * quick pomelo template project
  *
  * start memdb first by:
- * memdbcluster start -c ./config/.memdb.js
+ * memdbcluster start --conf=./config/memdb.conf.js
  */
 
 var util = require('util');

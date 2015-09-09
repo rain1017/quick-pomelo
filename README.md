@@ -1,7 +1,7 @@
-# quick-pomelo ![logo](https://github.com/memdb/memdb/wiki/images/logo.png)
+# quick-pomelo ![logo](https://github.com/rain1017/memdb/wiki/images/logo.png)
 
-[![Build Status](https://travis-ci.org/memdb/quick-pomelo.svg?branch=master)](https://travis-ci.org/memdb/quick-pomelo)
-[![Dependencies Status](https://david-dm.org/memdb/quick-pomelo.svg)](https://david-dm.org/memdb/quick-pomelo)
+[![Build Status](https://travis-ci.org/rain1017/quick-pomelo.svg?branch=master)](https://travis-ci.org/rain1017/quick-pomelo)
+[![Dependencies Status](https://david-dm.org/rain1017/quick-pomelo.svg)](https://david-dm.org/rain1017/quick-pomelo)
 
 __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and MemDB__
 
@@ -27,11 +27,10 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 ## Links
 
 * Home Page: [http://www.quickpomelo.com](http://www.quickpomelo.com)
-* Github: [https://github.com/memdb/quick-pomelo](https://github.com/memdb/quck-pomelo)
-* Wiki: [https://github.com/memdb/quick-pomelo/wiki](https://github.com/memdb/quick-pomelo/wiki)
-* Demo Game: [https://github.com/memdb/quick-pomelo-demo](https://github.com/memdb/quick-pomelo-demo)
-* Mailing list: [memdbd@googlegroups.com](https://groups.google.com/forum/#!forum/memdbd)
-* Email: [memdbd@gmail.com](mailto:memdbd@gmail.com)
+* Github: [https://github.com/rain1017/quick-pomelo](https://github.com/rain1017/quck-pomelo)
+* Wiki: [https://github.com/rain1017/quick-pomelo/wiki](https://github.com/rain1017/quick-pomelo/wiki)
+* Demo Game: [https://github.com/rain1017/quick-pomelo-demo](https://github.com/rain1017/quick-pomelo-demo)
+* Email: [rain1017@gmail.com](mailto:rain1017@gmail.com)
 
 ## Quick Start
 
@@ -41,7 +40,7 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 
 Quick-pomelo is based on pomelo, have a draft idea of pomelo framework is required.
 
-#### [MemDB](https://github.com/memdb/memdb)
+#### [MemDB](https://github.com/rain1017/memdb)
 
 Quick-pomelo use memdb for underlaying data storage, so understanding memdb is required.
 
@@ -50,13 +49,13 @@ Quick-pomelo use memdb for underlaying data storage, so understanding memdb is r
 * Install [Node.js](https://nodejs.org/download)
 * Install [Redis](http://redis.io/download) (required for memdb)
 * Install [MongoDB](https://www.mongodb.org/downloads) (required for memdb)
-* Install [MemDB](https://github.com/memdb/memdb) globally
+* Install [MemDB](https://github.com/rain1017/memdb) globally
 ```
 sudo npm install -g memdb-server
 ```
 * Install pomelo globally
 ```
-sudo npm install -g memdb/pomelo
+sudo npm install -g rain1017/pomelo
 ```
 
 ### Start with template
@@ -189,7 +188,7 @@ Thanks to [MemDB](http://memdb.org), quick pomelo un-invent the stateful approac
 
 ## License
 
-Copyright 2015 MemDB.
+Copyright 2015 rain1017.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
