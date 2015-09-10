@@ -21,7 +21,11 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 * Simple and clear Module-Controller architecture.
 * Use [Mongoose](http://mongoose.com) to define data models.
 
-### Useful Built-in Modules
+### ES6 Promise Supported
+* Promise A+ compatible
+* Support ES6 generators (yield)
+
+### Powerful Built-in Modules
 * Very powerful built-in modules, like push module. You can build a full featured push/chat service with almost zero code.
 
 ## Links
