@@ -13,7 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>quick-pomelo by memdb</title>
+    <title>quick-pomelo by rain1017</title>
   </head>
 
   <body>
@@ -21,7 +21,7 @@
       <div class="inner">
         <h1>quick-pomelo</h1>
         <h2>Scalable, Transactional and Reliable Game Server Framework based on Pomelo and MemDB</h2>
-        <a href="https://github.com/memdb/quick-pomelo" class="button"><small>View project on</small> GitHub</a>
+        <a href="https://github.com/rain1017/quick-pomelo" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
 
@@ -137,7 +137,7 @@
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/models/player.js</span>
 <span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
-    <span class="pl-k">var</span> mdbgoose <span class="pl-k">=</span> app.<span class="pl-c1">memdb</span>.<span class="pl-c1">goose</span>;
+    <span class="pl-k">var</span> mdbgoose <span class="pl-k">=</span> app.memdb.goose;
 
     <span class="pl-k">var</span> PlayerSchema <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">mdbgoose.Schema</span>({
         _id <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
@@ -147,7 +147,7 @@
         name <span class="pl-k">:</span> {type <span class="pl-k">:</span> <span class="pl-c1">String</span>},
     }, {collection <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>players<span class="pl-pds">'</span></span>});
 
-    mdbgoose.<span class="pl-c1">model</span>(<span class="pl-s"><span class="pl-pds">'</span>Player<span class="pl-pds">'</span></span>, PlayerSchema);
+    mdbgoose.model(<span class="pl-s"><span class="pl-pds">'</span>Player<span class="pl-pds">'</span></span>, PlayerSchema);
 };</pre></div>
 
 <h3>
@@ -157,23 +157,23 @@
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/controllers/player.js</span>
 <span class="pl-k">var</span> <span class="pl-en">Controller</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
-    <span class="pl-v">this</span>.<span class="pl-c1">app</span> <span class="pl-k">=</span> app;
+    <span class="pl-v">this</span>.app <span class="pl-k">=</span> app;
 };
 
 <span class="pl-k">var</span> proto <span class="pl-k">=</span> Controller.<span class="pl-c1">prototype</span>;
 
 <span class="pl-c1">proto</span>.<span class="pl-en">createPlayerAsync</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">opts</span>){
     <span class="pl-c">// Get model by this.app.models.[model]</span>
-    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">this.app</span>.<span class="pl-c1">models</span>.<span class="pl-c1">Player</span>(opts);
-    <span class="pl-k">yield</span> player.<span class="pl-c1">saveAsync</span>();
+    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">this.app</span>.models.Player(opts);
+    <span class="pl-k">yield</span> player.saveAsync();
 };
 
 <span class="pl-c1">proto</span>.<span class="pl-en">removePlayerAsync</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">playerId</span>){
-    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.<span class="pl-c1">app</span>.<span class="pl-c1">models</span>.<span class="pl-c1">Player</span>.<span class="pl-c1">findAsync</span>(playerId);
+    <span class="pl-k">var</span> player <span class="pl-k">=</span> <span class="pl-k">yield</span> <span class="pl-v">this</span>.app.models.Player.findAsync(playerId);
     <span class="pl-k">if</span>(<span class="pl-k">!</span>player){
         <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">'</span>player not exist<span class="pl-pds">'</span></span>);
     }
-    <span class="pl-k">yield</span> player.<span class="pl-c1">removeAsync</span>();
+    <span class="pl-k">yield</span> player.removeAsync();
 };
 
 <span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
@@ -186,12 +186,12 @@
 <p>For each type of server, write a route in app/routes directory.</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/routes/player.js</span>
-<span class="pl-c1">module</span>.<span class="pl-c1">exports</span> <span class="pl-k">=</span> {
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> {
     <span class="pl-c">// Routing in handler</span>
     <span class="pl-en">handler</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">session</span>, <span class="pl-smi">method</span>, <span class="pl-smi">msg</span>){
         <span class="pl-c">// Return a string routing key</span>
         <span class="pl-c">// Same routing key always route to the same backend server.</span>
-        <span class="pl-k">return</span> session.<span class="pl-c1">uid</span> <span class="pl-k">||</span> msg.<span class="pl-c1">playerId</span>;
+        <span class="pl-k">return</span> session.uid <span class="pl-k">||</span> msg.playerId;
     },
     <span class="pl-c">// Routing in remote</span>
     <span class="pl-en">remote</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">routeParam</span>, <span class="pl-smi">method</span>, <span class="pl-smi">args</span>){
@@ -206,13 +206,13 @@
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// app/servers/player/playerHandler.js</span>
 <span class="pl-k">var</span> <span class="pl-en">Handler</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
-    <span class="pl-v">this</span>.<span class="pl-c1">app</span> <span class="pl-k">=</span> app;
+    <span class="pl-v">this</span>.app <span class="pl-k">=</span> app;
 };
 
 <span class="pl-c1">Handler</span>.<span class="pl-c1">prototype</span>.<span class="pl-en">createPlayer</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">msg</span>, <span class="pl-smi">session</span>, <span class="pl-smi">next</span>){
     <span class="pl-c">// Get controller by this.app.controllers.[controler]</span>
-    <span class="pl-k">return</span> <span class="pl-v">this</span>.<span class="pl-c1">app</span>.<span class="pl-c1">controllers</span>.<span class="pl-c1">player</span>.<span class="pl-c1">createPlayerAsync</span>(msg.<span class="pl-c1">opts</span>)
-    .<span class="pl-c1">nodeify</span>(next); 
+    <span class="pl-k">return</span> <span class="pl-v">this</span>.app.<span class="pl-c1">controllers</span>.player.createPlayerAsync(msg.opts)
+    .nodeify(next); 
 };
 
 <span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">app</span>){
@@ -276,16 +276,16 @@ for names of contributors.</p>
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/memdb/quick-pomelo/zipball/master" class="button">
+          <a href="https://github.com/rain1017/quick-pomelo/zipball/master" class="button">
             <small>Download</small>
             .zip file
           </a>
-          <a href="https://github.com/memdb/quick-pomelo/tarball/master" class="button">
+          <a href="https://github.com/rain1017/quick-pomelo/tarball/master" class="button">
             <small>Download</small>
             .tar.gz file
           </a>
 
-          <p class="repo-owner"><a href="https://github.com/memdb/quick-pomelo"></a> is maintained by <a href="https://github.com/memdb">memdb</a>.</p>
+          <p class="repo-owner"><a href="https://github.com/rain1017/quick-pomelo"></a> is maintained by <a href="https://github.com/rain1017">rain1017</a>.</p>
 
           <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
