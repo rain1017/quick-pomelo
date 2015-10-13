@@ -36,5 +36,9 @@
             "host" : "127.0.0.1",
             "port" : 31037
         }
+    },
+    "backend" : {
+        "engine" : "mongodb",
+        "url" : "mongodb://localhost/quick-pomelo"
     }
 }

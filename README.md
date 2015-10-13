@@ -35,6 +35,7 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 * Wiki: [https://github.com/rain1017/quick-pomelo/wiki](https://github.com/rain1017/quick-pomelo/wiki)
 * Demo Game: [https://github.com/rain1017/quick-pomelo-demo](https://github.com/rain1017/quick-pomelo-demo)
 * Email: [rain1017@gmail.com](mailto:rain1017@gmail.com)
+* QQ: 9040044
 
 ## Quick Start
 
