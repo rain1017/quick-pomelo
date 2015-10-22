@@ -30,7 +30,7 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 
 ## Links
 
-* Home Page: [http://www.quickpomelo.com](http://www.quickpomelo.com)
+* Home Page: [http://quickpomelo.com](http://quickpomelo.com)
 * Github: [https://github.com/rain1017/quick-pomelo](https://github.com/rain1017/quck-pomelo)
 * Wiki: [https://github.com/rain1017/quick-pomelo/wiki](https://github.com/rain1017/quick-pomelo/wiki)
 * Demo Game: [https://github.com/rain1017/quick-pomelo-demo](https://github.com/rain1017/quick-pomelo-demo)
