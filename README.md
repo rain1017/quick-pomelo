@@ -19,7 +19,7 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 
 ### MVC Architecture
 * Simple and clear Module-Controller architecture.
-* Use [Mongoose](http://mongoose.com) to define data models.
+* Use [Mongoose](http://mongoosejs.com) to define data models.
 
 ### ES6 Promise Supported
 * Promise A+ compatible
