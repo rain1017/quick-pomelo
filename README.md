@@ -36,6 +36,7 @@ __Scalable, Transactional and Reliable Game Server Framework based on Pomelo and
 * Demo Game: [https://github.com/rain1017/quick-pomelo-demo](https://github.com/rain1017/quick-pomelo-demo)
 * Email: [rain1017@gmail.com](mailto:rain1017@gmail.com)
 * QQ: 9040044
+* QQ discussion group: 292495320
 
 ## Quick Start
 
@@ -165,7 +166,11 @@ module.exports = function(app){
 
 Before start
 * Make sure Redis and MongoDB has started.
-* Copy `./config/memdb.conf.js` to `~/.memdb/` (mkdir if not exist)
+* Create a symbol link to `[PROJECT_ROOT]/config/memdb.conf.js` in `~/.memdb/`
+```
+mkdir ~/.memdb
+ln -s [PROJECT_ROOT]/config/memdb.conf.js ~/.memdb/memdb.conf.js
+```
 * Start memdb cluster
 ```
 memdbcluster start
