@@ -178,7 +178,7 @@ memdbcluster start
 
 Start server
 ```
-pomelo start --harmony
+pomelo start --harmony (--harmony is required on node < 0.4.0)
 ```
 
 ### Well done! Congratulations!
